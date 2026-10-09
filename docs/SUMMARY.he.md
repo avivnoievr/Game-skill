@@ -213,10 +213,11 @@ Game-skill/
 
 **דרך 1, פלאגין** (Claude Code על המחשב שלך):
 ```
-/plugin marketplace add avivnoievr/Game-skill#claude/3d-game-dev-skills-system-13c0pn
+/plugin marketplace add avivnoievr/Game-skill
 /plugin install game-studio@game-skill
 ```
-(אחרי מיזוג הענף ל-main, מספיק `avivnoievr/Game-skill` בלי ה-`#...`.)
+(הענף `claude/3d-game-dev-skills-system-13c0pn` הוא כרגע ענף ברירת המחדל של הריפו, כי הריפו היה ריק. אם
+תשנה את ענף ברירת המחדל, הוסף `#claude/3d-game-dev-skills-system-13c0pn` לכתובת.)
 
 **דרך 2, לתוך הריפו של המשחק.** זו הדרך המומלצת אם אתה עובד ב-Claude Code בענן, כי סשנים בענן **לא טוענים
 פלאגינים** מה"חנות":
@@ -293,7 +294,7 @@ bash Game-skill/install.sh /path/to/your-game     # ב-Windows: .\install.ps1 -T
 ## 12. המלצות להמשך
 
 1. **התקן במשחק שלך והרץ את פרומפט א'.** הבדיקה הראשונה תיתן תמונת מצב כנה עם ראיות.
-2. **מזג את הענף ל-main** כדי שההתקנה כפלאגין תעבוד בלי `#branch`.
+2. **אופציונלי: שנה את שם הענף ל-`main`** בהגדרות הריפו ב-GitHub, לשם נקי. ההתקנה עובדת כבר עכשיו.
 3. **אחרי אבן הדרך הראשונה, ספר לי מה עבד ומה לא**, ונכייל ספים וכללים לפי המשחק שלך.
 4. **אופציונלי:** מדידה פורמלית עם `claude plugin eval` (משווה ריצות עם הפלאגין ובלעדיו). זה עולה טוקנים,
    ולכן כדאי רק אחרי שתראה שהכיוון נכון.

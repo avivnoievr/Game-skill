@@ -50,7 +50,8 @@ Pick one of three ways.
 /plugin marketplace add avivnoievr/Game-skill
 /plugin install game-studio@game-skill
 ```
-- Until this work is merged into the default branch, pin the branch:
+- The branch `claude/3d-game-dev-skills-system-13c0pn` is currently the repository's default branch.
+  If you change the default branch later, pin this one with
   `/plugin marketplace add avivnoievr/Game-skill#claude/3d-game-dev-skills-system-13c0pn`.
 - Skill: `/game-studio:game-studio`. Agents: `game-studio:asset-builder`, and so on.
 
