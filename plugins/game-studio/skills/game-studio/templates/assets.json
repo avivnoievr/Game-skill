@@ -1,0 +1,29 @@
+{
+  "_rules": [
+    "One entry per asset before work starts. status: todo -> blockout -> built -> accepted (accepted only after an art-critic PASS).",
+    "source is decided with the routing in references/modeling.md section 2 and never changed silently.",
+    "Third-party or generated assets also get a row in assets/LICENSES.md."
+  ],
+  "style_sheet": {
+    "style": "<from the art bible, e.g. stylized low-poly, flat shading>",
+    "palette": "<path to palette atlas or the art-bible palette section>",
+    "bevel_scale_mm": 4,
+    "shading": "<flat | smooth + weighted normals | toon>",
+    "texel_density_px_per_m": 512
+  },
+  "assets": [
+    {
+      "id": "crate_wood",
+      "class": "small-prop",
+      "description": "Reinforced wooden supply crate, player-adjacent, static",
+      "source": "code",
+      "dims_m": [0.6, 0.6, 0.6],
+      "pivot": "base-center",
+      "budget": { "tris": 800, "materials": 1, "texture": 512 },
+      "status": "todo",
+      "owner": null,
+      "evidence": null,
+      "license": "original"
+    }
+  ]
+}

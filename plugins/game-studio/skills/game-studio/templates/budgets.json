@@ -1,0 +1,15 @@
+{
+  "_notes": "Starting points from the game-studio skill (web desktop). Adjust to the real target device; record every change and its reason in progress.md. Mobile: roughly one third of the scene numbers.",
+  "target": { "platform": "web-desktop", "min_hardware": "<e.g. 2020 laptop with integrated GPU>", "resolution": "1920x1080", "dpr_cap": 2 },
+  "frame": { "fps": 60, "p95_frame_ms": 16.7, "measured_on": "real GPU only; never SwiftShader/llvmpipe" },
+  "scene": { "draw_calls": 250, "triangles_in_view": 1500000, "textures_live": 64, "shader_programs": 40, "texture_memory_mb": 256 },
+  "delivery": { "initial_download_mb": 25, "glb_max_mb": 5, "compression": "meshopt + KTX2" },
+  "texel_density_px_per_m": 512,
+  "asset_classes": {
+    "small-prop":  { "tris": 1000,  "materials": 1, "texture": 512,  "inspect_preset": "web-prop-small" },
+    "medium-prop": { "tris": 3000,  "materials": 2, "texture": 1024, "inspect_preset": "web-prop" },
+    "hero-prop":   { "tris": 8000,  "materials": 2, "texture": 2048, "inspect_preset": "web-hero-prop" },
+    "character":   { "tris": 10000, "materials": 3, "texture": 2048, "inspect_preset": "web-character" },
+    "building":    { "tris": 10000, "materials": 3, "texture": 2048, "inspect_preset": "web-building" }
+  }
+}

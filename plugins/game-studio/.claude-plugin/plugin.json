@@ -1,0 +1,23 @@
+{
+  "name": "game-studio",
+  "displayName": "Game Studio 3D",
+  "version": "1.0.0",
+  "description": "Production workflow for high-quality 3D games: art direction that does not look AI-made, game-ready 3D models, animation, clean architecture and evidence-based QA, with specialist subagents for asset building, animation, art critique and playtesting.",
+  "author": {
+    "name": "avivnoievr"
+  },
+  "repository": "https://github.com/avivnoievr/Game-skill",
+  "license": "MIT",
+  "keywords": [
+    "gamedev",
+    "3d",
+    "threejs",
+    "godot",
+    "unity",
+    "blender",
+    "gltf",
+    "art-direction",
+    "animation",
+    "qa"
+  ]
+}

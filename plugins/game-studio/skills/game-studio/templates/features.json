@@ -1,0 +1,32 @@
+{
+  "_rules": [
+    "Each feature starts with passes:false.",
+    "Only flip passes to true with evidence: a capture, test output or report path produced after the last change.",
+    "Never delete, reword or weaken a feature to make it pass. If scope changes, add a note and ask the user.",
+    "playtest-qa reports; the director flips passes after reading the evidence."
+  ],
+  "features": [
+    {
+      "id": "F01",
+      "title": "Game boots to a playable state with no console or page errors",
+      "acceptance": [
+        "capture.mjs (or the engine equivalent) reports 0 errors over 60 seconds",
+        "First frame shows the art-bible lighting and palette, not engine defaults"
+      ],
+      "passes": false,
+      "evidence": null,
+      "notes": ""
+    },
+    {
+      "id": "F02",
+      "title": "<player verb> works and feels responsive",
+      "acceptance": [
+        "<input> produces <observable result> within <N> ms",
+        "<measurable rule from the brief>"
+      ],
+      "passes": false,
+      "evidence": null,
+      "notes": ""
+    }
+  ]
+}

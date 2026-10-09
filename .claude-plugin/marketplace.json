@@ -1,0 +1,14 @@
+{
+  "name": "game-skill",
+  "description": "Game Studio 3D: a Claude Code plugin for building high-quality 3D games.",
+  "owner": { "name": "avivnoievr" },
+  "plugins": [
+    {
+      "name": "game-studio",
+      "source": "./plugins/game-studio",
+      "description": "Art direction, game-ready 3D models, animation, clean architecture and evidence-based QA for 3D games, with specialist subagents.",
+      "category": "development",
+      "tags": ["gamedev", "3d", "blender", "threejs", "godot", "unity", "qa"]
+    }
+  ]
+}
