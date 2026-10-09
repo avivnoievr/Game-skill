@@ -50,7 +50,7 @@ A category scored below the threshold fails the gate, whatever the average. Neve
 - No evidence from real input (only staged or title-screen shots).
 - No renderer diagnostics (draw calls, triangles, errors).
 
-## Advisory image metrics (from capture.mjs)
+## Advisory image metrics (from capture.mjs or image_metrics.py)
 
 Several flags on gameplay shots argue against scores of 2 or more. The critic must address each flag
 in writing. "Do not add noise just to raise metrics": metrics are evidence, not targets.

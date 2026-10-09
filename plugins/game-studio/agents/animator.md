@@ -35,7 +35,7 @@ Read `SKILL_DIR/references/animation.md` completely, and `modeling.md` §7 for e
    - a Blender-scripted rig.
 
    Record the source and license.
-2. **Check the rig and skin:** `inspect_model.py <model> --preset <class>`. It reports bone count,
+2. **Check the rig and skin:** `inspect_model.py <model> --preset <inspect_preset of the asset's class in design/budgets.json>`. It reports bone count,
    vertices with more than 4 influences, and the actions present. Fix skinning problems before
    animating: they show up as collapsing joints in the pose strips.
 3. **Make or retarget the clips:**
@@ -55,12 +55,15 @@ Read `SKILL_DIR/references/animation.md` completely, and `modeling.md` §7 for e
    - loop closure (the first pose equals the last);
    - no bind/T-pose frames;
    - no collapsing joints.
-6. **Measure:**
+6. **Measure:** run `clip_report.py <model> [--feet L,R] --json assets/<id>/clips.json`. It gives,
+   per clip:
    - frame range and fps;
-   - loop yes/no;
-   - root displacement per cycle, giving root speed in m/s, which gameplay must match to avoid foot
-     sliding;
-   - event frames (footsteps, hit frames, VFX spawns).
+   - pops at the loop point;
+   - root speed (root motion), or the **ground speed** an in-place clip implies (gameplay must move
+     the character at that speed);
+   - the foot-skate ratio.
+
+   Add the event frames (footsteps, hit frames, VFX spawns) yourself.
 
 ## Report: write `assets/<id>/animation-report.md`, then reply in ≤ 15 lines
 

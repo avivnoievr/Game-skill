@@ -133,6 +133,8 @@ mkdir -p qa/out/frames && xvfb-run -a godot --path . --rendering-driver opengl3 
 - `--write-movie` needs an existing output folder.
 - In tests, the window size came from `project.godot`, not from `--resolution`.
 - Turn frames into a contact sheet with `toolchain.md` §3 (ffmpeg `tile`).
+- Run `image_metrics.py qa/out/shots/*.png --gray` for the same image metrics and grayscale copies
+  that web captures get.
 - `RID allocations leaked at exit` lines are noise. Gate on the exit code and the report.
 
 ## 6. Animation

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // Capture evidence from a running web game (Three.js / R3F / Babylon / PlayCanvas): screenshots with
-// objective image metrics, console + page errors, failed requests, renderer stats, game state, a rough
-// FPS figure, and an optional frame sequence (with held/pressed keys) for motion review.
+// objective image metrics and grayscale copies, console + page errors, failed requests, renderer stats
+// checked against budgets, game state, a scene-reload leak test, and an optional frame sequence (with
+// held/pressed keys) for motion review.
 //
-// Usage: node capture.mjs --url http://localhost:5173 --out qa/captures/<milestone> [options]
+// Usage: node capture.mjs --url http://localhost:5173 --out qa/out/<milestone> [options]
 //   --viewport 1280x720     page size (default 1280x720)
-//   --timeout 20000         max ms to wait for window.__QA__.ready (default 20000)
+//   --timeout 30000         max ms to wait for window.__QA__.ready === true (default 30000)
 //   --wait-ms 3000          settle time when the page has no __QA__ hook (default 3000)
 //   --shots 3               screenshots to take when the page has no __QA__.shots (default 3)
 //   --interval-ms 1000      gap between those screenshots (default 1000)
@@ -13,24 +14,26 @@
 //   --step-ms 100           time between sequence frames (uses __QA__.advance(ms) when present)
 //   --hold KEY              hold a key during the sequence (Playwright key name, e.g. KeyW, ArrowLeft)
 //   --press KEY             press a key once at the start of the sequence (e.g. Space)
+//   --budgets FILE          design/budgets.json: fail when drawCalls / triangles / textures exceed scene budgets
+//   --reloads N             leak test: call __QA__.reload() N times; fail if geometries/textures grow
 //   --gpu                   use the machine's GPU instead of SwiftShader (faster; less deterministic)
 //   --no-gray               skip the grayscale copy (<shot>_gray.png) written for every named shot
-//   --allow-errors          exit 0 even when console/page errors occurred
+//   --allow-errors          exit 0 even when checks failed
 // Requires `playwright` in the game project (npm i -D playwright; npx playwright install chromium).
-// Set CHROMIUM_PATH to use a specific Chromium binary.
+// CHROMIUM_PATH selects a specific Chromium binary if Playwright's own browser is not installed.
 //
-// Optional dev-only hook the game can expose to make captures deterministic and informative:
+// Dev-only hook the game can expose (all members optional except ready):
 //   window.__QA__ = {
-//     ready: true,                                   // set after assets loaded + first frame drawn
-//     stats: () => ({ drawCalls, triangles, geometries, textures }),  // e.g. from renderer.info
-//     state: () => ({ player: {x, y, z, hp}, enemies: 3, ... }),      // small JSON game state
-//     shots: { overview: async () => {...}, player: async () => {...} }, // named camera/state presets
-//     advance: async (ms) => {...},                  // step the fixed-timestep simulation
+//     ready: false,                                  // set true (synchronously) after load + first frame
+//     stats: () => ({ drawCalls, triangles, geometries, textures, programs }),  // e.g. renderer.info
+//     state: () => ({ player: {x, y, z, hp}, ... }), // small JSON game state for invariants
+//     shots: { gameplay: async () => {...}, ... },   // named camera/state presets, rendered on call
+//     advance: async (ms) => {...},                  // step the fixed-timestep simulation, then render
+//     reload: async () => {...},                     // unload + reload the main scene (leak test)
 //   }
-//
-// Image metrics are computed on a 320 px copy of each screenshot. They are evidence, not verdicts:
-// low lumaStd (flat contrast), low colorEntropyBits (few colors), high dominantColorShare (one color fills
-// the frame), low edgeDensity (little structure) and clipping flags argue against a high visual score.
+// Exit code 1 when: page/console errors, failed requests, a blank canvas, budgets exceeded, a leak,
+// or a fatal error. Image-metric flags are evidence for the critic, not failures by themselves.
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { createRequire } from 'node:module';
@@ -51,7 +54,7 @@ const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) =>
   return acc;
 }, []));
 if (!args.url || !args.out) {
-  console.error('usage: node capture.mjs --url URL --out DIR [--viewport WxH] [--sequence N] [--hold KeyW] [--gpu] ...');
+  console.error('usage: node capture.mjs --url URL --out DIR [--sequence N] [--hold KeyW] [--budgets design/budgets.json] [--reloads 5] [--gpu] ...');
   process.exit(2);
 }
 const [vw, vh] = String(args.viewport || '1280x720').split('x').map(Number);
@@ -71,14 +74,28 @@ try {
 
 const launchArgs = args.gpu
   ? ['--ignore-gpu-blocklist', '--enable-gpu-rasterization']
-  : ['--use-gl=angle', '--use-angle=swiftshader-webgl', '--enable-unsafe-swiftshader']; // documented Chromium software-WebGL switches
-const executablePath = process.env.CHROMIUM_PATH || (existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined);
-const browser = await chromium.launch({ args: launchArgs, ...(executablePath ? { executablePath } : {}) });
+  : ['--use-gl=angle', '--use-angle=swiftshader-webgl', '--enable-unsafe-swiftshader']; // documented software-WebGL switches
+async function launch() {
+  if (process.env.CHROMIUM_PATH) return chromium.launch({ args: launchArgs, executablePath: process.env.CHROMIUM_PATH });
+  try {
+    return await chromium.launch({ args: launchArgs });           // Playwright's own matching browser
+  } catch (e) {
+    const fallback = '/opt/pw-browsers/chromium';                  // preinstalled in some cloud containers
+    if (/Executable doesn't exist/.test(String(e)) && existsSync(fallback)) {
+      console.error(`note: Playwright's browser is not installed; using ${fallback}`);
+      return chromium.launch({ args: launchArgs, executablePath: fallback });
+    }
+    throw e;
+  }
+}
+const browser = await launch();
 const page = await browser.newPage({ viewport: { width: vw, height: vh } });
 const tool = await browser.newPage(); // blank page for image math, isolated from the game
 
 const report = { url: args.url, viewport: [vw, vh], renderer: args.gpu ? 'gpu' : 'swiftshader', consoleErrors: [],
-  consoleWarnings: [], pageErrors: [], failedRequests: [], hook: false, fps: null, shots: [], sequence: [] };
+  consoleWarnings: [], pageErrors: [], failedRequests: [], checks: [], hook: false, fps: null, shots: [], sequence: [] };
+const fail = (msg) => report.checks.push({ level: 'FAIL', msg });
+const warn = (msg) => report.checks.push({ level: 'WARN', msg });
 page.on('console', (m) => {
   const where = m.location()?.url; // resource-load errors carry the failing URL here
   if (m.type() === 'error') report.consoleErrors.push(where ? `${m.text()} [${where}]` : m.text());
@@ -102,6 +119,7 @@ const hookCall = (fn) => page.evaluate((f) => {
     return s && s.length > 4000 ? { truncated: s.slice(0, 4000) } : v;
   } catch (e) { return { error: String(e) }; }
 }, fn);
+const hasHook = (fn) => page.evaluate((f) => typeof window.__QA__?.[f] === 'function', fn);
 
 async function imageMetrics(png) {
   return tool.evaluate(async (b64) => {
@@ -144,6 +162,7 @@ function visualFlags(m) {
   if (m.clippedShadows > 0.15) f.push('crushed shadows (>15% pure black)');
   return f;
 }
+const isBlank = (m) => m.lumaStd < 3 && m.dominantColorShare > 0.97;
 async function grayCopy(png, file) {  // value-structure check: does the scene still read without hue?
   const url = await tool.evaluate(async (b64) => {
     const im = new Image(); im.src = 'data:image/png;base64,' + b64; await im.decode();
@@ -161,15 +180,19 @@ async function grayCopy(png, file) {  // value-structure check: does the scene s
 async function shoot(file, gray = false) {
   const png = await page.screenshot({ path: file });
   const metrics = await imageMetrics(png);
+  const sha1 = createHash('sha1').update(png).digest('hex');
   const grayFile = gray && !args['no-gray'] ? await grayCopy(png, file.replace(/\.png$/, '_gray.png')) : undefined;
-  return { file, ...(grayFile ? { grayFile } : {}), metrics, flags: visualFlags(metrics) };
+  if (isBlank(metrics)) fail(`blank canvas in ${file} (nothing rendered)`);
+  return { file, sha1, ...(grayFile ? { grayFile } : {}), metrics, flags: visualFlags(metrics) };
 }
 
 try {
-  await page.goto(String(args.url), { waitUntil: 'load', timeout: num('timeout', 20000) });
+  await page.goto(String(args.url), { waitUntil: 'load', timeout: num('timeout', 30000) });
   report.hook = await page.evaluate(() => typeof window.__QA__ === 'object' && window.__QA__ !== null);
   if (report.hook) {
-    await page.waitForFunction(async () => (await window.__QA__.ready) === true, null, { timeout: num('timeout', 20000) });
+    // Synchronous predicate: Playwright does not await a Promise returned by the predicate.
+    await page.waitForFunction(() => window.__QA__?.ready === true, null, { timeout: num('timeout', 30000) })
+      .catch(() => { throw new Error(`window.__QA__.ready was not true within ${num('timeout', 30000)} ms`); });
   } else {
     await page.waitForTimeout(num('wait-ms', 3000));
   }
@@ -198,10 +221,37 @@ try {
     }
   }
 
+  // Budgets: compare the largest renderer counts seen across shots with design/budgets.json → scene.
+  if (args.budgets) {
+    const scene = JSON.parse(readFileSync(String(args.budgets), 'utf8')).scene || {};
+    const seen = (k) => Math.max(0, ...report.shots.map((s) => Number(s.stats?.[k]) || 0));
+    if (!report.shots.some((s) => s.stats)) warn('budgets given but the page exposes no __QA__.stats()');
+    else {
+      if (scene.draw_calls && seen('drawCalls') > scene.draw_calls) fail(`draw calls ${seen('drawCalls')} > budget ${scene.draw_calls}`);
+      if (scene.triangles_in_view && seen('triangles') > scene.triangles_in_view) fail(`triangles ${seen('triangles')} > budget ${scene.triangles_in_view}`);
+      if (scene.textures_live && seen('textures') > scene.textures_live) fail(`textures ${seen('textures')} > budget ${scene.textures_live}`);
+    }
+  }
+
+  // Leak test: geometries/textures must return to baseline after N reloads.
+  const reloads = num('reloads', 0);
+  if (reloads > 0) {
+    if (!(await hasHook('reload')) || !(await hasHook('stats'))) warn('leak test skipped: __QA__.reload() or stats() missing');
+    else {
+      const before = await hookCall('stats');
+      for (let i = 0; i < reloads; i++) { await page.evaluate(async () => { await window.__QA__.reload(); }); await frames(2); }
+      const after = await hookCall('stats');
+      report.leak = { reloads, before, after };
+      for (const k of ['geometries', 'textures']) {
+        if (Number(after?.[k]) > Number(before?.[k])) fail(`leak: ${k} ${before[k]} -> ${after[k]} after ${reloads} reloads`);
+      }
+    }
+  }
+
   const seqN = num('sequence', 0);
   if (seqN > 0) {
     const stepMs = num('step-ms', 100);
-    const hasAdvance = report.hook && await page.evaluate(() => typeof window.__QA__.advance === 'function');
+    const hasAdvance = report.hook && await hasHook('advance');
     await page.mouse.click(vw / 2, vh / 2); // focus the canvas so keyboard input reaches the game
     if (args.hold) await page.keyboard.down(String(args.hold));
     if (args.press) await page.keyboard.press(String(args.press));
@@ -215,6 +265,9 @@ try {
       report.sequence.push({ index: i, ...s, deterministic: hasAdvance, state: await hookCall('state') });
     }
     if (args.hold) await page.keyboard.up(String(args.hold));
+    if (seqN > 1 && new Set(report.sequence.map((s) => s.sha1)).size === 1) {
+      warn('all sequence frames are identical: nothing moved, or the capture is stale');
+    }
     // Contact sheet composed in the browser (no image libraries needed), frames numbered.
     const imgs = report.sequence.map((s) => readFileSync(s.file).toString('base64'));
     const cols = Math.min(4, imgs.length);
@@ -246,7 +299,9 @@ report.consoleWarnings = report.consoleWarnings.filter((t) => !isNoise(t));
 report.failedRequests = report.failedRequests.filter((t) => !isNoise(t));
 writeFileSync(join(outDir, 'capture_report.json'), JSON.stringify(report, null, 2));
 
-const errorCount = report.consoleErrors.length + report.pageErrors.length + report.failedRequests.length + (report.fatal ? 1 : 0);
+const failedChecks = report.checks.filter((c) => c.level === 'FAIL');
+const errorCount = report.consoleErrors.length + report.pageErrors.length + report.failedRequests.length
+  + failedChecks.length + (report.fatal ? 1 : 0);
 console.log(`capture: ${report.shots.length} shots, ${report.sequence.length} sequence frames -> ${outDir}`);
 console.log(`hook: ${report.hook ? 'window.__QA__ found' : 'none (timed captures only)'} | fps~${report.fps} (${report.renderer}; not a perf measurement under swiftshader)`);
 for (const s of report.shots) {
@@ -255,8 +310,10 @@ for (const s of report.shots) {
 }
 const last = report.shots.at(-1)?.stats;
 if (last) console.log(`stats: ${JSON.stringify(last)}`);
+if (report.leak) console.log(`leak test: ${JSON.stringify(report.leak.before)} -> ${JSON.stringify(report.leak.after)}`);
+for (const c of report.checks) console.log(`  ${c.level} ${c.msg}`);
 for (const t of [...report.pageErrors, ...report.consoleErrors].slice(0, 10)) console.log(`  ERROR ${t}`);
 for (const t of report.failedRequests.slice(0, 10)) console.log(`  FAILED REQUEST ${t}`);
 if (report.fatal) console.log(`  FATAL ${report.fatal}`);
-console.log(`VERDICT: ${errorCount ? 'FAIL' : 'PASS'} (${errorCount} errors, ${report.consoleWarnings.length} warnings)`);
+console.log(`VERDICT: ${errorCount ? 'FAIL' : 'PASS'} (${errorCount} failures, ${report.consoleWarnings.length + report.checks.length - failedChecks.length} warnings)`);
 process.exit(errorCount && !args['allow-errors'] ? 1 : 0);

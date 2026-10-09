@@ -45,7 +45,8 @@ window.__QA__ = {
     wide:     async () => { cameraRig.apply('wide'); game.render(); },
     hero:     async () => { cameraRig.apply('hero'); game.render(); },
   },
-  advance: async (ms) => { game.stepFixed(ms); game.render(); },   // N fixed steps, then one render
+  advance: async (ms) => { game.stepFixed(ms / 1000); game.render(); },   // fixed steps covering ms, then one render
+  reload: async () => { await game.reloadMainScene(); game.render(); },   // leak test: capture.mjs --reloads 5
 };
 ```
 
@@ -66,8 +67,8 @@ session's output.
 | **G0 Scaffold** | before the first feature | Game boots; QA mode exists; `qa/verify.sh` runs; `design/` state files exist | — |
 | **G1 Static** | every change | Typecheck 0 errors; lint 0 errors (incl. `max-lines`); layer rules 0 violations | tsc, ESLint, dependency-cruiser / GDScript warnings |
 | **G2 Logic** | every change to simulation code | Unit tests green. A bug fix ships with a test you **saw fail** before the fix | vitest / GUT / gdUnit4 / Unity EditMode |
-| **G3 Boot smoke** | every change, start of every session | 0 page errors, 0 console errors, 0 failed requests; `ready` within 30 s; canvas not blank; renderer counts within budget | `capture.mjs` / engine equivalent |
-| **G4 Playthrough** | each feature | Scripted input for N simulated seconds keeps invariants true (moved > X, no NaN transforms, never below the floor, objective reachable); after 5 scene reloads, geometry/texture counts return to baseline | `capture.mjs --sequence --hold`, `__QA__.state()` |
+| **G3 Boot smoke** | every change, start of every session | 0 page errors, 0 console errors, 0 failed requests; `ready` within 30 s; canvas not blank; renderer counts within budget | `capture.mjs --budgets design/budgets.json` (fails on errors, blank canvas, over-budget counts) / engine equivalent |
+| **G4 Playthrough** | each feature | Scripted input for N simulated seconds keeps invariants true (moved > X, no NaN transforms, never below the floor, objective reachable); after 5 scene reloads, geometry/texture counts return to baseline | `capture.mjs --sequence --hold`, `__QA__.state()`; leak test `capture.mjs --reloads 5` (needs `__QA__.reload`) |
 | **G5 Visual** | each visual milestone | The shot list renders; `art-critic` passes every scorecard threshold | `capture.mjs`, `render_views.py`, art-critic |
 | **G6 Real-GPU perf** | milestones | p95 frame time within budget on the target device class, measured headed on real hardware and labelled with the device | stats-gl / Chrome DevTools trace / Godot monitors |
 | **G7 Release review** | before "done" | `art-critic` and `playtest-qa` PASS on the same build revision; every feature in `features.json` has evidence | both critics |
@@ -132,10 +133,14 @@ These are heuristics. A flag argues against a high visual score, and the critic 
 explicitly. A stylized minimal look can legitimately trip one flag. Several flags on gameplay shots
 almost always mean "empty, flat, unlit".
 
-The same JSON records a blank-canvas signature:
-- A very low `lumaStd`, plus a dominant share near 1, means nothing rendered.
-- Identical hashes on consecutive shots after a change that should be visible mean the capture is
-  stale.
+`capture.mjs` also guards against false evidence:
+- **Blank canvas:** `lumaStd` < 3 with one color filling > 97% of the frame means nothing rendered. It
+  fails the run (exit 1).
+- **Stale captures:** each image's sha1 is recorded. Identical sequence frames are flagged, meaning
+  nothing moved or the capture is stale. Compare hashes across iterations before trusting "it changed".
+
+For screenshots from Godot, Unity or Blender renders, `scripts/blender/image_metrics.py` computes the
+same metrics and flags, and writes grayscale copies with `--gray`.
 
 ## 7. Performance and memory
 
@@ -170,8 +175,10 @@ Every asset delivered by `asset-builder` arrives with:
 Animation QA:
 - Run `render_views.py --anim <clip>` for each clip to get a pose strip.
 - Use `capture.mjs --sequence` for in-game motion.
-- Check the strip against `animation.md` §7: contact poses, arcs, no foot sliding, no popping, loop
-  closure (the first and last pose match), no bind-pose leaks.
+- Check the strip against `animation.md` §8: contact poses, arcs, no foot sliding, no popping, loop
+  closure, no bind-pose leaks.
+- Run `clip_report.py MODEL` for the numbers: loop-point pops, root speed, the ground speed in-place
+  clips imply, and the foot-skate ratio of root-motion clips.
 
 ## 9. Deterministic backstops (optional)
 
@@ -179,13 +186,14 @@ For long autonomous runs, block "done" mechanically with a project-level Stop ho
 game repo's `.claude/settings.json`, not in the plugin, so it only runs where it belongs:
 
 ```json
-{ "hooks": { "Stop": [ { "hooks": [ { "type": "command", "command": "bash qa/stop-gate.sh", "timeout": 300 } ] } ] } }
+{ "hooks": { "Stop": [ { "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR\"/qa/stop-gate.sh", "timeout": 300 } ] } ] } }
 ```
 
 ```bash
 #!/usr/bin/env bash
 # qa/stop-gate.sh: exit 2 blocks the stop and shows stderr to Claude
 input=$(cat)
+cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0                         # hooks may run from another directory
 echo "$input" | grep -q '"stop_hook_active": *true' && exit 0   # never block twice in a row
 [ -f qa/verify.sh ] || exit 0
 if ! out=$(bash qa/verify.sh --quick 2>&1); then

@@ -34,7 +34,8 @@ Read `SKILL_DIR/references/qa-protocol.md` (gates G1–G6) and, for the engine,
 
 ## Procedure
 
-1. **Fresh evidence:** run `bash qa/verify.sh` yourself and quote its summary. If it doesn't exist or
+1. **Fresh evidence:** run `bash qa/verify.sh` yourself and quote its summary. It finds the skill's
+   scripts through `qa/.game-studio-scripts` or the standard install folders. If it doesn't exist or
    fails to start, that alone fails G0.
 2. **Boot smoke (G3):** 0 page/console errors and 0 failed requests; ready within 30 s; canvas not
    blank (check the image metrics); renderer counts within budget.
@@ -50,8 +51,8 @@ Read `SKILL_DIR/references/qa-protocol.md` (gates G1–G6) and, for the engine,
    - the objective is reachable.
 
    Try the obvious abuses: hold two directions, spam the action key, pause and resume, reload.
-4. **Leak test:** load and unload the main scene 5 times through the QA hook or a test. Geometry and
-   texture counts must return to baseline.
+4. **Leak test:** `capture.mjs --reloads 5` (it needs `__QA__.reload`), or load and unload the main
+   scene 5 times in an engine test. Geometry and texture counts must return to baseline.
 5. **Frame-rate independence:** where the QA hook allows stepping at different dt (1/30, 1/60, 1/144),
    compare positions at t = 2 s. Otherwise grep the code for per-frame constant lerps
    (`lerp(..., 0.1)`), movement without dt, and `Math.random` in feel paths.

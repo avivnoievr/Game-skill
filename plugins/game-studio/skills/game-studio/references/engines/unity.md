@@ -61,6 +61,7 @@ public static class QaCapture {
 ```
 
 - In Play Mode, `ScreenCapture.CaptureScreenshot(path)` is the simplest alternative.
+- Run `image_metrics.py <shots> --gray` on the PNGs for image metrics and grayscale copies.
 - Running with `-nographics` disables rendering, so captures need a graphics device.
 - On a desktop, CoplayDev unity-mcp or Unity's MCP can take editor screenshots.
 

@@ -190,7 +190,7 @@ starting points. Pass explicit flags when the project's budgets differ.
   render.
 
 **UVs:**
-- `bpy.ops.uv.smart_project(angle_limit≈66°, island_margin=0.02)` works headless, using
+- `bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=0.02)` (radians) works headless, using
   `temp_override` plus edit mode.
 - Hard edges are UV seams on normal-mapped assets.
 - An image-textured material without a UV map exports broken. The inspector FAILs it.
@@ -236,9 +236,9 @@ bpy.ops.export_scene.gltf(filepath=out, export_format='GLB', use_selection=True,
 ```bash
 blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/inspect_model.py" -- \
   assets/<id>/<id>.glb --preset web-prop --expect-height 0.9 --json assets/<id>/inspect.json
-blender -b --factory-startup -P "$SKILL_DIR/scripts/blender/render_views.py" -- \
+blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/render_views.py" -- \
   assets/<id>/<id>.glb --out assets/<id>/review --scale-ref            # form: workbench (fast)
-blender -b --factory-startup -P "$SKILL_DIR/scripts/blender/render_views.py" -- \
+blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/render_views.py" -- \
   assets/<id>/<id>.glb --out assets/<id>/look --engine eevee --views q_fl,q_fr   # materials
 node "$SKILL_DIR/scripts/web/check_gltf.mjs" assets/<id>/<id>.glb --max-tris 3000 --max-texture 1024
 ```
@@ -278,7 +278,7 @@ can be reverted. Compare the before/after sheets.
 
 API drift is the #1 crash cause in LLM-written Blender code. Check `bpy.app.version` and read the
 installed version's API when in doubt.
-- EEVEE's engine id is `BLENDER_EEVEE_NEXT` in 4.2–4.4 and `BLENDER_EEVEE` in 5.x.
+- EEVEE's engine id is `BLENDER_EEVEE_NEXT` in 4.2–4.5 and `BLENDER_EEVEE` in 5.x.
 - `mesh.use_auto_smooth` was removed in 4.1. Use the "Smooth by Angle" modifier or
   `bpy.ops.object.shade_auto_smooth()`.
 - Principled BSDF sockets were renamed in 4.0: `Subsurface Weight`, `Specular IOR Level`,

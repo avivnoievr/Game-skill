@@ -62,13 +62,17 @@ def parse():
     return a
 
 
-def engine_id(name):
-    items = {i.identifier for i in bpy.types.RenderSettings.bl_rna.properties["engine"].enum_items}
+def set_engine(scene, name):
+    """EEVEE is BLENDER_EEVEE_NEXT in Blender 4.2-4.5 and BLENDER_EEVEE in 5.x (and before 4.2)."""
     if name == "workbench":
-        return "BLENDER_WORKBENCH"
-    if name == "cycles":
-        return "CYCLES"
-    return "BLENDER_EEVEE" if "BLENDER_EEVEE" in items else "BLENDER_EEVEE_NEXT"
+        scene.render.engine = "BLENDER_WORKBENCH"
+    elif name == "cycles":
+        scene.render.engine = "CYCLES"
+    else:
+        try:
+            scene.render.engine = "BLENDER_EEVEE_NEXT" if (4, 2) <= bpy.app.version < (5, 0) else "BLENDER_EEVEE"
+        except TypeError:
+            scene.render.engine = "BLENDER_EEVEE"
 
 
 def set_world(color, strength=1.0):
@@ -88,7 +92,7 @@ def set_world(color, strength=1.0):
 def setup_render(a, has_textures):
     scene = bpy.context.scene
     r = scene.render
-    r.engine = engine_id(a.engine)
+    set_engine(scene, a.engine)
     r.resolution_x = r.resolution_y = a.size
     r.resolution_percentage = 100
     r.film_transparent = False
@@ -151,11 +155,12 @@ def add_ground(lo, hi):
 def add_scale_ref(lo, hi):
     """1.8 m tall, 0.45 m wide figure placed 0.4 m to the right of the asset."""
     h, w = 1.8, 0.45
-    bpy.ops.mesh.primitive_cylinder_add(radius=w / 2, depth=h - w,
-                                        location=(hi.x + 0.4 + w / 2, (lo.y + hi.y) / 2, lo.z + h / 2))
+    r = w / 2
+    x, y = hi.x + 0.4 + r, (lo.y + hi.y) / 2
+    bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=h - r, location=(x, y, lo.z + (h - r) / 2))
     body = bpy.context.object
     body.name = "gs_scale_ref_1.8m"
-    bpy.ops.mesh.primitive_uv_sphere_add(radius=w / 2, location=(body.location.x, body.location.y, lo.z + h - w / 2))
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=r, location=(x, y, lo.z + h - r))
     head = bpy.context.object
     mat = bpy.data.materials.new("gs_scale_ref_mat")
     mat.diffuse_color = (0.9, 0.35, 0.1, 1.0)
@@ -285,6 +290,9 @@ def main():
     a = parse()
     load_model(a.model)
     os.makedirs(a.out, exist_ok=True)
+    for old in os.listdir(a.out):  # never review a stale image as fresh
+        if old.endswith(".png") or old == "views.json":
+            os.remove(os.path.join(a.out, old))
     scene = bpy.context.scene
     if a.frame is not None:
         scene.frame_set(a.frame)

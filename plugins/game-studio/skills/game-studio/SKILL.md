@@ -101,9 +101,9 @@ indie game in the same genre.
 |---|---|---|
 | **0 · Intake** | `design/brief.md`, from at most 5 questions: genre/camera, engine/platform, core loop, references, scope, rigor level `prototype \| standard \| premium` | The user confirms the brief |
 | **1 · Pre-production** | Art bible: offer 2–3 written directions with palettes, the user picks, write `design/art-bible.md` (`references/art-direction.md`). Architecture: an ADR, the folder skeleton, the QA mode/hook, `qa/verify.sh` and `CLAUDE.md` (`references/architecture.md`). Also `design/features.json`, `budgets.json`, `assets.json` | The user approves the art direction. `art-critic` reviews the art bible (APPROVE). G0 passes |
-| **2 · Vertical slice** | You build the greybox core loop and the QA hook while up to 3 `asset-builder`s make the hero assets, plus the `animator` if needed | Each asset gets an `art-critic` acceptance pass (≤ 2 fix rounds) |
+| **2 · Vertical slice** | You build the greybox core loop and the QA hook while up to 3 `asset-builder`s make the hero assets, plus the `animator` if needed | `art-critic` accepts assets **in batches**: one critic run per builder batch, reusing the builders' fresh renders (≤ 2 fix rounds) |
 | **3 · Integration & look** | Assets in the scene, in this order: forms → materials → lighting → post/VFX → UI → feel | `art-critic` and `playtest-qa` run **in parallel on the same revision** and both PASS. Then a user checkpoint with proof: capture sheet or video |
-| **4 · Expansion** | More content, one milestone at a time | The same gates per milestone; narrow edits get targeted checks only |
+| **4 · Expansion** | More content, one milestone at a time | Gates per the rigor level (`references/qa-protocol.md` §3); narrow edits get targeted checks only |
 | **5 · Release** | Final evidence pack: shots, metrics, feature evidence, licenses | G7: both critics PASS, and every feature has evidence |
 
 Gate rules (`references/orchestration.md` §6, `references/qa-protocol.md` §3):
@@ -128,8 +128,10 @@ Gate rules (`references/orchestration.md` §6, `references/qa-protocol.md` §3):
 
 **Every session, start the same way:**
 1. Read `progress.md`.
-2. Run `qa/verify.sh --quick` and the boot smoke.
-3. Only then start new work.
+2. Write the absolute `SKILL_DIR/scripts` path to `qa/.game-studio-scripts`. `qa/verify.sh` reads it,
+   and the file stays gitignored together with `qa/out/`.
+3. Run `qa/verify.sh --quick` and the boot smoke.
+4. Only then start new work.
 
 After a context compaction, re-read `progress.md` and the art bible before continuing.
 
@@ -145,7 +147,7 @@ After a context compaction, re-read `progress.md` and the art bible before conti
 | Project structure, game loop, patterns, keeping code clean | `references/architecture.md` |
 | QA mode, gates, evidence, visual review, performance | `references/qa-protocol.md` |
 | Tools, Blender/engine CLIs, optional MCP servers, paid 3D generation | `references/toolchain.md` |
-| Engine specifics | `references/engines/threejs.md` · `godot.md` · `unity.md` |
+| Engine specifics | `references/engines/threejs.md` · `godot.md` · `unity.md`. Unreal has no guide here: use Epic's official Claude Code plugin (`toolchain.md` §4) with the general references |
 
 ## Scripts (tested headless; details in `references/toolchain.md` §2)
 
@@ -153,9 +155,11 @@ Write the absolute `SKILL_DIR` path into commands; shell variables do not persis
 
 ```bash
 blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/inspect_model.py" -- MODEL --preset web-prop --expect-height 1.0
-blender -b --factory-startup -P "$SKILL_DIR/scripts/blender/render_views.py" -- MODEL --out DIR --scale-ref [--engine eevee] [--anim Walk]
+blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/render_views.py" -- MODEL --out DIR --scale-ref [--engine eevee] [--anim Walk]
+blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/clip_report.py" -- MODEL      # animation numbers
+blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/image_metrics.py" -- shots/*.png --gray   # any engine
 node "$SKILL_DIR/scripts/web/check_gltf.mjs" MODEL.glb --max-tris 3000 --max-texture 1024
-node "$SKILL_DIR/scripts/web/capture.mjs" --url "http://localhost:5173/?qa=1" --out qa/out/m1 --sequence 8 --hold KeyW
+node "$SKILL_DIR/scripts/web/capture.mjs" --url "http://localhost:5173/?qa=1" --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8 --hold KeyW
 ```
 
 No Blender installed? Use `pip install bpy` (Python 3.13) and run the same scripts with `python`. The

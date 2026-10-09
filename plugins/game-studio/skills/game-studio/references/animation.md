@@ -140,13 +140,14 @@ feet move.
   - The 0.5–5 s values in library demos are not gameplay values.
 - **three.js:**
   ```ts
-  next.enabled = true; next.setEffectiveTimeScale(1); next.setEffectiveWeight(1); next.time = 0;
+  next.reset().setEffectiveTimeScale(1).setEffectiveWeight(1).play();   // a clip must be playing to fade in
   current.crossFadeTo(next, 0.2, true);               // warp=true matches cycle speeds
   mixer.update(dt);                                   // every frame, real delta
   ```
   - For cycles, crossfade at the loop boundary (the mixer 'loop' event).
   - Additive layers (breathing, recoil) use `AnimationUtils.makeClipAdditive`.
-  - `THREE.Clock` is deprecated since r183; use `THREE.Timer`.
+  - `THREE.Clock` is deprecated since r183; use `THREE.Timer` (older versions:
+    `import { Timer } from 'three/addons/misc/Timer.js'`).
 - **Godot:** `AnimationTree` with a StateMachine.
   - Transitions use Xfade Time and a non-linear Xfade Curve.
   - BlendSpace1D/2D for locomotion; OneShot with filters for upper-body actions.
@@ -168,8 +169,14 @@ feet move.
 2. **In-place vs. root motion:** decide per clip at download or export, and match the engine-side
    approach (§5).
 3. **Blender → glTF export traps:**
-   - An action that is neither active nor stashed on an NLA track **is not exported**. Put each
-     action on its own track; the track name becomes the glTF animation name.
+   - With a single armature, the exporter option "Export all Armature Actions" (on by default) exports
+     **every** action that fits the armature, including stray test actions. Delete unused actions first,
+     or turn the option off.
+   - Otherwise, an action ships only if it is active or on an NLA track. Use one action per track; the
+     track name becomes the glTF animation name.
+   - Actions with no users are not even saved in the .blend unless they have a fake user.
+   - After export, compare the clip list with the design: `inspect_model.py` lists the actions, and
+     `check_gltf.mjs` counts the animations.
    - Since Blender 4.4, actions are slotted, and tracks merge by action, not by name.
    - Enable "Reset pose bones between actions" when not every bone is keyed in every clip.
    - Keep sampling on. Unsampled export can produce wrong curves.
@@ -199,12 +206,17 @@ A still image cannot prove animation quality. Every check below uses motion evid
    - transitions without pops;
    - feet planted while in contact;
    - camera smoothness.
-3. **Foot skate (numeric):** log world-space foot positions per frame. Flag frames where a foot lower
-   than 5 cm slides more than 2.5 cm horizontally, and report the skate ratio over contact frames.
-   Thresholds are heuristics; tune per game.
+3. **Numbers per clip:** `clip_report.py MODEL [--feet L,R]` measures:
+   - pops at the loop point (the jump back to the first frame compared with a normal frame step);
+   - root speed, in place vs. root motion;
+   - the **ground speed** an in-place clip implies (gameplay must move the character at this speed);
+   - the foot-skate ratio of root-motion clips: planted feet moving more than 2.5 cm per frame at
+     30 fps, at human scale.
+
+   Thresholds are heuristics; tune them per game.
 4. **Pops:** per-bone angular velocity spikes above ~3× the clip median inside a transition window.
-5. **Loop seam:** for looping clips, the first and last pose (and their velocities) match within a
-   tolerance.
+5. **Loop seam:** `clip_report.py` FAILs a looping clip whose loop-point jump is more than 5× a
+   normal frame step.
 6. **Bind-pose leaks:** no visible frame equals the bind pose after spawn, load or transitions.
 7. **Frame-rate independence:** run the simulation at fixed dt 1/30, 1/60 and 1/144. Camera, follow
    and damper positions at t = 2 s must match within epsilon. Search for `lerp(` with a constant and

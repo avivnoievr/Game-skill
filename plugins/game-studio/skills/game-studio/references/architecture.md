@@ -187,7 +187,7 @@ res://
 ```markdown
 # <Game> — project memory
 Engine: <three.js r1xx + Vite | Godot 4.x | Unity 6>  ·  Art bible: design/art-bible.md  ·  Progress: progress.md
-Skill: game-studio (scripts at <absolute path>/scripts — export GAME_STUDIO_SCRIPTS=<that path>)
+Skill: game-studio. At session start, write the absolute SKILL_DIR/scripts path to qa/.game-studio-scripts (gitignored)
 
 ## Commands
 - dev: npm run dev · verify (all gates): bash qa/verify.sh · quick: bash qa/verify.sh --quick

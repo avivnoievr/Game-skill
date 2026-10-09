@@ -32,6 +32,12 @@ def script_args():
     return sys.argv[1:]
 
 
+def die(msg, code=2):
+    """Usage/load errors exit 2, so that exit 1 always means a FAIL verdict."""
+    print(f"error: {msg}", file=sys.stderr)
+    sys.exit(code)
+
+
 def reset_scene():
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
@@ -40,13 +46,13 @@ def load_model(path):
     """Open a .blend or import any supported format into an empty scene."""
     path = os.path.abspath(path)
     if not os.path.isfile(path):
-        raise SystemExit(f"error: file not found: {path}")
+        die(f"file not found: {path}")
     ext = os.path.splitext(path)[1].lower()
     if ext == ".blend":
         bpy.ops.wm.open_mainfile(filepath=path)
         return
     if ext not in IMPORTERS:
-        raise SystemExit(f"error: unsupported format '{ext}' (supported: .blend {' '.join(sorted(IMPORTERS))})")
+        die(f"unsupported format '{ext}' (supported: .blend {' '.join(sorted(IMPORTERS))})")
     reset_scene()
     IMPORTERS[ext](path)
 

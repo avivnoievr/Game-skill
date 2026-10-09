@@ -51,7 +51,8 @@ Read `SKILL_DIR/references/modeling.md` completely before starting. Read
    5. bevels and weighted normals;
    6. materials and UVs.
 4. **Inspect:**
-   `inspect_model.py <model> --preset <class> --expect-height <m> --json assets/<id>/inspect.json`.
+   `inspect_model.py <model> --preset <inspect_preset of the asset's class in design/budgets.json>
+   --expect-height <m> --json assets/<id>/inspect.json`.
    Fix every FAIL. A WARN stays only with a written reason.
 5. **Look at it:** `render_views.py <model> --out assets/<id>/review --scale-ref`. Open
    `contact_sheet.png`. Judge it in the correction-priority order (`modeling.md` §9):

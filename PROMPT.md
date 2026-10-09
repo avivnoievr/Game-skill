@@ -12,7 +12,7 @@ With the plugin installed, the skill is `/game-studio:game-studio`. With the pro
 ## A. Existing game (start here if you already have a game in progress)
 
 ```text
-Use the game-studio skill for all work on this game. Load it first (/game-studio, or /game-studio:game-studio with the plugin), read its SKILL.md completely, and treat it as this project's standard.
+Use the game-studio skill for all work on this game. Load it first (/game-studio, or /game-studio:game-studio with the plugin) and follow it as this project's standard.
 
 Context: I'm building a 3D game with you. So far the visuals look amateur and AI-generated, and the 3D models are poor. I need intentional, professional art direction, game-ready models, good animation, a clean codebase, and strict quality control. Mediocre results count as failure on this project. I would rather hear an honest "this isn't good yet" than a claim that it's fine.
 
@@ -29,7 +29,7 @@ Rules for the whole project: no claim without evidence from this session; look a
 ## B. New game
 
 ```text
-Use the game-studio skill for all work on this game. Load it first (/game-studio, or /game-studio:game-studio with the plugin), read its SKILL.md completely, and treat it as this project's standard.
+Use the game-studio skill for all work on this game. Load it first (/game-studio, or /game-studio:game-studio with the plugin) and follow it as this project's standard.
 
 I want to build a new 3D game: <one paragraph: the idea, genre and camera, engine (three.js / Godot / Unity), target platform, references you like>.
 
@@ -43,7 +43,7 @@ Quality bar: a shipped indie game in this genre. Mediocre results count as failu
 ## א. משחק קיים (מתחילים כאן אם כבר יש לך משחק בעבודה)
 
 ```text
-השתמש בסקיל game-studio לכל העבודה על המשחק הזה. טען אותו קודם (/game-studio, או /game-studio:game-studio אם הותקן כפלאגין), קרא את ה-SKILL.md שלו במלואו, והתייחס אליו כסטנדרט של הפרויקט.
+השתמש בסקיל game-studio לכל העבודה על המשחק הזה. טען אותו קודם (/game-studio, או /game-studio:game-studio אם הותקן כפלאגין) ופעל לפיו כסטנדרט של הפרויקט.
 
 הקשר: אני בונה איתך משחק תלת-ממדי. עד עכשיו העיצוב נראה חובבני ו"עשוי ב-AI", והמודלים התלת-ממדיים חלשים. אני צריך כיוון אמנותי מקצועי ומכוון, מודלים מוכנים למשחק, אנימציה איכותית, קוד נקי ובקרת איכות קפדנית. תוצאה בינונית נחשבת כישלון בפרויקט הזה. אני מעדיף לשמוע "זה עוד לא טוב" בכנות מאשר טענה שהכול בסדר.
 
@@ -60,7 +60,7 @@ Quality bar: a shipped indie game in this genre. Mediocre results count as failu
 ## ב. משחק חדש
 
 ```text
-השתמש בסקיל game-studio לכל העבודה על המשחק הזה. טען אותו קודם (/game-studio, או /game-studio:game-studio אם הותקן כפלאגין), קרא את ה-SKILL.md שלו במלואו, והתייחס אליו כסטנדרט של הפרויקט.
+השתמש בסקיל game-studio לכל העבודה על המשחק הזה. טען אותו קודם (/game-studio, או /game-studio:game-studio אם הותקן כפלאגין) ופעל לפיו כסטנדרט של הפרויקט.
 
 אני רוצה לבנות משחק תלת-ממדי חדש: <פסקה אחת: הרעיון, הז'אנר והמצלמה, המנוע (three.js / Godot / Unity), הפלטפורמה, משחקים שאתה אוהב כרפרנס>.
 

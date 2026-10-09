@@ -143,7 +143,7 @@ Engine code for this recipe: `engines/threejs.md`, `engines/godot.md`, `engines/
   - collision handling so walls never cut between the camera and the player.
 - **Smoothing must be frame-rate independent:** `x = lerp(x, target, 1 - exp(-ln2 · dt / halfLife))`.
   A fixed `lerp(x, target, 0.1)` per frame behaves differently at 30, 60 and 144 FPS.
-- Shake is applied on top of the follow camera, never to the simulated body (`animation.md` §4).
+- Shake is applied on top of the follow camera, never to the simulated body (`animation.md` §3).
 - **Composition:** the player, the immediate threat or reward, and the route must stay visible.
   Check mobile aspect ratios separately when they're a target.
 
@@ -232,7 +232,7 @@ Fixed camera bookmarks, the same every time:
 
 Check four variants of each:
 1. **Color:** the real look.
-2. **Grayscale:** `capture.mjs` writes `*_gray.png` automatically. This tests the value structure.
+2. **Grayscale:** `capture.mjs` writes `*_gray.png` automatically (other engines: `image_metrics.py --gray`). This tests the value structure.
 3. **Silhouette:** gameplay-relevant objects flat black on a light background. This tests shape
    readability. Implement it as a `__QA__.shots` entry (`engines/threejs.md` §4).
 4. **Post-off:** without the composer. This tests that forms, materials and lighting carry the scene

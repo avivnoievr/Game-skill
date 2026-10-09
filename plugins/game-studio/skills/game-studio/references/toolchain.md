@@ -23,9 +23,11 @@ Contents: 1. Principles · 2. Bundled scripts · 3. Essential tools · 4. Option
 | Script | Does | Run |
 |---|---|---|
 | `blender/inspect_model.py` | Game-readiness report: tris, materials, textures, texel density, flipped normals, non-manifold, loose geometry, UVs, negative/unapplied scale, units, pivot, rig/skin limits, actions. Exit 1 on FAIL | `blender -b --factory-startup --python-exit-code 1 -P inspect_model.py -- MODEL --preset web-prop --expect-height 1.0` |
-| `blender/render_views.py` | Review renders: front/right/back/left/top (ortho), two 3/4 views, silhouette, wireframe overlay, optional 1.8 m scale figure, pose strip of an action, contact sheet | `blender -b --factory-startup -P render_views.py -- MODEL --out DIR [--engine workbench\|eevee\|cycles] [--scale-ref] [--anim Walk]` |
+| `blender/render_views.py` | Review renders: front/right/back/left/top (ortho), two 3/4 views, silhouette, wireframe overlay, optional 1.8 m scale figure, pose strip of an action, contact sheet | `blender -b --factory-startup --python-exit-code 1 -P render_views.py -- MODEL --out DIR [--engine workbench\|eevee\|cycles] [--scale-ref] [--anim Walk]` |
+| `blender/clip_report.py` | Numeric animation QA per clip: loop-point pops, root speed, implied ground speed for in-place clips, foot-skate ratio. Exit 1 on FAIL | `blender -b --factory-startup --python-exit-code 1 -P clip_report.py -- MODEL [--feet L,R]` |
+| `blender/image_metrics.py` | The same objective image metrics as `capture.mjs`, for screenshots from any engine; `--gray` writes grayscale copies. Exit 1 on a blank image | `blender -b --factory-startup --python-exit-code 1 -P image_metrics.py -- shots/*.png --gray` |
 | `web/check_gltf.mjs` | Khronos glTF-Validator + budgets (tris, draw calls, materials, texture size, file size) | `node check_gltf.mjs MODEL.glb --max-tris 5000 --max-texture 1024` |
-| `web/capture.mjs` | Runs a web game in headless Chromium: screenshots, console/page errors, failed requests, renderer stats, frame sequence + contact sheet for motion review | `node capture.mjs --url http://localhost:5173 --out qa/captures/m1 --sequence 8` |
+| `web/capture.mjs` | Runs a web game in headless Chromium: screenshots + grayscale copies + image metrics, console/page errors, failed requests, blank-canvas check, renderer stats vs budgets, scene-reload leak test, frame sequence + contact sheet | `node capture.mjs --url http://localhost:5173 --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8` |
 
 All Blender scripts also run with the PyPI module: `python inspect_model.py MODEL ...`. They accept
 `.glb .gltf .fbx .obj .stl .ply .usd* .blend`.
@@ -33,12 +35,13 @@ All Blender scripts also run with the PyPI module: `python inspect_model.py MODE
 ## 3. Essential tools (work in cloud containers and on desktops)
 
 **Blender, headless.** Use one of:
-- Installed Blender: `blender -b --factory-startup -P script.py --python-exit-code 1 -- args`.
-  `--python-exit-code 1` turns Python exceptions into a failing exit code. Arguments after `--` go to
+- Installed Blender: `blender -b --factory-startup --python-exit-code 1 -P script.py -- args`.
+  `--python-exit-code 1` turns Python exceptions into a failing exit code. It must come **before** `-P`,
+  because Blender applies arguments in order. Arguments after `--` go to
   the script.
-- When no Blender is installed, or download.blender.org is unreachable: `python3.13 -m venv .venv-blender &&
-  .venv-blender/bin/pip install bpy==5.2.2`. The wheel is about 400 MB and needs Python 3.13. Check the
-  wheel tags on PyPI for other versions. Then run `.venv-blender/bin/python script.py args`. In the bpy
+- When no Blender is installed, or download.blender.org is unreachable: `python3.13 -m venv ~/.venv-blender &&
+  ~/.venv-blender/bin/pip install bpy==5.2.2`. Create it outside the game repo. The wheel is about 400 MB and needs Python 3.13. Check the
+  wheel tags on PyPI for other versions. Then run `~/.venv-blender/bin/python script.py args`. In the bpy
   module, `import bpy` must come before `import bmesh` or `mathutils`.
 - In a bare Linux container, EEVEE and Workbench need Mesa EGL: `apt-get install -y libegl1
   libegl-mesa0 libgl1-mesa-dri`. Cycles CPU works without it. `EGL_BAD_MATCH` lines in the log are
@@ -95,6 +98,7 @@ montage shot_*.png -tile 3x -geometry +4+4 qa/contact.png    # ImageMagick 6
 | Web perf traces, Lighthouse, console with source maps | **Chrome DevTools MCP** (Apache-2.0) | `claude mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest`. Add `--slim --headless` for routine checks, and `--no-usage-statistics --no-performance-crux` |
 | Godot editor screenshots, test runs, GDScript validation | `hi-godot/godot-ai` (MIT, Godot 4.7+, editor plugin) | Per its README; set `GODOT_AI_DISABLE_TELEMETRY=true` |
 | Unity editor control, tests, profiling | `CoplayDev/unity-mcp` (MIT), or Unity's official MCP (beta, Unity 6+, AI Assistant package) | Per their docs. Use tool groups to limit context |
+| Engine conventions from the vendor | Unity's official agent plugin (`Unity-Technologies/unity-agent-plugin`) and Epic's `unreal-engine-skills-for-claude-code`, both listed in Anthropic's official plugin marketplace | `/plugin` → browse the official marketplace. Their text is under vendor licenses; use them alongside this skill |
 
 Rules:
 - Run only one Blender MCP at a time, because both default to port 9876.

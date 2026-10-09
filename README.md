@@ -33,7 +33,8 @@ plugins/game-studio/
                                         architecture · qa-protocol · toolchain · engines/{threejs,godot,unity}
     templates/                          brief · art-bible · scorecard · features.json · budgets.json
                                         assets.json · progress · LICENSES · verify.sh
-    scripts/blender/                    inspect_model.py · render_views.py (headless Blender or `pip install bpy`)
+    scripts/blender/                    inspect_model.py · render_views.py · clip_report.py · image_metrics.py
+                                        (headless Blender or `pip install bpy`)
     scripts/web/                        capture.mjs (Playwright) · check_gltf.mjs (Khronos validator)
 PROMPT.md                               activation prompts (English + Hebrew)
 install.sh / install.ps1                copy the skill + agents into a project (no plugin system needed)
@@ -91,11 +92,20 @@ Then open a new Claude Code session in the game project and paste a prompt from 
   - console/page error capture;
   - the `__QA__` hook (shots, stats, state, deterministic `advance`);
   - held-key sequences, grayscale copies, image metrics.
+- `capture.mjs`, in both directions:
+  - it waits for a late `ready`;
+  - it fails when the game is never ready, the canvas is blank, counts are over budget, or a scene
+    reload leaks geometry;
+  - it passes a healthy game.
+- `clip_report.py`: passes the Fox clips; FAILs a clip with a deliberate pop at the loop point.
+- `image_metrics.py`: run on Godot, web and Blender images (grayscale copies written).
 - `check_gltf.mjs`: Khronos validator and budget checks.
 - `templates/verify.sh`: a minimal Vite + TypeScript + three r186 game, in both its pass and fail paths.
 - The three.js reference snippets typecheck against three r186 under strict TypeScript.
 - The Godot QA autoload in `engines/godot.md` ran in Godot 4.7.2 (shots and a metrics report).
 - `claude plugin validate --strict` passes for the plugin and the marketplace.
+- An independent review agent checked everything. It found 7 blocking and 15 optional issues,
+  including a real bug where `capture.mjs` did not wait for `ready`. All were fixed and re-tested.
 
 **Not tested here:** Unity snippets (no Unity available), `install.ps1` (no PowerShell), and the paid
 3D-generation services and MCP servers (documented from their docs; not run). The plugin's effect on

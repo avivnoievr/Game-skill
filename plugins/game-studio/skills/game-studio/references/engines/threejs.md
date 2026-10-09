@@ -122,8 +122,11 @@ export function installQa(game: Game) {
       hero:                async () => { game.cameraRig.apply('hero'); render(); },
     },
     advance: async (ms: number) => { game.stepFixed(ms / 1000); render(); },
+    reload: async () => { await game.reloadMainScene(); render(); },   // leak test: --reloads 5
   };
-  game.onFirstFrame(() => { (window as any).__QA__.ready = true; });
+  // QA mode runs no animation loop, so render the first frame explicitly, then mark ready.
+  // Call installQa(game) after the boot asset group has loaded.
+  render(); (window as any).__QA__.ready = true;
 }
 ```
 - In QA mode, don't run `setAnimationLoop`. The harness drives `advance`.
@@ -131,14 +134,14 @@ export function installQa(game: Game) {
 - With an EffectComposer, set `renderer.info.autoReset = false` and call `renderer.info.reset()` at the
   start of each frame, so the counts cover all passes.
 
-Run it: `node "$SKILL_DIR/scripts/web/capture.mjs" --url "http://localhost:5173/?qa=1&seed=1" --out qa/out/m1 --sequence 8 --hold KeyW`
+Run it: `node "$SKILL_DIR/scripts/web/capture.mjs" --url "http://localhost:5173/?qa=1&seed=1" --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8 --hold KeyW`
 
 ## 5. Animation
 
 ```ts
 const mixer = new THREE.AnimationMixer(model);
 const actions = Object.fromEntries(gltf.animations.map((c) => [c.name, mixer.clipAction(c)]));
-const timer = new THREE.Timer();               // THREE.Clock is deprecated since r183
+const timer = new THREE.Timer();   // Clock is deprecated since r183; older: import { Timer } from 'three/addons/misc/Timer.js'
 renderer.setAnimationLoop((t) => { timer.update(t); const dt = timer.getDelta(); /* fixed-step sim */ mixer.update(dt); });
 ```
 - Crossfades and additive layers: `animation.md` §6.
