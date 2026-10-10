@@ -1,10 +1,27 @@
 # Credits and sources
 
-The text of this plugin is original, written from the research in `docs/research/`. Ideas, methods and
-some starting values were adapted from the sources below, and short quotations are attributed where
-they appear. No text was copied from sources whose license does not allow it: Anthropic's claude-code
-plugins (all rights reserved), Unity's agent plugin (Unity Companion License), terma (CC-BY-SA) and
-GPL-licensed skill packs.
+The orchestrator, agents, local references, scripts and adaptations are original work informed by
+`docs/research/`. Version 1.1.0 also includes selected, unchanged third-party reference files under
+`plugins/game-studio/skills/game-studio/vendor/`. These retain their own licenses and notices;
+they are not all MIT merely because the original plugin is MIT. Exact commits, file hashes and the
+copy inventory are in [THIRD_PARTY_NOTICES.md](../plugins/game-studio/THIRD_PARTY_NOTICES.md) and
+`vendor/sources.json`. The phase router adds local scope adaptations without altering the originals.
+
+No text was copied from sources whose license did not permit this redistribution: Anthropic's
+claude-code plugins (all rights reserved), Unity's agent plugin (Unity Companion License), terma
+(CC-BY-SA) and GPL-licensed skill packs. Referenced tools are not bundled.
+
+## Actual bundled selection (version 1.1.0)
+
+| Component | Source/license | Integrated use |
+|---|---|---|
+| `threejs-aaa-graphics-builder` selected core/technical-art/scorecard | majidmanzarpour/threejs-game-skills, MIT | Scene review, shared material roles and renderer budgets; source generation mandates and example ratings are not adopted |
+| `threejs-game-ui-designer` core and UI patterns | same source, MIT | Gameplay-state HUD hierarchy and world-derived motifs |
+| `game-feel` reference | same source, MIT | Feedback tuning and deterministic motion, read when needed |
+| `frontend-design` | anthropics/skills, Apache-2.0 | Subject-specific design, restraint and rejection of interchangeable choices; not a substitute for 3D craft |
+| `game-ui-ux` core/layout-and-flow | gamedev-skills/awesome-gamedev-agent-skills, Apache-2.0 + NOTICE | Focus, modal/input ownership, safe areas, responsive states and accessibility |
+
+All other sources below are research influences, not silently installed or copied skills.
 
 ## Skills, plugins and agent setups
 
@@ -60,3 +77,12 @@ Blender and `bpy` (GPL), glTF-Transform (MIT), gltfpack/meshoptimizer (MIT), Khr
 (Apache-2.0), KTX-Software (Apache-2.0), Playwright (Apache-2.0), Chrome DevTools MCP (Apache-2.0),
 Blender Lab MCP (GPL), ahujasid/mcp-for-blender (MIT), hi-godot/godot-ai (MIT), CoplayDev/unity-mcp (MIT).
 Asset sources: Poly Haven, Kenney, Quaternius, KayKit, ambientCG (CC0; check each pack's license file).
+
+## Media verification boundary
+
+The round-two handoff contains caption-based notes for 15 YouTube videos. This continuation checked
+primary written workflow sources and video metadata; it did not directly watch those videos.
+Blender Studio's indexed animation-pipeline text informed a blocking checkpoint, and Poly Haven's
+[Simple Prop Workflow](https://blog.polyhaven.com/simple-prop-workflow/) informed the UV checker
+checkpoint. Public Instagram fetching failed; no Instagram post is cited as a verified finding.
+See `docs/research/round2/08-media-followup.md` for exact access and evidence limits.

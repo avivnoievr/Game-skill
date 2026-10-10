@@ -13,11 +13,17 @@ Options:
   --texel-density PX/M   target texel density; reported deviation beyond +-35% is a WARN
   --pivot base|center|any  expected origin placement (default: base for props/characters)
   --contact-tol M        gap in meters below which separate pieces count as touching (default 0.002)
+  --parts GLOBS          required render parts, comma-separated exact names or shell-style globs
+  --part-pivot center|any  spin joints check centers by default; explicit center also checks untagged required parts
+  --part-pivot-tol M     center tolerance floor in meters (default 0.005)
+  --part-pivot-ratio F   center tolerance relative to largest part extent (default 0.02)
+  --sockets NAMES        required empty attachment nodes; SOCKET_ prefix optional
   --json PATH            also write the full report as JSON
 
 Exit codes: 0 = no FAIL, 1 = at least one FAIL, 2 = usage/load error.
 """
 import argparse
+import fnmatch
 import json
 import math
 import os
@@ -31,7 +37,8 @@ import numpy as np  # noqa: E402  (bundled with Blender and with the bpy wheel)
 from mathutils import Vector  # noqa: E402
 from mathutils.bvhtree import BVHTree  # noqa: E402
 
-from gs_common import load_model, mesh_objects, round_vec, script_args, world_bbox  # noqa: E402
+from gs_common import (collision_objects, hierarchy_rows, joint_of, load_model, mesh_objects,
+                       rigid_group, round_vec, script_args, world_bbox)  # noqa: E402
 
 # Starting points only. The project's art bible / tech budget is the authority:
 # pass explicit flags when it says otherwise.
@@ -74,8 +81,17 @@ def parse():
     p.add_argument("--texel-density", type=float)
     p.add_argument("--pivot", choices=["base", "center", "any"], default="base")
     p.add_argument("--contact-tol", type=float, default=0.002)
+    p.add_argument("--parts", default="")
+    p.add_argument("--part-pivot", choices=["center", "any"], default=None)
+    p.add_argument("--part-pivot-tol", type=float, default=0.005)
+    p.add_argument("--part-pivot-ratio", type=float, default=0.02)
+    p.add_argument("--sockets", default="")
     p.add_argument("--json")
     a = p.parse_args(script_args())
+    a.part_pivot_explicit = a.part_pivot is not None
+    a.part_pivot = a.part_pivot or "center"
+    if any(not math.isfinite(v) or v < 0 for v in (a.contact_tol, a.part_pivot_tol, a.part_pivot_ratio)):
+        p.error("contact and part-pivot tolerances must be finite and nonnegative")
     budget = dict(PRESETS.get(a.preset, {}))
     for k in ("max_tris", "max_materials", "max_texture"):
         if getattr(a, k) is not None:
@@ -271,6 +287,83 @@ def floating_parts(meshes, deps, tol, rep, max_islands=200):
                 f"{tol * 1000:.0f} mm (floating parts read as bugs unless intentionally detached): {where}")
 
 
+def inspect_parts(meshes, a, rep):
+    """Required nodes plus pivot evidence. Hinge/steer/slide origins are never assumed to be centers."""
+    objects = list(bpy.context.scene.objects)
+    required = set()
+    for pattern in filter(None, (v.strip() for v in a.parts.split(","))):
+        matches = [o for o in objects if fnmatch.fnmatchcase(o.name, pattern)
+                   and o.type in {"MESH", "EMPTY"} and o not in collision_objects()]
+        if not matches:
+            rep.add("FAIL", "parts", f"required part pattern {pattern!r} matches no render node")
+        for obj in matches:
+            descendants = set(obj.children_recursive)
+            geometry = [m for m in meshes if m == obj or m in descendants]
+            if not geometry:
+                rep.add("FAIL", "parts", "required part has no renderable mesh geometry", obj.name)
+            else:
+                required.add(obj.name)
+                rep.add("PASS", "parts", f"required part matches {pattern!r}", obj.name)
+
+    groups = {}
+    for obj in meshes:
+        groups.setdefault(rigid_group(obj, required), []).append(obj)
+    parts = []
+    for obj in objects:
+        joint = joint_of(obj)
+        if not joint and obj.name not in required:
+            continue
+        geometry = groups.get(obj.name, [])
+        entry = {"name": obj.name, "joint": joint, "axis": obj.get("axis"),
+                 "origin": round_vec(obj.matrix_world.translation, 6),
+                 "meshes": [m.name for m in geometry]}
+        if joint:
+            if joint not in {"spin", "steer", "hinge", "slide"}:
+                rep.add("WARN", "joint", f"unknown joint kind {joint!r}", obj.name)
+            if obj.get("axis") not in {"X", "Y", "Z"}:
+                rep.add("FAIL", "joint", "joint must declare local axis X, Y or Z", obj.name)
+        check_center = a.part_pivot == "center" and (joint == "spin" or (not joint and a.part_pivot_explicit))
+        if check_center:
+            if not geometry:
+                rep.add("FAIL", "part_pivot", "no rigid-group geometry for bounds-center check", obj.name)
+            else:
+                lo, hi = world_bbox(geometry)
+                error = ((lo + hi) / 2 - obj.matrix_world.translation).length
+                tolerance = max(a.part_pivot_tol, max(hi - lo) * a.part_pivot_ratio)
+                entry.update({"bounds_min": round_vec(lo, 6), "bounds_max": round_vec(hi, 6),
+                              "pivot_distance_m": round(error, 6), "pivot_tolerance_m": round(tolerance, 6)})
+                rep.add("PASS" if error <= tolerance + 1e-8 else "FAIL", "part_pivot",
+                        f"bounds-center distance {error:.6f} m / tolerance {tolerance:.6f} m "
+                        "(max of absolute floor and relative extent)", obj.name)
+        parts.append(entry)
+
+    sockets = []
+    for name in filter(None, (v.strip() for v in a.sockets.split(","))):
+        full = name if name.startswith("SOCKET_") else f"SOCKET_{name}"
+        obj = bpy.context.scene.objects.get(full)
+        if obj is None or obj.type != "EMPTY":
+            rep.add("FAIL", "socket", f"required empty attachment node {full!r} is missing")
+        else:
+            rep.add("PASS", "socket", "required attachment node exists", full)
+            sockets.append(full)
+    return parts, groups, sockets
+
+
+def collision_report(deps, rep):
+    rows = []
+    for obj in collision_objects():
+        oe = obj.evaluated_get(deps)
+        mesh = oe.to_mesh()
+        triangles = sum(len(p.vertices) - 2 for p in mesh.polygons)
+        oe.to_mesh_clear()
+        lo, hi = world_bbox([obj])
+        rows.append({"name": obj.name, "triangles": triangles,
+                     "dimensions_m": round_vec(hi - lo), "origin": round_vec(obj.matrix_world.translation, 6)})
+        if triangles > 500:
+            rep.add("WARN", "collision", f"collision proxy has {triangles} triangles (>500); simplify it", obj.name)
+    return rows
+
+
 def main():
     a = parse()
     try:
@@ -299,7 +392,16 @@ def main():
             # px per meter, assuming UV area maps onto the largest texture of the mesh
             texel_samples.append((obj.name, math.sqrt(uv_area * max(sizes) ** 2 / world_area)))
 
-    floating_parts(meshes, deps, a.contact_tol, rep)
+    parts, groups, sockets = inspect_parts(meshes, a, rep)
+    for name, members in groups.items():
+        group_report = Report()
+        floating_parts(members, deps, a.contact_tol, group_report)
+        for check in group_report.checks:
+            check["rigid_group"] = name
+            check["message"] = f"rigid group {name!r}: {check['message']}"
+        rep.checks.extend(group_report.checks)
+    collisions = collision_report(deps, rep)
+    hierarchy = hierarchy_rows()
 
     lo, hi = world_bbox(meshes)
     dims = hi - lo
@@ -316,7 +418,7 @@ def main():
     # Budgets
     b = a.budget
     if "max_tris" in b:
-        lvl = "PASS" if total_tris <= b["max_tris"] else ("WARN" if total_tris <= b["max_tris"] * 1.15 else "FAIL")
+        lvl = "PASS" if total_tris <= b["max_tris"] else "FAIL"
         rep.add(lvl, "budget", f"triangles {total_tris} / budget {b['max_tris']}")
     if "max_materials" in b:
         lvl = "PASS" if len(materials) <= b["max_materials"] else "FAIL"
@@ -384,6 +486,11 @@ def main():
             "armatures": rigs, "actions": actions, "budget": b,
         },
         "meshes": per_mesh,
+        "parts": parts,
+        "rigid_groups": {name: [m.name for m in members] for name, members in groups.items()},
+        "sockets": sockets,
+        "collisions": collisions,
+        "hierarchy": hierarchy,
         "checks": rep.checks,
         "verdict": "FAIL" if rep.count("FAIL") else ("WARN" if rep.count("WARN") else "PASS"),
     }
@@ -399,6 +506,13 @@ def main():
         print("texel density (px/m): " + ", ".join(f"{n} {t:.0f}" for n, t in texel_samples))
     if rigs or actions:
         print(f"rigs: {rigs} | actions: {[x['name'] for x in actions]}")
+    if collisions:
+        print("collision proxies (excluded from render budgets): " + ", ".join(
+            f"{c['name']} {c['triangles']} tris" for c in collisions))
+    print("hierarchy (world origins in meters):")
+    for node in hierarchy:
+        label = f" joint={node['joint']} axis={node['axis']}" if node["joint"] else ""
+        print(f"  {'  ' * node['depth']}{node['name']} [{node['type']}]{label} origin={node['origin']}")
     for c in rep.checks:
         where = f" [{c['object']}]" if c["object"] else ""
         print(f"  {c['level']:<4} {c['check']}{where}: {c['message']}")

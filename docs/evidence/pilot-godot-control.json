@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "base_stationary": true,
+    "guard_stationary": true,
+    "required_runtime_nodes": true,
+    "rotor_origin_stationary": true,
+    "rotor_rotation_changed": true,
+    "rotor_vertex_moved": true,
+    "socket_expected_position": true,
+    "socket_stationary": true
+  },
+  "engine": {
+    "build": "official",
+    "hash": "7d41c59c457bd5a245092b4e7eb2d833e3b3f8c3",
+    "hex": 263683,
+    "major": 4,
+    "minor": 6,
+    "patch": 3,
+    "status": "stable",
+    "string": "4.6.3-stable (official)",
+    "timestamp": 0
+  },
+  "rotor_vertex_displacement_m": 0.0137764709070325,
+  "socket_position": [
+    0.0,
+    0.025000000372529,
+    -0.0799999982118607
+  ]
+}

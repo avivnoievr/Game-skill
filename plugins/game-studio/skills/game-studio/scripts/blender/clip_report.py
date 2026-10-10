@@ -39,15 +39,23 @@ def assign(arm, act):
 
 
 def sample(arm, f0, f1):
-    """World-space bone head positions, shape (frames, bones, 3)."""
+    """World bone heads and parent-relative rotations, including constrained/evaluated poses."""
     scene = bpy.context.scene
     names = [pb.name for pb in arm.pose.bones]
-    out = []
+    out, rotations = [], []
     for f in range(f0, f1 + 1):
         scene.frame_set(f)
         mw = arm.matrix_world
         out.append([tuple(mw @ pb.head) for pb in arm.pose.bones])
-    return names, np.array(out, dtype=np.float64)
+        rotations.append([tuple((pb.parent.matrix.inverted_safe() @ pb.matrix if pb.parent else pb.matrix)
+                                .to_quaternion().normalized()) for pb in arm.pose.bones])
+    return names, np.array(out, dtype=np.float64), np.array(rotations, dtype=np.float64)
+
+
+def rotation_jump(a, b):
+    """Sign-invariant quaternion angular distance in radians (q and -q represent the same pose)."""
+    dots = np.abs(np.sum(a * b, axis=-1))
+    return 2.0 * np.arccos(np.clip(dots, 0.0, 1.0))
 
 
 def main():
@@ -73,7 +81,7 @@ def main():
         f0, f1 = int(act.frame_range[0]), int(act.frame_range[1])
         if f1 <= f0:
             continue
-        names, pos = sample(arm, f0, f1)
+        names, pos, rotations = sample(arm, f0, f1)
         height = float(pos[0, :, 2].max() - pos[0, :, 2].min()) or 1.0
         rel = pos - pos[:, root:root + 1, :]
         # Loop seam: the jump from the last frame back to the first, compared with ordinary frame-to-frame
@@ -82,6 +90,10 @@ def main():
         step = float(np.median(np.linalg.norm(np.diff(rel, axis=0), axis=2).max(axis=1)))
         seam = wrap / height
         seam_ratio = wrap / step if step > 1e-9 else (0.0 if wrap < 1e-9 else float("inf"))
+        rotation_wrap = float(rotation_jump(rotations[-1], rotations[0]).max())
+        rotation_step = float(np.median(rotation_jump(rotations[1:], rotations[:-1]).max(axis=1)))
+        rotation_ratio = (rotation_wrap / rotation_step if rotation_step > 1e-6
+                          else (0.0 if rotation_wrap < 1e-6 else float("inf")))
         duration = (f1 - f0) / fps
         root_disp = pos[-1, root, :2] - pos[0, root, :2]
         root_speed = float(np.linalg.norm(root_disp)) / duration
@@ -98,11 +110,18 @@ def main():
                  "loop_seam_pct": round(seam * 100, 2), "root_speed": round(root_speed, 3), "in_place": in_place,
                  "feet": [names[i] for i in feet], "checks": []}
         entry["loop_jump_vs_step"] = round(seam_ratio, 2) if seam_ratio != float("inf") else None
+        entry["loop_rotation_jump_deg"] = round(float(np.degrees(rotation_wrap)), 2)
+        entry["loop_rotation_jump_vs_step"] = round(rotation_ratio, 2) if np.isfinite(rotation_ratio) else None
         must_loop = re.search(a.loops, act.name, re.I) is not None
         if must_loop and seam > 0.005 and seam_ratio > 5:
             entry["checks"].append(["FAIL", f"pop at the loop point: wrap jump is {seam_ratio:.1f}x a normal frame step"])
         elif must_loop and seam > 0.005 and seam_ratio > 2.5:
             entry["checks"].append(["WARN", f"loop point jump is {seam_ratio:.1f}x a normal frame step"])
+        if must_loop and rotation_wrap > np.radians(5) and rotation_ratio > 5:
+            entry["checks"].append(["FAIL", f"rotation pop at the loop point: {np.degrees(rotation_wrap):.1f} degrees "
+                                     f"({rotation_ratio:.1f}x a normal rotational step)"])
+        elif must_loop and rotation_wrap > np.radians(5) and rotation_ratio > 2.5:
+            entry["checks"].append(["WARN", f"rotation loop jump is {rotation_ratio:.1f}x a normal rotational step"])
 
         if feet:
             speeds, skating, planted = [], 0, 0
@@ -135,6 +154,7 @@ def main():
         extra = f" ground speed {e['ground_speed']}/s" if "ground_speed" in e else ""
         extra += f" skate {e['foot_skate_ratio']:.0%}" if "foot_skate_ratio" in e else ""
         print(f"  {e['clip']}: {e['duration_s']}s @ {e['fps']}fps | loop jump {e['loop_jump_vs_step']}x step | "
+              f"rotation jump {e['loop_rotation_jump_deg']}deg | "
               f"root speed {e['root_speed']}/s {'(in place)' if e['in_place'] else '(root motion)'}{extra}")
         for level, msg in e["checks"]:
             print(f"    {level} {msg}")

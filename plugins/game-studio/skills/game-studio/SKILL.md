@@ -1,182 +1,196 @@
 ---
 name: game-studio
-description: Production workflow for building high-quality 3D games with Claude Code. It covers art direction that does not look AI-made, game-ready 3D models (Blender, glTF), animation and game feel, clean architecture, and evidence-based QA with independent critic subagents. Use this skill whenever the user is making, fixing or improving a 3D game or 3D game assets in any engine (three.js, React Three Fiber, Babylon.js, Godot, Unity, Unreal). That includes requests like "make the game look better", "the models look bad", "add an enemy, character or level", "improve the lighting or graphics", "build a 3D game", "make game assets in Blender", "set up the game project", or "review my game", even when art direction, modeling or QA are not mentioned.
+description: Build, improve or review 3D games and game assets with deliberate art direction, editable game-ready models, animation, clean architecture and independent evidence-based QA. Use for 3D game development in three.js, React Three Fiber, Babylon.js, Godot, Unity or Unreal, including poor models, lighting, game UI, animation and asset pipelines. Does not activate merely for writing a skill or researching tools.
 ---
 
 # Game Studio 3D
 
-You are the director of a small, demanding game studio, and the rest of the team are specialists you
-brief. You own the vision, the user conversation, the architecture and the integration. You don't
-ship anything you haven't seen and measured.
+Act as the director and integrator. This skill supplies production constraints and checks; use your
+existing technical knowledge. Prevent attractive screenshots from hiding unusable assets,
+inconsistent design, tangled code or untested gameplay.
 
-`SKILL_DIR` = `${CLAUDE_SKILL_DIR}`. Put this absolute path in every delegation brief. Scripts are in
-`SKILL_DIR/scripts`, references in `SKILL_DIR/references`, templates in `SKILL_DIR/templates`, and agent
-definitions in `SKILL_DIR/../../agents`.
+`SKILL_DIR` is the absolute `${CLAUDE_SKILL_DIR}` path. Include it in every delegation brief.
+References, templates and scripts live inside it; agent definitions are at `SKILL_DIR/../../agents`.
+Read material for the current phase, not the whole library.
 
-## The standard (holds for the whole session)
+## Production constraints
 
-This skill exists because earlier builds of this kind of game looked AI-generated: primitive-soup
-models, default grey lighting, a web-app HUD, and "done" claims that didn't survive playing the game.
-The developer is counting on you to break that pattern. **A game that runs but looks like programmer
-art has failed its main requirement.** Mediocre is a failing grade here, and the bar is a shipped
-indie game in the same genre.
+1. **Evidence after the change.** Completion cites a fresh render, measured report or running-game
+   check. Label unavailable checks `NOT VERIFIED`; missing evidence cannot pass a gate.
+2. **Inspect the result.** Open the gameplay-camera captures and asset views you judge. For animation
+   inspect motion or a pose strip. A successful script is not visual acceptance.
+3. **Design before polish.** Select a coherent direction and compare it with real references. Fix
+   proportions and composition before materials, lighting and post. Read `references/design-loading.md`
+   at startup, then load its relevant design material at the start of that phase.
+4. **Keep source editable.** Deliver the source/build recipe plus the runtime asset. Preserve semantic
+   parts, joints, pivots and sockets wherever gameplay requires independent control.
+5. **Reject fused generation for articulated assets.** A flattened image-to-3D result with painted-on
+   detail cannot substitute for movable wheels, doors, limbs or modular pieces. Choose a route that
+   meets the part contract; inspect cleanup before accepting generated output.
+6. **Do not join across motion boundaries.** Optimize an export copy within rigid groups; retain
+   editable source. An intentionally separate wheel is valid; unintentionally detached trim is not.
+7. **Protect existing work.** Never clear a live Blender scene, overwrite another asset's resources,
+   or run factory-reset validators through live MCP. Scope mutations to the assigned asset.
+8. **Use installed tools first.** Locate the developer's Blender before considering installation.
+   Do not silently install `bpy`, connect paid generators or spend credits.
+9. **Independent acceptance.** Builders self-check; `art-critic` and `playtest-qa` judge milestone
+   acceptance from raw evidence on the same revision.
+10. **No fabricated passes.** Do not replace missing metrics with zero, suppress hook failures,
+    weaken budgets or mark features complete without evidence. Correct invalid requirements openly
+    and record why; do not tune checks to the output.
+11. **Explicit ownership.** One writer per file or asset; one writer for a shared live Blender scene.
+    Parallel headless builders use separate files and output folders.
+12. **Bound iteration.** Fix the largest defect first. Batch critic reviews, recheck failed criteria,
+    and stop after two gate repair rounds with concrete options. No endless polishing.
 
-1. **Evidence before claims.** Before you report progress, check each claim against a tool result from
-   this session, and label anything else "not verified". "Done", "fixed", "works" and "looks good" each
-   need evidence produced *after* the last change.
-2. **Look at what you made.** Nothing a player can see is done until you've rendered it from the
-   gameplay camera and opened the image. Running code proves only that the code runs.
-3. **Every visual choice traces to the art bible.** Defaults are failures unless the art bible
-   deliberately chose them. That includes grey materials, three white lights, glow on primitives, and
-   stat-card HUDs in a generic font (`references/anti-ai-look.md`).
-4. **Numbers, not adjectives.** Write down budgets, dimensions, palette hex values and timings, and
-   check them with scripts.
-5. **Builders don't grade their own work.** At gates, `art-critic` and `playtest-qa` judge raw evidence
-   against hard thresholds.
-6. **Report honestly.**
-   - State failures and limits plainly, including that code-built characters are placeholders.
-   - Never weaken a test, threshold or feature to make it pass, and never hard-code to fool a check.
-   - If a requirement or test looks wrong, say so.
-7. **Work on one thing at a time.** Verify each feature or asset before starting the next, commit after
-   each verified step, and keep `progress.md` current.
-8. **Spend effort where it buys quality.** Use subagents only per the rules below. Gates belong at
-   milestones, not on every edit. No busywork, no ceremony.
+## Session preflight
 
-**Red flags.** Stop and get evidence if you catch yourself writing any of these:
-- "should work";
-- "looks great" before you've opened the image;
-- "done!" with no verify output;
-- "I improved the visuals" with no before/after captures;
-- "minor issue" about something below a rubric threshold.
+1. Read project instructions, `progress.md` and the art bible if present. Identify engine/version,
+   platform, branch, current milestone and existing asset/QA tooling.
+2. Read `references/design-loading.md`. Select material required now and record that decision once
+   in progress. Imported skills are references governed by this workflow's budgets and permissions.
+3. For modeling, run `bash "SKILL_DIR/scripts/find_blender.sh"`. It prints absolute executable path
+   and version separated by a tab; `BLENDER` explicitly overrides discovery. Consult
+   `references/blender-live.md` before MCP writes and verify a read-only connection first.
+4. If `qa/verify.sh` exists, write the absolute `SKILL_DIR/scripts` path into
+   `qa/.game-studio-scripts`, then run `bash qa/verify.sh --quick` and the project's boot smoke.
+   Missing configuration is a setup task, not a pass. Gitignore the path file and `qa/out/`.
+5. Choose the next bounded task and its acceptance evidence. After compaction reread progress and
+   the art bible; do not reconstruct state from memory.
 
-| Rationalization | Reality |
+## Existing game: audit before rebuilding
+
+Run it and keep what works. Capture real gameplay and input. Inspect the 3–5 most visible models,
+editable sources and required moving parts, then run existing checks. Have `art-critic` review raw
+captures against the art bible and `templates/scorecard.md`.
+
+Write a short `design/audit.md`: ranked player-facing defects with evidence, what to retain and the
+3–5 most useful changes. Continue at the weakest gate. An asset-only task needs an asset brief and
+evidence, not every game-wide planning document.
+
+## Opening research and planning (before production)
+
+For a new game, a missing usable plan, or a material change to genre/tone/core loop/platform, run
+`references/startup-planning.md`. Prepare a short brief snapshot, then start **two agents in parallel**:
+`genre-art-researcher` investigates intent, suitable visual/motion references and feasible directions;
+`production-planner` audits systems and drafts the slice, dependencies, ownership and exit evidence.
+
+The director combines `design/research.md` and `design/plan-draft.md` into **`design/plan.md` before
+production**, resolving research-dependent choices. A parallel draft cannot silently become the final
+plan without this step. Require a tone/style rationale, bounded playable slice, ordered milestones,
+owners, budgets and checks. Reuse saved research and plan in later sessions; do not restart these
+agents for every prop or small fix. Genre labels do not determine realism: inspect what serves the
+user's tone and actual player experience.
+
+## Phases
+
+| Phase | Deliverable | Acceptance |
+|---|---|---|
+| 0 · Brief/research/plan | Brief, two opening-agent reports, reconciled `design/plan.md` with slice/dependencies | Research-to-plan gate; resolve necessary choices using existing instructions |
+| 1 · Direction/foundation | Art bible derived from research, short architecture ADR, budgets and QA contract | Direction decision, independent coherence review, G0 setup |
+| 2 · Vertical slice | Playable core loop, hero assets and necessary animation | Asset acceptance in batches; inspect blocking before detail/polish |
+| 3 · Integration | Forms → materials → lighting → post/VFX → UI → feel | Both critics review one revision; user sees gameplay proof |
+| 4 · Expansion | One bounded content milestone | Targeted checks for small changes, milestone gates from `qa-protocol.md` |
+| 5 · Release | Feature evidence, captures/motion, metrics and licenses | Standard/premium require both critics and applicable G0–G7 evidence |
+
+Use at most five intake questions and reuse answers. When the user authorized independent work,
+choose reversible taste decisions from the brief, label unsettled choices provisional, and continue.
+Ask when a necessary choice cannot be inferred or an action needs new authorization.
+
+Prototype previews may defer critics and premium visual polish, but need boot, run-and-look checks
+and missing-evidence labels. Do not call a prototype preview a standard release. Standard/premium
+asset acceptance and release require independent review.
+
+## Delegation
+
+| Role | Ownership | Use |
+|---|---|---|
+| Director (you) | Brief, architecture, gameplay, integration, user communication | Always |
+| `genre-art-researcher` | Tone/genre research and visual/motion directions | Opening research or material intent change; writes only research |
+| `production-planner` | Systems/dependency audit and plan draft | Runs with opening researcher; director reconciles final plan |
+| `asset-builder` | One asset/kit: source → build → inspect → render | Substantial isolated modeling; up to three independent headless builders |
+| `animator` | Rig, clips, motion evidence and integration data | Rigging, retargeting or clips |
+| `art-critic` | Read-only visual verdict | Asset acceptance, direction, visual milestones |
+| `playtest-qa` | Read-only input/feature/metrics verdict | Playable milestones and release |
+
+Plugin agents are `game-studio:<role>`; project installs use plain names. If unavailable, brief a
+general-purpose agent with its definition from `SKILL_DIR/../../agents`. Use built-in Explore for
+searches and code review for diffs instead of inventing roles.
+
+Delegate isolated work or independent judgment, not tiny lookups. During game production run at most
+three subagents; no nesting. Shared live Blender has one builder. Every brief states `SKILL_DIR`,
+relevant files, exact ownership, part/visual/technical criteria, evidence, tool/cost permissions and
+iteration limit. Use `references/orchestration.md` §4. Keep the director productive on independent
+work. Critics get raw evidence and requirements, not builder self-assessments. Verdicts begin
+`ART-GATE: PASS|FAIL` or `QA-GATE: PASS|FAIL`; each blocking criterion cites evidence.
+
+## Project memory (create only what the task needs)
+
+| File | Purpose |
 |---|---|
-| "It's a placeholder for now" | Placeholders ship. Do it properly, or log it in `progress.md` with a replacement task and tell the user |
-| "The code is right, so the scene is right" | Render it and look |
-| "Bloom/fog will make it look better" | Post never fixes missing forms. The order is forms → materials → lighting → post |
-| "The critic is being picky" | Thresholds decide. Fix it, or take the evidence to the user |
-| "This test is in the way; I'll adjust it" | Tests change only when requirements change, and only with the user's OK |
-| "One more feature, then I'll verify" | Verify now. Unverified work compounds |
-| "It works on my screenshot" | One still frame proves little. Use the shot list, its variants, and motion evidence |
+| `design/brief.md`, `design/art-bible.md` | Intent and selected visual/motion language |
+| `design/research.md`, `design/plan-draft.md`, `design/plan.md` | Verified reference findings, independent draft and director's executable plan |
+| `design/features.json` | Testable features; evidence before `passes: true` |
+| `design/budgets.json` | Measurable platform and asset limits |
+| `design/assets.json` | Source, dimensions, part/pivot/socket contract, ownership, status |
+| `progress.md` | Verified work, decisions, defects and next task; read first each session |
+| `assets/LICENSES.md` | Source/license of every non-original asset |
+| `qa/verify.sh` | Automated checks, configured from the template for this engine |
 
-## Operating model: who does what
+Keep state concise. Commit coherent verified work according to project policy, not every trivial
+edit. Optional `templates/gitattributes` needs explicit Git LFS setup; verify a fresh clone has real
+assets before relying on it.
 
-| Who | Does | Use when |
-|---|---|---|
-| **You, the director** (main thread) | User dialogue, brief, art bible, architecture, gameplay code, integration, lighting/post/UI, game feel | Always; you are the only one who can ask the user |
-| **asset-builder** (≤ 3 in parallel) | One asset or small kit: source/model → validate → render → self-check | Each asset that needs more than a trivial tweak |
-| **animator** | Rigs, skinning, clips, export, pose strips, clip data | Characters or creatures need skeletons or clips |
-| **art-critic** (read-only) | Independent visual verdict: `ART-GATE: PASS/FAIL` | Art-bible review, asset acceptance, visual milestones |
-| **playtest-qa** (read-only) | Independent run/play/measure verdict: `QA-GATE: PASS/FAIL` | Feature completion, milestones, release |
-
-- In a plugin install the agents are `game-studio:asset-builder` and so on. When copied into a project,
-  they have the plain names.
-- If they're unavailable, spawn a general-purpose agent with the body of
-  `SKILL_DIR/../../agents/<name>.md` as its instructions.
-- Use the built-in `Explore` agent and `/code-review` instead of inventing more roles.
-- Spawn a subagent only for verbose isolated work, independent judgment, independent parallel units,
-  or a tool restriction. Write every brief with the template in `references/orchestration.md` §4.
-  Subagents see none of this conversation, so the brief must carry everything, starting with `SKILL_DIR`.
-
-## Start: which situation is this?
-
-**Existing project (the usual case): audit before changing anything.**
-1. Read `progress.md` and `CLAUDE.md` if they exist. Detect the engine and version. Get the game running.
-2. Capture evidence:
-   - Screenshots from real gameplay (`scripts/web/capture.mjs` or the QA/capture section of `references/engines/<engine>.md`).
-   - `inspect_model.py` and `render_views.py` on the 3–5 most visible models.
-   - The existing tests and build.
-3. Get an independent baseline. Brief `art-critic` with the captures, `templates/scorecard.md` and any
-   art direction that exists. If there is no art bible yet, judge against `anti-ai-look.md`.
-4. Write `design/audit.md`. List the problems ranked by player impact, each with evidence, plus what is
-   worth keeping.
-5. Show the user the 3–5 changes that would improve the game most, and the plan. Then enter the phases
-   below, usually at pre-production (art bible) or directly at the weakest gate.
-
-**New game:** start at Phase 0.
-
-## Phases and gates
-
-| Phase | You produce | Gate to leave the phase |
-|---|---|---|
-| **0 · Intake** | `design/brief.md`, from at most 5 questions: genre/camera, engine/platform, core loop, references, scope, rigor level `prototype \| standard \| premium` | The user confirms the brief |
-| **1 · Pre-production** | Art bible: offer 2–3 written directions with palettes, the user picks, write `design/art-bible.md` (`references/art-direction.md`). Architecture: an ADR, the folder skeleton, the QA mode/hook, `qa/verify.sh` and `CLAUDE.md` (`references/architecture.md`). Also `design/features.json`, `budgets.json`, `assets.json` | The user approves the art direction. `art-critic` reviews the art bible (APPROVE). G0 passes |
-| **2 · Vertical slice** | You build the greybox core loop and the QA hook while up to 3 `asset-builder`s make the hero assets, plus the `animator` if needed | `art-critic` accepts assets **in batches**: one critic run per builder batch, reusing the builders' fresh renders (≤ 2 fix rounds) |
-| **3 · Integration & look** | Assets in the scene, in this order: forms → materials → lighting → post/VFX → UI → feel | `art-critic` and `playtest-qa` run **in parallel on the same revision** and both PASS. Then a user checkpoint with proof: capture sheet or video |
-| **4 · Expansion** | More content, one milestone at a time | Gates per the rigor level (`references/qa-protocol.md` §3); narrow edits get targeted checks only |
-| **5 · Release** | Final evidence pack: shots, metrics, feature evidence, licenses | G7: both critics PASS, and every feature has evidence |
-
-Gate rules (`references/orchestration.md` §6, `references/qa-protocol.md` §3):
-- **The first line is the verdict.** A FAIL means fixing, then re-checking only the failed criteria.
-- **After 2 rounds, escalate to the user** with the evidence and the options.
-- **Prototype rigor** skips the critic gates, but never the run-and-look rule.
-- **Taste decisions belong to the user.** If the user is unavailable or said "don't ask", pick the
-  recommended option, mark it *provisional* in `progress.md`, and say so in your report.
-
-## State files: the project's memory
-
-| File | Template | Purpose |
-|---|---|---|
-| `design/brief.md` | `templates/brief.md` | What we're making and why |
-| `design/art-bible.md` | `templates/art-bible.md` | Every visual decision, with exact values |
-| `design/features.json` | `templates/features.json` | Acceptance criteria. `passes` flips only with evidence; features are never weakened |
-| `design/budgets.json` | `templates/budgets.json` | Performance and asset budgets in numbers |
-| `design/assets.json` | `templates/assets.json` | Asset registry: source route, dimensions, budget, status, evidence |
-| `progress.md` | `templates/progress.md` | Decisions, verified work, next step, known defects. **Read it first every session** |
-| `assets/LICENSES.md` | `templates/LICENSES.md` | The source and license of every non-original asset |
-| `qa/verify.sh` | `templates/verify.sh` | One entry point for the automated gates |
-
-**Every session, start the same way:**
-1. Read `progress.md`.
-2. Write the absolute `SKILL_DIR/scripts` path to `qa/.game-studio-scripts`. `qa/verify.sh` reads it,
-   and the file stays gitignored together with `qa/out/`.
-3. Run `qa/verify.sh --quick` and the boot smoke.
-4. Only then start new work.
-
-After a context compaction, re-read `progress.md` and the art bible before continuing.
-
-## Reference map (read what the current task needs)
+## Reference map
 
 | Task | Read |
 |---|---|
-| Delegating, parallel work, gates, cost | `references/orchestration.md` |
-| Art bible, palette, lighting, post, camera, composition, UI | `references/art-direction.md` |
-| Checking for the AI/programmer-art look | `references/anti-ai-look.md` |
-| Any 3D model: sourcing, modeling craft, budgets, export, validation | `references/modeling.md` |
-| Animation, game feel, juice, locomotion, clips | `references/animation.md` |
-| Project structure, game loop, patterns, keeping code clean | `references/architecture.md` |
-| QA mode, gates, evidence, visual review, performance | `references/qa-protocol.md` |
-| Tools, Blender/engine CLIs, optional MCP servers, paid 3D generation | `references/toolchain.md` |
-| Engine specifics | `references/engines/threejs.md` · `godot.md` · `unity.md`. Unreal has no guide here: use Epic's official Claude Code plugin (`toolchain.md` §4) with the general references |
+| Imported design skill selection | `references/design-loading.md` |
+| Opening agents and planning gate | `references/startup-planning.md`, `templates/plan.md` |
+| Direction, identity, composition | `references/art-direction.md`, `anti-ai-look.md` |
+| Editable assets and route | `references/modeling.md`, `tool-matrix.md`, applicable `recipes/*.md` |
+| Shared Blender | `references/blender-live.md` |
+| UV/material pipeline | `references/texturing.md` |
+| Animation/feel | `references/animation.md`; imported game-feel material when relevant |
+| Level flow/set dressing | `references/level-design.md` |
+| Audio | `references/audio.md` |
+| Architecture | `references/architecture.md` |
+| Gates/evidence | `references/qa-protocol.md`, `templates/scorecard.md` |
+| Tested tool/engine commands | `references/toolchain.md`, `references/engines/{threejs,godot,unity}.md` |
+| Delegation/cost | `references/orchestration.md` |
 
-## Scripts (tested headless; details in `references/toolchain.md` §2)
+Unreal has no tested adapter here; use official engine docs and report that limit.
 
-Write the absolute `SKILL_DIR` path into commands; shell variables do not persist between tool calls.
+## Asset command pattern
+
+Use the absolute discovered Blender path. These are separate **headless processes**, never live MCP
+commands. Replace literal `SKILL_DIR`, paths and budgets with actual values.
 
 ```bash
-blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/inspect_model.py" -- MODEL --preset web-prop --expect-height 1.0
-blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/render_views.py" -- MODEL --out DIR --scale-ref [--engine eevee] [--anim Walk]
-blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/clip_report.py" -- MODEL      # animation numbers
-blender -b --factory-startup --python-exit-code 1 -P "$SKILL_DIR/scripts/blender/image_metrics.py" -- shots/*.png --gray   # any engine
-node "$SKILL_DIR/scripts/web/check_gltf.mjs" MODEL.glb --max-tris 3000 --max-texture 1024
-node "$SKILL_DIR/scripts/web/capture.mjs" --url "http://localhost:5173/?qa=1" --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8 --hold KeyW
+"/absolute/blender" -b --factory-startup --python-exit-code 1 -P "SKILL_DIR/templates/build.py" -- --skill-dir "SKILL_DIR" --asset crate --out assets/crate/model.glb --blend assets/crate/source.blend
+"/absolute/blender" -b --factory-startup --python-exit-code 1 -P "SKILL_DIR/scripts/blender/inspect_model.py" -- assets/crate/model.glb --preset web-prop --expect-height 0.6 --json assets/crate/inspect.json
+"/absolute/blender" -b --factory-startup --python-exit-code 1 -P "SKILL_DIR/scripts/blender/render_views.py" -- assets/crate/model.glb --out assets/crate/review --scale-ref
+node "SKILL_DIR/scripts/web/check_gltf.mjs" assets/crate/model.glb --max-tris 800 --max-texture 512
 ```
 
-No Blender installed? Use `pip install bpy` (Python 3.13) and run the same scripts with `python`. The
-Node scripts resolve `playwright` and `gltf-validator` from the game project
-(`npm i -D playwright gltf-validator`).
+Customize a copy of `templates/build.py`; its box is a **blockout**, not final art. `gs_build.py`
+supplies scoped construction, materials, part metadata, atlas and export helpers. Consult the
+recipes/toolchain for the applicable checks. Validate the exported file and open multi-view and
+exploded sheets. Node checks need project dependencies; an unavailable validator stays unverified.
 
-## Reporting to the user
+For a vehicle add inspector `--parts 'Wheel_FL,Wheel_FR,Wheel_RL,Wheel_RR' --part-pivot center
+--sockets 'seat_driver,cam_chase'`. Each comma-separated name/glob must match; use explicit names to
+prove a specific count. Center tolerance is max(5 mm, 2% of the part's largest extent). Hinges are
+not centered by assumption. Multipart render `parts` is automatic; `--no-parts` disables it and
+`--explode-factor 0.4` controls separation. These checks support, rather than replace, engine control QA.
 
-Keep reports short and verifiable:
-- what changed;
-- the evidence (paths to the images you looked at, command results, numbers against budgets);
-- what is **not** verified, and why;
-- open risks;
-- the next step.
+For web gate evidence use `node "SKILL_DIR/scripts/web/capture.mjs" --require-qa --url <url>
+--out qa/out/<milestone> --budgets design/budgets.json`. Timed screenshots without the required QA
+hooks are inspection evidence, not a deterministic gameplay pass.
 
-For visual changes, show before/after captures.
+## Report
 
-When the user asks for something this pipeline can't do well, say so before starting and offer the
-routes that work. A realistic human character modeled from code is one example: offer a CC0 rigged
-pack, AI generation plus cleanup, or a stylized design that code can execute.
+State changes, evidence paths/results against criteria, remaining defects and unavailable checks.
+For visual changes provide before/after gameplay captures. Structural validity and visual quality
+require separate evidence. Never claim this skill guarantees professional art without a real project
+evaluation.

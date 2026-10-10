@@ -30,6 +30,11 @@ credit, from majidmanzarpour/threejs-game-skills (MIT).
 
 ## Thresholds by rigor level
 
+Before grading, map categories to the brief. Mark genuinely absent roles `N/A` with a reason and
+evidence (e.g. no player avatar in a first-person puzzle). Never use `N/A` to excuse a required but
+missing feature. Compute the premium average only over applicable categories; technical evidence
+remains required. Do not impose combat or third-person conventions on unrelated genres.
+
 - **prototype:** no visual gate. Automatic failures are still reported.
 - **standard:** every category ≥ 2, and no automatic failure.
 - **premium:** every category ≥ 2, average ≥ 2.3, no automatic failure, and real-GPU frame time
@@ -46,7 +51,8 @@ A category scored below the threshold fails the gate, whatever the average. Neve
 - Fog, darkness or bloom stands in for geometry.
 - UI overlaps the play path, or text is clipped.
 - Metals render black (no environment map).
-- Floating objects in the gameplay or hero shots.
+- Unintentionally floating objects in gameplay or hero shots. Declared hover effects and articulated
+  part gaps are judged against the brief, not automatically failed.
 - No evidence from real input (only staged or title-screen shots).
 - No renderer diagnostics (draw calls, triangles, errors).
 
@@ -62,9 +68,13 @@ in writing. "Do not add noise just to raise metrics": metrics are evidence, not 
 | Silhouette | Reads as *this* object in the black-on-white view |
 | Proportions and scale | Matches the brief's dimensions; sensible next to the 1.8 m figure |
 | Form quality | No primitive soup; bevels sized per part; detail recessed; calm areas present |
-| Joins | Every part attached (no floating warning), no z-fighting seams |
+| Joins/control | Static pieces belong to the intended rigid group; moving parts keep usable pivots/hierarchy; intentional joint gaps explained; no z-fighting seams |
 | Materials | Palette roles, tonal or roughness variation, correct metalness |
 | Style match | Same bevel scale, shading and texel density as the style sheet and accepted assets |
 | Technical | `inspect_model.py` PASS (or a WARN explained in the asset report), `check_gltf.mjs` 0 errors, within budget |
 
 To pass: every criterion ≥ 2, with a technical PASS.
+
+For multipart assets also cite exported required parts, joint/pivot checks, sockets, collision budget
+and a target-engine control check. Keep editable source even when an export copy merges static pieces.
+Colorful materials cannot compensate for missing functional geometry.

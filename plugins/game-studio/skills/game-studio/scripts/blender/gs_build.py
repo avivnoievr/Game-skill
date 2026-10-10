@@ -28,7 +28,9 @@ Reference:  blueprint(png, view, width)  (image empty for modeling against ortho
 Output:     export_glb(path, roots) · save_blend(path)
 """
 import math
+import os
 import re
+from contextlib import contextmanager
 
 import bpy  # import before bmesh/mathutils (required by the PyPI bpy module)
 import bmesh
@@ -63,12 +65,33 @@ def begin(asset):
         print(f"gs_build WARNING: scene unit scale is {scene.unit_settings.scale_length}, not 1.0; "
               "sizes in this script are meters")
     name = f"GS_{asset}"
-    col = bpy.data.collections.get(name)
+    # A user may already have a collection with this name. Never adopt or clear it by name alone.
+    col = next((c for c in bpy.data.collections if c.get("gs_owner") == asset and c.get("gs_build")), None)
     if col is None:
         col = bpy.data.collections.new(name)
+        col["gs_owner"], col["gs_build"] = asset, True
     else:
-        for o in list(col.all_objects):
-            delete(o)
+        protected = {o for o in col.objects if o.get("gs_owner") != asset or
+                     any(c != col for c in o.users_collection)}
+        for o in list(protected):
+            p = o.parent
+            while p is not None and p in col.objects.values():
+                protected.add(p)
+                p = p.parent
+        for o in list(col.objects):
+            # Objects linked into another collection may be used by the developer's scene. Detach them
+            # from this build, rather than deleting them everywhere. Unowned objects receive the same care.
+            if o in protected:
+                if len(o.users_collection) == 1:
+                    scene.collection.objects.link(o)
+                col.objects.unlink(o)
+            else:
+                delete(o)
+        # Library builders link directly into col. Preserve any child collections the user added.
+        for child in list(col.children):
+            col.children.unlink(child)
+            if child not in scene.collection.children_recursive:
+                scene.collection.children.link(child)
     if col not in scene.collection.children_recursive:
         scene.collection.children.link(col)
     _STATE.update(asset=asset, collection=col)
@@ -97,6 +120,7 @@ def _link(name, bm, smooth=False):
     if smooth:
         me.polygons.foreach_set("use_smooth", [True] * len(me.polygons))
     obj = bpy.data.objects.new(name, me)
+    obj["gs_owner"] = _owner()
     _collection().objects.link(obj)
     return obj
 
@@ -123,10 +147,15 @@ def _bsdf(mat):
 def _new_material(name):
     """A material this build owns. An existing material of the same name that this build did not create
     (e.g. the user's own, in a live session) is never edited: Blender gives the new one a .001 name."""
-    mat = bpy.data.materials.get(name)
-    if mat is None or mat.get("gs_owner") != _owner():
+    candidates = [m for m in bpy.data.materials if m.get("gs_owner") == _owner() and
+                  (m.name == name or m.get("gs_name") == name)]
+    own_objects = set(_collection().all_objects)
+    mat = next((m for m in candidates if not any(o not in own_objects and o.type == "MESH" and
+               m in list(o.data.materials) for o in bpy.data.objects)), None)
+    if mat is None:
         mat = bpy.data.materials.new(name)
         mat["gs_owner"] = _owner()
+    mat["gs_name"] = name
     if mat.node_tree is None and hasattr(mat, "use_nodes"):
         mat.use_nodes = True
     return mat
@@ -142,12 +171,10 @@ def material(name, color="#808080", roughness=0.6, metallic=0.0, emission=None, 
     bsdf.inputs["Base Color"].default_value = (*lin, 1.0)
     bsdf.inputs["Roughness"].default_value = roughness
     bsdf.inputs["Metallic"].default_value = metallic
-    if emission:
-        sock = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
-        sock.default_value = (*(_srgb_to_linear(c) for c in _hex_rgb(emission)), 1.0)
-        bsdf.inputs["Emission Strength"].default_value = emission_strength
-    if alpha < 1.0:
-        bsdf.inputs["Alpha"].default_value = alpha
+    sock = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
+    sock.default_value = (*(_srgb_to_linear(c) for c in _hex_rgb(emission or "#000000")), 1.0)
+    bsdf.inputs["Emission Strength"].default_value = emission_strength if emission else 0.0
+    bsdf.inputs["Alpha"].default_value = alpha
     mat.diffuse_color = (*lin, alpha)  # viewport / Workbench color
     mat.roughness = roughness
     mat.metallic = metallic
@@ -180,8 +207,13 @@ def palette_atlas(objs, image_path, name="palette", cell_px=8, keep=()):
 
     Materials named in `keep` stay separate (emissive lights that gameplay toggles, transparent glass).
     Run it after the last join() and before export. Writes <image_path> and <image_path>_orm.png.
-    UNTESTED in this revision: check the result with inspect_model.py and a render before relying on it.
+    Only constant opaque, non-emissive palette materials may be packed. Name emissive/transparent
+    materials in `keep`; texture-driven materials need a real bake instead of this palette shortcut.
+    Produces TWO textures (color and ORM), not a single texture. Tested with Blender 4.3.2 GLB export.
     """
+    image_path = os.fspath(image_path)
+    if cell_px < 1:
+        raise ValueError("palette_atlas: cell_px must be positive")
     objs = [o for o in objs if o.type == "MESH"]
     used = []
     for o in objs:
@@ -190,6 +222,15 @@ def palette_atlas(objs, image_path, name="palette", cell_px=8, keep=()):
                 used.append(m)
     if not used:
         raise ValueError("palette_atlas: no materials to pack")
+    for m in used:
+        bsdf = _bsdf(m)
+        emission = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
+        if (bsdf.inputs["Alpha"].default_value < 1.0 or
+                (bsdf.inputs["Emission Strength"].default_value > 0 and any(emission.default_value[:3]))):
+            raise ValueError(f"palette_atlas: keep emissive/transparent material {m.name!r} separate")
+        if any(s.is_linked for s in (bsdf.inputs["Base Color"], bsdf.inputs["Roughness"],
+                                    bsdf.inputs["Metallic"], bsdf.inputs["Alpha"], emission)):
+            raise ValueError(f"palette_atlas: {m.name!r} is not a constant palette material; bake it instead")
     n = math.ceil(math.sqrt(len(used)))
     size = 4
     while size < n * cell_px:
@@ -213,13 +254,24 @@ def palette_atlas(objs, image_path, name="palette", cell_px=8, keep=()):
     images = []
     for img_name, pixels, path, space in ((name, color, image_path, "sRGB"),
                                           (f"{name}_orm", orm, orm_path, "Non-Color")):
-        img = bpy.data.images.get(img_name) or bpy.data.images.new(img_name, size, size, alpha=False)
+        # Names are not ownership. Also preserve owned images subsequently used outside this asset.
+        candidates = [im for im in bpy.data.images if im.get("gs_owner") == _owner() and
+                      (im.name == img_name or im.get("gs_name") == img_name)]
+        img = next((im for im in candidates if not any(mat.node_tree and
+            any(node.type == "TEX_IMAGE" and node.image == im for node in mat.node_tree.nodes) and
+            (mat.get("gs_owner") != _owner() or any(o.type == "MESH" and o not in objs and
+                mat in list(o.data.materials) for o in bpy.data.objects)) for mat in bpy.data.materials)), None)
+        if img is None:
+            img = bpy.data.images.new(img_name, size, size, alpha=False)
+            img["gs_owner"] = _owner()
+        img["gs_name"] = img_name
         if tuple(img.size) != (size, size):
             img.scale(size, size)
         img.colorspace_settings.name = space
         img.pixels.foreach_set(pixels)  # byte image: values are stored as given (sRGB for the color atlas)
         img.filepath_raw = path
         img.file_format = "PNG"
+        os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
         img.save()
         images.append(img)
 
@@ -230,14 +282,18 @@ def palette_atlas(objs, image_path, name="palette", cell_px=8, keep=()):
     bsdf = _bsdf(pal)
     tex, tex_orm = nt.nodes.new("ShaderNodeTexImage"), nt.nodes.new("ShaderNodeTexImage")
     tex.image, tex_orm.image = images
-    tex.interpolation = tex_orm.interpolation = "Closest"  # glTF sampler NEAREST: no color bleeding
+    tex.interpolation = tex_orm.interpolation = "Closest"  # glTF NEAREST; inspect minified gameplay views too
+    nt.nodes.active = tex  # Workbench texture shading should show color, not the data-only ORM atlas
     sep = nt.nodes.new("ShaderNodeSeparateColor")
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
     nt.links.new(tex_orm.outputs["Color"], sep.inputs["Color"])
     nt.links.new(sep.outputs["Green"], bsdf.inputs["Roughness"])
     nt.links.new(sep.outputs["Blue"], bsdf.inputs["Metallic"])
 
+    # Editing UV/material slots must not alter a linked instance outside this build.
     for o in objs:
+        if any(other.type == "MESH" and other not in objs and other.data == o.data for other in bpy.data.objects):
+            o.data = o.data.copy()
         me = o.data
         old = list(me.materials)
         new = [pal] + [m for m in dict.fromkeys(old) if m and m not in cells and m != pal]
@@ -253,11 +309,13 @@ def palette_atlas(objs, image_path, name="palette", cell_px=8, keep=()):
                 for loop in f.loops:
                     loop[uv].uv = (u, v)
             f.material_index = remap.get(f.material_index, 0)
-        bm.to_mesh(me)
-        bm.free()
+        # Clearing mesh material slots resets polygon indices. Do it BEFORE writing the remapped bmesh,
+        # otherwise keep= silently becomes material 0 (and emissive/transparent semantics disappear).
         me.materials.clear()
         for m in new:
             me.materials.append(m)
+        bm.to_mesh(me)
+        bm.free()
     return pal
 
 
@@ -427,21 +485,50 @@ def weighted_normals(obj, keep_sharp=True):
     return m
 
 
-def recess(obj, select, inset=0.01, depth=0.005):
-    """Cut detail INTO a surface: inset the selected faces, then push them in along their average normal.
+def _clean_bmesh(bm):
+    """Dissolve numerical zero-length edges left by exact booleans/insets, without welding panel gaps.
 
-    select(face) -> bool picks faces (e.g. by normal and center position). Use for windows, vents, panels.
+    This does not fill holes or pretend to repair arbitrary non-manifold input. The 0.1-micron tolerance
+    is far below a modeled seam; a QA inspection still owns the final topology verdict.
     """
+    bmesh.ops.dissolve_degenerate(bm, edges=list(bm.edges), dist=1e-7)
+    bm.normal_update()
+
+
+def _clean_mesh(obj):
     bm = bmesh.new()
     bm.from_mesh(obj.data)
+    _clean_bmesh(bm)
+    bm.to_mesh(obj.data)
+    bm.free()
+
+
+def recess(obj, select, inset=0.01, depth=0.005):
+    """Inset detail INTO a surface, offsetting each inner vertex along its selected-region normal.
+
+    select(face) -> bool picks faces (e.g. by normal and center position). Use for windows, vents, panels.
+    Uses a non-even inset: a bounded border on curved/acute regions is safer than a constant-width miter
+    that can shoot cabin corners outside the original silhouette. Split sharply folded or concave panels
+    into sensible regions; this is not a general-purpose self-intersection solver.
+    """
+    if inset < 0 or depth < 0:
+        raise ValueError("recess: inset and depth must be nonnegative")
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.normal_update()
     faces = [f for f in bm.faces if select(f)]
     if not faces:
         bm.free()
         raise ValueError(f"recess: selector matched no faces on {obj.name}")
-    normal = sum((f.normal for f in faces), Vector()).normalized()
-    bmesh.ops.inset_region(bm, faces=faces, thickness=inset, depth=0.0, use_even_offset=True)
-    verts = list({v for f in faces for v in f.verts})
-    bmesh.ops.translate(bm, vec=-normal * depth, verts=verts)
+    bmesh.ops.inset_region(bm, faces=faces, thickness=inset, depth=0.0, use_even_offset=False)
+    bm.normal_update()
+    region = set(faces)
+    verts = {v for f in faces for v in f.verts}
+    normals = {v: sum((f.normal * f.calc_area() for f in v.link_faces if f in region), Vector()).normalized()
+               for v in verts}
+    for v in verts:
+        v.co -= normals[v] * depth
+    _clean_bmesh(bm)
     bm.to_mesh(obj.data)
     bm.free()
     return obj
@@ -461,6 +548,9 @@ def apply_modifiers(obj):
     if old.users == 0:
         bpy.data.meshes.remove(old)
     me.name = obj.name
+    # Bevel can create collapsed corner triangles too. Clean the baked result, not only boolean input;
+    # bmesh preserves the remaining corner-normal layer (checked by the geometry regression fixtures).
+    _clean_mesh(obj)
     return obj
 
 
@@ -506,7 +596,7 @@ def set_origin(obj, mode="base", point=None):
 
     mode: 'base' (bottom center: the asset root, props, characters), 'center' (bounds center: wheels and
     anything that spins), 'point' (a given world point: door hinge, turret ring, lever shaft).
-    Call before parenting and before making linked copies (it edits the mesh data).
+    Call before parenting. Shared mesh data is copied so other linked objects keep their geometry.
     """
     lo, hi = bounds(obj, world=True, evaluated=False)
     if mode == "base":
@@ -518,6 +608,8 @@ def set_origin(obj, mode="base", point=None):
     else:
         raise ValueError(f"set_origin: unknown mode {mode}")
     local = obj.matrix_world.inverted() @ target
+    if obj.data.users > 1:
+        obj.data = obj.data.copy()  # preserve other linked objects' geometry
     obj.data.transform(Matrix.Translation(-local))
     obj.matrix_world = obj.matrix_world @ Matrix.Translation(local)
     return obj
@@ -525,9 +617,12 @@ def set_origin(obj, mode="base", point=None):
 
 def apply_rot_scale(obj):
     """Bake rotation and scale into the mesh, keep the location (like Apply > Rotation & Scale)."""
+    _update()
     loc = obj.matrix_basis.to_translation()
     rs = obj.matrix_basis.copy()
     rs.translation = Vector((0, 0, 0))
+    if obj.data.users > 1:
+        obj.data = obj.data.copy()
     obj.data.transform(rs)
     obj.matrix_basis = Matrix.Translation(loc)
     return obj
@@ -547,17 +642,23 @@ def join(objs, name=None):
 
     Each part's modifiers are applied first, so per-part bevels and weighted normals are kept.
     """
+    objs = list(dict.fromkeys(objs))
+    if not objs or any(o.type != "MESH" for o in objs):
+        raise ValueError("join: provide one or more mesh objects")
+    if any(o.get("joint") in JOINTS for o in objs):
+        raise ValueError("join: moving parts must stay separate")
     target = objs[0]
+    if target.data.users > 1:
+        target.data = target.data.copy()
     for o in objs:
         apply_modifiers(o)
-    if bpy.context.object and bpy.context.object.mode != "OBJECT":  # live session in edit mode
-        bpy.ops.object.mode_set(mode="OBJECT")
-    for o in bpy.context.view_layer.objects:
-        o.select_set(o in objs)
-    bpy.context.view_layer.objects.active = target
-    with bpy.context.temp_override(active_object=target, object=target, selected_objects=objs,
-                                   selected_editable_objects=objs):
-        bpy.ops.object.join()
+    with _preserve_context():
+        for o in bpy.context.view_layer.objects:
+            o.select_set(o in objs)
+        bpy.context.view_layer.objects.active = target
+        with bpy.context.temp_override(active_object=target, object=target, selected_objects=objs,
+                                       selected_editable_objects=objs):
+            bpy.ops.object.join()
     if name:
         target.name = target.data.name = name
     return target
@@ -574,6 +675,7 @@ def delete(obj):
 def empty(name, location=(0.0, 0.0, 0.0), parent_obj=None, display="PLAIN_AXES", size=0.25):
     """Empty in the asset's collection: asset root, pivot (steer, turret yaw), or group node."""
     e = bpy.data.objects.new(name, None)
+    e["gs_owner"] = _owner()
     e.empty_display_type = display
     e.empty_display_size = size
     _collection().objects.link(e)
@@ -665,8 +767,11 @@ def wheel(name, radius=0.33, width=0.22, rim_ratio=0.62, spokes=5, segments=32, 
         tire_prof.append((radius - sh + sh * math.cos(a), hw - sh + sh * math.sin(a)))
     tire_prof += [(r_rim, hw * 0.92)]
     tire = revolve(f"{name}_tire", tire_prof, segments=segments, axis=axis, cap=False)
-    rim_prof = [(0.0, hw * 0.55), (r_rim * 0.25, hw * 0.6), (r_rim * 0.92, hw * 0.35), (r_rim, hw * 0.9),
-                (r_rim, -hw * 0.9), (r_rim * 0.9, -hw * 0.85), (0.0, -hw * 0.6)]
+    # The barrel reaches beyond the tire's +/-0.92hw bead so the rubber seats on metal. Stopping at
+    # +/-0.90hw left a real 2.05 mm gap for a 205 mm tire. Overlap the bead into the barrel rather than
+    # duplicating its boundary ring, which would create a three-face edge when export seams are welded.
+    rim_prof = [(0.0, hw * 0.55), (r_rim * 0.25, hw * 0.6), (r_rim * 0.92, hw * 0.35), (r_rim, hw * 0.94),
+                (r_rim, -hw * 0.94), (r_rim * 0.9, -hw * 0.85), (0.0, -hw * 0.6)]
     rim = revolve(f"{name}_rim", rim_prof, segments=segments, axis=axis)
     parts = [tire, rim]
     for k in range(spokes):
@@ -703,6 +808,7 @@ def blueprint(path, view, width, center=(0.0, 0.0, 0.0), opacity=0.5):
     e.color[3] = opacity
     e.hide_select = True
     e.hide_render = True
+    e["gs_reference"] = True
     return e
 
 
@@ -713,21 +819,45 @@ def _select_tree(roots):
     for r in roots:
         keep.add(r)
         keep.update(r.children_recursive)
+    keep = {o for o in keep if not o.get("gs_reference")}
     for o in bpy.context.view_layer.objects:
         o.select_set(o in keep)
     return keep
+
+
+@contextmanager
+def _preserve_context():
+    """Restore developer selection, active object and mode, including when an operator raises."""
+    selected = {o.as_pointer() for o in bpy.context.view_layer.objects if o.select_get()}
+    active = bpy.context.view_layer.objects.active
+    mode = active.mode if active else "OBJECT"
+    if active and mode != "OBJECT":
+        bpy.ops.object.mode_set(mode="OBJECT")
+    try:
+        yield
+    finally:
+        current = bpy.context.view_layer.objects.active
+        if current and current.mode != "OBJECT":
+            bpy.ops.object.mode_set(mode="OBJECT")
+        for o in bpy.context.view_layer.objects:
+            o.select_set(o.as_pointer() in selected)
+        try:
+            exists = active is not None and bpy.data.objects.get(active.name) == active
+        except ReferenceError:
+            exists = False
+        bpy.context.view_layer.objects.active = active if exists else None
+        if exists and mode != "OBJECT":
+            bpy.ops.object.mode_set(mode=mode)
 
 
 def export_glb(path, roots=None, extras=True):
     """Export roots (and their children) as GLB: +Y up, modifiers applied, custom properties (joints) as
     extras. Default roots: the top-level objects of this asset's collection. The selection is restored."""
     roots = roots or [o for o in _collection().all_objects if o.parent is None]
-    before = [o for o in bpy.context.view_layer.objects if o.select_get()]
-    _select_tree(roots)
-    bpy.ops.export_scene.gltf(filepath=str(path), export_format="GLB", use_selection=True, export_apply=True,
-                              export_yup=True, export_extras=extras)
-    for o in bpy.context.view_layer.objects:
-        o.select_set(o in before)
+    with _preserve_context():
+        _select_tree(roots)
+        bpy.ops.export_scene.gltf(filepath=str(path), export_format="GLB", use_selection=True, export_apply=True,
+                                  export_yup=True, export_extras=extras)
     return path
 
 

@@ -39,9 +39,11 @@ Read `SKILL_DIR/references/qa-protocol.md` (gates G1–G6) and, for the engine,
    fails to start, that alone fails G0.
 2. **Boot smoke (G3):** 0 page/console errors and 0 failed requests; ready within 30 s; canvas not
    blank (check the image metrics); renderer counts within budget.
+   For web gate evidence use `capture.mjs --require-qa --budgets design/budgets.json`; ordinary
+   screenshots without required hooks cannot establish G0/G3 or deterministic feature behavior.
 3. **Features (G4):** for each feature id in scope, follow its acceptance criteria literally. Drive
    real input:
-   - `capture.mjs --sequence N --step-ms M --hold <Key> [--press <Key>]`;
+   - `capture.mjs --require-qa --sequence N --step-ms M --hold <Key> [--press <Key>]`;
    - or the engine's scripted input or tests.
 
    Read `state()` before and after, and assert the invariants:
@@ -51,11 +53,12 @@ Read `SKILL_DIR/references/qa-protocol.md` (gates G1–G6) and, for the engine,
    - the objective is reachable.
 
    Try the obvious abuses: hold two directions, spam the action key, pause and resume, reload.
-4. **Leak test:** `capture.mjs --reloads 5` (it needs `__QA__.reload`), or load and unload the main
+4. **Leak test:** `capture.mjs --require-qa --reloads 5` (it needs `__QA__.reload`), or load and unload the main
    scene 5 times in an engine test. Geometry and texture counts must return to baseline.
 5. **Frame-rate independence:** where the QA hook allows stepping at different dt (1/30, 1/60, 1/144),
    compare positions at t = 2 s. Otherwise grep the code for per-frame constant lerps
-   (`lerp(..., 0.1)`), movement without dt, and `Math.random` in feel paths.
+   (`lerp(..., 0.1)`), movement without dt, and `Math.random` in feel paths. Static code review is a
+   diagnostic, not equivalent to a runtime frame-rate-independence pass; mark that test unverified.
 6. **Feel pass** (`animation.md` §3 and §8):
    - response under ~100 ms;
    - shake decays to zero;

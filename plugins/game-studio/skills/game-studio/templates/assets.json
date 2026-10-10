@@ -2,7 +2,9 @@
   "_rules": [
     "One entry per asset before work starts. status: todo -> blockout -> built -> accepted (accepted only after an art-critic PASS).",
     "source is decided with the routing in references/modeling.md section 2 and never changed silently.",
-    "Third-party or generated assets also get a row in assets/LICENSES.md."
+    "Third-party or generated assets also get a row in assets/LICENSES.md.",
+    "Declare semantic parts/joints/sockets/collision before building. Never merge pieces that gameplay must control separately.",
+    "Keep editable source/build.py even when an export copy merges static geometry."
   ],
   "style_sheet": {
     "style": "<from the art bible, e.g. stylized low-poly, flat shading>",
@@ -19,7 +21,45 @@
       "source": "code",
       "dims_m": [0.6, 0.6, 0.6],
       "pivot": "base-center",
+      "source_files": ["assets/crate_wood/build.py", "assets/crate_wood/source.blend"],
+      "control_contract": {
+        "required_parts": ["Body"],
+        "rigid_groups": { "Body": ["Body"] },
+        "joints": [],
+        "required_sockets": [],
+        "collision": { "mode": "box", "max_tris": 12 },
+        "pivot_tolerance_m": 0.005,
+        "pivot_tolerance_extent_ratio": 0.02,
+        "engine_check": "Import exported GLB; verify scale/orientation and collision behavior."
+      },
       "budget": { "tris": 800, "materials": 1, "texture": 512 },
+      "status": "todo",
+      "owner": null,
+      "evidence": null,
+      "license": "original"
+    },
+    {
+      "id": "vehicle_example",
+      "class": "hero-prop",
+      "description": "Illustrative articulated contract; set its budget/style to the actual game before work",
+      "source": "code",
+      "dims_m": [1.8, 4.5, 1.44],
+      "pivot": "root at ground, wheels at axle centers",
+      "source_files": ["assets/vehicle_example/build.py", "assets/vehicle_example/source.blend"],
+      "control_contract": {
+        "required_parts": ["Body", "Wheel_FL", "Wheel_FR", "Wheel_RL", "Wheel_RR"],
+        "rigid_groups": { "Body": ["Body"], "Wheel_FL": ["Wheel_FL"], "Wheel_FR": ["Wheel_FR"], "Wheel_RL": ["Wheel_RL"], "Wheel_RR": ["Wheel_RR"] },
+        "joints": [
+          { "parts": "Wheel_*", "kind": "spin", "local_axis_blender": "X", "pivot": "center", "units": "deg" },
+          { "parts": "Steer_*", "kind": "steer", "local_axis_blender": "Z", "min": -35, "max": 35, "units": "deg" }
+        ],
+        "required_sockets": ["seat_driver", "cam_chase", "exhaust"],
+        "collision": { "mode": "body proxy; wheel handling chosen by gameplay", "max_tris": 500 },
+        "pivot_tolerance_m": 0.005,
+        "pivot_tolerance_extent_ratio": 0.02,
+        "engine_check": "Address all four exported wheels, rotate about axle without orbit, steer fronts, resolve sockets and hide collision mesh."
+      },
+      "budget": { "tris": 12000, "materials": 3, "texture": 2048 },
       "status": "todo",
       "owner": null,
       "evidence": null,

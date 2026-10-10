@@ -1,0 +1,80 @@
+test_blueprints_stay_out_of_export (__main__.BuildTests.test_blueprints_stay_out_of_export) ... Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+08:55:40 | INFO: Starting glTF 2.0 export
+08:55:40 | INFO: Extracting primitive: Asset
+08:55:40 | INFO: Primitives created: 1
+08:55:40 | INFO: Finished glTF 2.0 export in 0.0029077529907226562 s
+ok
+test_boolean_cleanup_does_not_destroy_real_panel_gap (__main__.BuildTests.test_boolean_cleanup_does_not_destroy_real_panel_gap) ... ok
+test_car_geometry_pivots_and_spike_regression (__main__.BuildTests.test_car_geometry_pivots_and_spike_regression) ... 
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+08:55:40 | INFO: Starting glTF 2.0 export
+08:55:40 | INFO: Extracting primitive: Body
+08:55:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+08:55:40 | INFO: Primitives created: 3
+08:55:40 | INFO: Extracting primitive: Body-colonly
+08:55:40 | INFO: Primitives created: 1
+08:55:40 | INFO: Extracting primitive: Wheel_FL
+08:55:40 | INFO: Primitives created: 1
+08:55:40 | INFO: Extracting primitive: Wheel_FR
+08:55:40 | INFO: Primitives created: 1
+08:55:40 | INFO: Extracting primitive: Wheel_RL
+08:55:40 | INFO: Primitives created: 1
+08:55:40 | INFO: Extracting primitive: Wheel_RR
+08:55:40 | INFO: Primitives created: 1
+08:55:40 | INFO: Finished glTF 2.0 export in 0.03085041046142578 s
+
+Info: Saved "car.blend"
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+08:55:41 | INFO: Data are loaded, start creating Blender stuff
+08:55:41 | INFO: Blender create Mesh node Body
+08:55:41 | INFO: Blender create Mesh node Body-colonly
+08:55:41 | INFO: Blender create Mesh node Wheel_FL
+08:55:41 | INFO: Blender create Mesh node Wheel_FR
+08:55:41 | INFO: Blender create Mesh node Wheel_RL
+08:55:41 | INFO: Blender create Mesh node Wheel_RR
+08:55:41 | INFO: glTF import finished in 0.02s
+ok
+test_join_keeps_developer_linked_mesh_unchanged (__main__.BuildTests.test_join_keeps_developer_linked_mesh_unchanged) ... ok
+test_join_refuses_moving_parts_before_mutation (__main__.BuildTests.test_join_refuses_moving_parts_before_mutation) ... ok
+test_live_material_and_atlas_never_overwrite_user_datablocks (__main__.BuildTests.test_live_material_and_atlas_never_overwrite_user_datablocks) ... ok
+test_live_restart_preserves_developer_collections_objects_and_parent (__main__.BuildTests.test_live_restart_preserves_developer_collections_objects_and_parent) ... ok
+test_modifier_cleanup_preserves_custom_corner_normals (__main__.BuildTests.test_modifier_cleanup_preserves_custom_corner_normals) ... ok
+test_operator_context_restored_on_success_and_failure (__main__.BuildTests.test_operator_context_restored_on_success_and_failure) ... Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+08:55:41 | INFO: Starting glTF 2.0 export
+08:55:41 | INFO: Extracting primitive: Combined
+08:55:41 | INFO: Primitives created: 1
+08:55:41 | INFO: Finished glTF 2.0 export in 0.0021381378173828125 s
+ok
+test_palette_preserves_kept_faces_and_roughness_metallic_colors (__main__.BuildTests.test_palette_preserves_kept_faces_and_roughness_metallic_colors) ... 
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+08:55:41 | INFO: Starting glTF 2.0 export
+08:55:41 | INFO: Extracting primitive: Panel
+08:55:41 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+08:55:41 | INFO: Primitives created: 2
+08:55:41 | INFO: Finished glTF 2.0 export in 0.00811767578125 s
+ok
+test_palette_refuses_lossy_inputs_before_mutation (__main__.BuildTests.test_palette_refuses_lossy_inputs_before_mutation) ... ok
+test_recess_is_inward_and_rejects_missing_or_negative_inputs (__main__.BuildTests.test_recess_is_inward_and_rejects_missing_or_negative_inputs) ... ok
+test_shared_owned_material_is_not_edited_on_rebuild (__main__.BuildTests.test_shared_owned_material_is_not_edited_on_rebuild) ... ok
+test_transform_helpers_preserve_geometry_and_linked_users (__main__.BuildTests.test_transform_helpers_preserve_geometry_and_linked_users) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 1.073s
+
+OK
+
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Extensions: writing cache failed ([Errno 30] Read-only file system: '<user-home>/.config/blender/4.3/extensions').
+Blender 4.3.2
+
+Blender quit

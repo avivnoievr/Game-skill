@@ -7,6 +7,7 @@
 
 ## Current state
 - Phase: <intake | pre-production | production | integration | expansion | release>
+- Startup research / reconciled plan: <paths, brief revision, ready/provisional/blocked; reuse until intent changes>
 - Build status: <runs / broken — last verified YYYY-MM-DD with evidence path>
 
 ## Decisions

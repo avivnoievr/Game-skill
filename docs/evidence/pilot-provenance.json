@@ -1,0 +1,42 @@
+{
+  "fan.glb": {
+    "bytes": 51652,
+    "sha256": "d980623112bcce4ef7d9ab0b912c8ba8905c3b9fca053a939a54cd8d77785903"
+  },
+  "source.blend": {
+    "bytes": 561348,
+    "sha256": "1da1d68d14c51221dd051d526744ef8ec6480307b6c30447af8c4eb5e0b39e76"
+  },
+  "build.py": {
+    "bytes": 5734,
+    "sha256": "22617601d10adae7dc304008bdfba56ee35012f4133f5a4d4fda759d9411c064"
+  },
+  "control.gd": {
+    "bytes": 2580,
+    "sha256": "0823ec6e62b0592b95dd00a47ea353aa4e50efa05d8e21a5693077bacc78c4db"
+  },
+  "inspect.json": {
+    "bytes": 6203,
+    "sha256": "b905065ea686a72ed7d535a21525cced9b771ff0472d5687c8d68f715e5a73ae"
+  },
+  "inspect-rotor.json": {
+    "bytes": 5577,
+    "sha256": "aa77e366d82c423cc6e69156276741f26a723ca02364e1e44f70ee049899c76c"
+  },
+  "godot-control.json": {
+    "bytes": 677,
+    "sha256": "117f2e8554ddd3b03a943c12d46afca763471ea6117bcf469806f2fcef00aeb1"
+  },
+  "review/contact_sheet.png": {
+    "bytes": 779444,
+    "sha256": "a1d45e62aa0f226c4e55954d1c6da748824bbdd33901e3f01ab2b476e7276018"
+  },
+  "look/contact_sheet.png": {
+    "bytes": 513462,
+    "sha256": "40de2455317239e4f9dedb23551ee3321458eb97a1e38a5d5e7d1b755160e95d"
+  },
+  "scale/contact_sheet.png": {
+    "bytes": 290135,
+    "sha256": "d49c0cfd9b73bed3c5342f99aaad59b89b011c0669fd48bd1161925c2bd7fdb1"
+  }
+}

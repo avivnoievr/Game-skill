@@ -8,6 +8,7 @@ Views (default: front,right,back,left,q_fl,q_fr,top,silhouette,wire):
   q_fl/q_fr                  three-quarter perspective (front-left / front-right), for form
   silhouette                 flat black on white from q_fr, for shape readability
   wire                       three-quarter with wireframe overlay, for topology density
+  parts                      exploded, flat color per render mesh (auto-added for multipart assets)
 Options:
   --engine workbench|eevee|cycles  workbench (default) is fast and shows form/cavities; eevee/cycles
                                    add studio lights, a ground plane and contact shadows
@@ -18,9 +19,12 @@ Options:
   --anim-steps N       frames in the pose strip (default 8)
   --frame N            scene frame to render the static views at
   --no-sheet           skip the contact sheet
+  --no-parts           suppress the exploded parts view
+  --explode-factor F   offset = (part center - asset center) * F (default 0.4)
 Outputs: one PNG per view, contact_sheet.png (row-major in the order of --views) and views.json.
 """
 import argparse
+import colorsys
 import json
 import math
 import os
@@ -32,9 +36,10 @@ import bpy  # noqa: E402  (import before mathutils: required by the PyPI bpy mod
 import numpy as np  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
-from gs_common import collision_objects, load_model, mesh_objects, script_args, world_bbox, world_points  # noqa: E402
+from gs_common import (collision_objects, load_model, mesh_objects, object_depth,
+                       round_vec, script_args, world_bbox, world_points)  # noqa: E402
 
-ALL_VIEWS = ["front", "right", "back", "left", "q_fl", "q_fr", "top", "silhouette", "wire"]
+ALL_VIEWS = ["front", "right", "back", "left", "q_fl", "q_fr", "top", "silhouette", "wire", "parts"]
 DIRECTIONS = {  # camera position relative to the asset center (Blender: -Y is the asset's front)
     "front": (0, -1, 0), "back": (0, 1, 0), "right": (1, 0, 0), "left": (-1, 0, 0),
     "top": (0, -0.0001, 1), "q_fl": (-1, -1.1, 0.55), "q_fr": (1, -1.1, 0.55),
@@ -48,17 +53,28 @@ def parse():
     p.add_argument("--out", required=True)
     p.add_argument("--engine", choices=["workbench", "eevee", "cycles"], default="workbench")
     p.add_argument("--size", type=int, default=640)
-    p.add_argument("--views", default=",".join(ALL_VIEWS))
+    p.add_argument("--views", default=None)
     p.add_argument("--scale-ref", action="store_true")
     p.add_argument("--anim")
     p.add_argument("--anim-steps", type=int, default=8)
     p.add_argument("--frame", type=int)
     p.add_argument("--no-sheet", action="store_true")
+    p.add_argument("--no-parts", action="store_true")
+    p.add_argument("--explode-factor", type=float, default=0.4)
     a = p.parse_args(script_args())
-    a.views = [v.strip() for v in a.views.split(",") if v.strip()]
+    a.default_views = a.views is None
+    a.views = ALL_VIEWS[:-1].copy() if a.default_views else [v.strip() for v in a.views.split(",") if v.strip()]
     bad = [v for v in a.views if v not in ALL_VIEWS]
     if bad:
         p.error(f"unknown views {bad}; choose from {ALL_VIEWS}")
+    if not math.isfinite(a.explode_factor) or a.explode_factor < 0:
+        p.error("--explode-factor must be finite and nonnegative")
+    if not a.views or a.size <= 0:
+        p.error("at least one view and a positive --size are required")
+    if a.no_parts:
+        a.views = [v for v in a.views if v != "parts"]
+        if not a.views:
+            p.error("--no-parts removed the only requested view")
     return a
 
 
@@ -177,7 +193,7 @@ def aim(obj, target):
 
 def place_camera(cam, view, center, points, fill=0.85):
     """Aim at `center` from the view direction and fit the projected vertices to `fill` of the frame."""
-    direction = Vector(DIRECTIONS["q_fr" if view in ("silhouette", "wire") else view]).normalized()
+    direction = Vector(DIRECTIONS["q_fr" if view in ("silhouette", "wire", "parts") else view]).normalized()
     radius = max(float(np.linalg.norm(points - np.array(center), axis=1).max()) if len(points) else 1.0, 1e-3)
     ortho = view in ORTHO_PLANE
     cam.data.type = "ORTHO" if ortho else "PERSP"
@@ -251,6 +267,52 @@ def with_wireframe(meshes, radius, render):
     scene.render.engine, sh.color_type = saved
 
 
+def with_parts(meshes, center, render, factor=0.4):
+    """Reversible exploded view: fixed target world matrices avoid doubling child offsets.
+
+    The callback receives a deterministic object/color/offset key. Parent-first application/restoration
+    preserve hierarchy and linked mesh data. State is restored even if the render raises.
+    """
+    scene = bpy.context.scene
+    shading = scene.display.shading
+    ordered = sorted(meshes, key=lambda o: (object_depth(o), o.name))
+    matrices = {o.name: o.matrix_world.copy() for o in ordered}
+    colors = {o.name: tuple(o.color) for o in ordered}
+    saved = (scene.render.engine, shading.light, shading.color_type,
+             shading.show_cavity, shading.show_specular_highlight)
+    hidden = [o for o in scene.objects if o.name.startswith(("gs_ground", "gs_scale_ref"))]
+    visibility = {o.name: o.hide_render for o in hidden}
+    key = []
+    for i, obj in enumerate(ordered):
+        lo, hi = world_bbox([obj])
+        offset = ((lo + hi) / 2 - center) * factor
+        key.append({"name": obj.name, "offset": round_vec(offset, 6),
+                    "color": list(colorsys.hsv_to_rgb((i * 0.61803398875) % 1, 0.65, 0.85))})
+    try:
+        scene.render.engine = "BLENDER_WORKBENCH"
+        shading.light, shading.color_type = "FLAT", "OBJECT"
+        shading.show_cavity = True
+        shading.show_specular_highlight = False
+        for obj in hidden:
+            obj.hide_render = True
+        for obj, item in zip(ordered, key):
+            matrix = matrices[obj.name].copy()
+            matrix.translation += Vector(item["offset"])
+            obj.matrix_world = matrix
+            obj.color = (*item["color"], 1.0)
+            bpy.context.view_layer.update()
+        return render(key)
+    finally:
+        for obj in ordered:
+            obj.matrix_world = matrices[obj.name]
+            obj.color = colors[obj.name]
+            bpy.context.view_layer.update()
+        for obj in hidden:
+            obj.hide_render = visibility[obj.name]
+        (scene.render.engine, shading.light, shading.color_type,
+         shading.show_cavity, shading.show_specular_highlight) = saved
+
+
 def find_action_target(action_name):
     act = bpy.data.actions.get(action_name)
     if act is None:
@@ -301,6 +363,8 @@ def main():
     meshes = mesh_objects()
     if not meshes:
         raise SystemExit("error: no mesh objects to render")
+    if a.default_views and len(meshes) > 1 and not a.no_parts:
+        a.views.append("parts")
     has_textures = any(n.type == "TEX_IMAGE" and n.image for o in meshes for s in o.material_slots
                        if s.material and s.material.node_tree for n in s.material.node_tree.nodes)
     lo, hi = world_bbox(meshes)
@@ -321,9 +385,15 @@ def main():
     scene.camera = cam
 
     written = []
+    part_key = []
 
-    def shoot(view, path):
-        place_camera(cam, view, center, points)
+    def shoot(view, path, fit_objects=None):
+        if fit_objects is None:
+            fit_center, fit_points = center, points
+        else:
+            fit_lo, fit_hi = world_bbox(fit_objects)
+            fit_center, fit_points = (fit_lo + fit_hi) / 2, world_points(fit_objects)
+        place_camera(cam, view, fit_center, fit_points)
         scene.render.filepath = path
         bpy.ops.render.render(write_still=True)
         written.append({"view": view, "file": path})
@@ -334,6 +404,11 @@ def main():
             with_silhouette(lambda: shoot(view, path))
         elif view == "wire":
             with_wireframe(meshes, radius, lambda: shoot(view, path))
+        elif view == "parts":
+            def render_parts(key):
+                part_key.extend(key)
+                shoot(view, path, fit_objects=meshes)
+            with_parts(meshes, (lo + hi) / 2, render_parts, a.explode_factor)
         else:
             shoot(view, path)
 
@@ -362,7 +437,8 @@ def main():
 
     with open(os.path.join(a.out, "views.json"), "w", encoding="utf-8") as fh:
         json.dump({"model": os.path.abspath(a.model), "engine": a.engine, "views": written, "anim": strip,
-                   "bounds_min": list(lo), "bounds_max": list(hi)}, fh, indent=2)
+                   "bounds_min": list(lo), "bounds_max": list(hi),
+                   "parts": part_key, "explode_factor": a.explode_factor}, fh, indent=2)
     print(f"rendered {len(written)} views" + (f" + {len(strip)} anim frames" if strip else "") + f" -> {a.out}")
 
 

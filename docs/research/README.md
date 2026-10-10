@@ -16,3 +16,7 @@ plan they followed. They are kept as-is for transparency: claims tagged [UNVERIF
 
 Note: YouTube and most video-transcript sites were blocked in the research environment, so no videos
 were watched; where a talk mattered, the agents used its slides, code or written notes instead.
+
+Round-two reports and the original Claude handoff are in `round2/`. Current verified continuation
+results live in [../VALIDATION.md](../VALIDATION.md); archived reports retain their original caveats
+and may describe unfinished work or facts superseded by current documentation.

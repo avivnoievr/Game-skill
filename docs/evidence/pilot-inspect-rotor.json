@@ -1,0 +1,291 @@
+{
+  "file": "work/pilot-review/fan.glb",
+  "summary": {
+    "triangles": 2344,
+    "meshes": 3,
+    "materials": 2,
+    "draw_calls_estimate": 3,
+    "dimensions_m": [
+      0.304,
+      0.2,
+      0.452
+    ],
+    "bounds_min": [
+      -0.152,
+      -0.085,
+      0.0
+    ],
+    "bounds_max": [
+      0.152,
+      0.115,
+      0.452
+    ],
+    "surface_area_m2": 0.263,
+    "textures": {},
+    "texel_density_px_per_m": {},
+    "armatures": [],
+    "actions": [],
+    "budget": {
+      "max_tris": 4000,
+      "max_materials": 2,
+      "max_texture": 1024
+    }
+  },
+  "meshes": [
+    {
+      "name": "Base",
+      "vertices": 290,
+      "faces": 472,
+      "triangles": 472,
+      "uv_layers": 0,
+      "materials": [
+        "enamel"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": null,
+      "surface_area_m2": 0.1398,
+      "uv_area": null,
+      "ngons": 0,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": true,
+      "signed_volume": 0.00161
+    },
+    {
+      "name": "Guard",
+      "vertices": 738,
+      "faces": 1376,
+      "triangles": 1376,
+      "uv_layers": 0,
+      "materials": [
+        "enamel"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": null,
+      "surface_area_m2": 0.0695,
+      "uv_area": null,
+      "ngons": 0,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": true,
+      "signed_volume": 8.2e-05
+    },
+    {
+      "name": "Rotor",
+      "vertices": 345,
+      "faces": 496,
+      "triangles": 496,
+      "uv_layers": 0,
+      "materials": [
+        "rotor"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": null,
+      "surface_area_m2": 0.0533,
+      "uv_area": null,
+      "ngons": 0,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": true,
+      "signed_volume": 0.000167
+    }
+  ],
+  "parts": [
+    {
+      "name": "Rotor",
+      "joint": "spin",
+      "axis": "Y",
+      "origin": [
+        0.0,
+        -0.0105,
+        0.3
+      ],
+      "meshes": [
+        "Rotor"
+      ],
+      "bounds_min": [
+        -0.12588,
+        -0.025,
+        0.17412
+      ],
+      "bounds_max": [
+        0.12588,
+        0.004,
+        0.42588
+      ],
+      "pivot_distance_m": 0.0,
+      "pivot_tolerance_m": 0.005035
+    }
+  ],
+  "rigid_groups": {
+    "body": [
+      "Base",
+      "Guard"
+    ],
+    "Rotor": [
+      "Rotor"
+    ]
+  },
+  "sockets": [
+    "SOCKET_cord"
+  ],
+  "collisions": [
+    {
+      "name": "Base-colonly",
+      "triangles": 12,
+      "dimensions_m": [
+        0.2,
+        0.2,
+        0.344
+      ],
+      "origin": [
+        0.0,
+        0.015,
+        0.172
+      ]
+    }
+  ],
+  "hierarchy": [
+    {
+      "name": "desk_fan",
+      "type": "EMPTY",
+      "parent": null,
+      "depth": 0,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Base",
+      "type": "MESH",
+      "parent": "desk_fan",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.015,
+        0.0
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Base-colonly",
+      "type": "MESH",
+      "parent": "desk_fan",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.015,
+        0.172
+      ],
+      "collision": true,
+      "socket": false
+    },
+    {
+      "name": "Guard",
+      "type": "MESH",
+      "parent": "desk_fan",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.3
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Rotor",
+      "type": "MESH",
+      "parent": "desk_fan",
+      "depth": 1,
+      "joint": "spin",
+      "axis": "Y",
+      "origin": [
+        0.0,
+        -0.0105,
+        0.3
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "SOCKET_cord",
+      "type": "EMPTY",
+      "parent": "desk_fan",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.08,
+        0.025
+      ],
+      "collision": false,
+      "socket": true
+    }
+  ],
+  "checks": [
+    {
+      "level": "PASS",
+      "check": "parts",
+      "object": "Rotor",
+      "message": "required part matches 'Rotor'"
+    },
+    {
+      "level": "PASS",
+      "check": "part_pivot",
+      "object": "Rotor",
+      "message": "bounds-center distance 0.000000 m / tolerance 0.005035 m (max of absolute floor and relative extent)"
+    },
+    {
+      "level": "PASS",
+      "check": "socket",
+      "object": "SOCKET_cord",
+      "message": "required attachment node exists"
+    },
+    {
+      "level": "PASS",
+      "check": "budget",
+      "object": null,
+      "message": "triangles 2344 / budget 4000"
+    },
+    {
+      "level": "PASS",
+      "check": "budget",
+      "object": null,
+      "message": "materials 2 / budget 2"
+    },
+    {
+      "level": "PASS",
+      "check": "pivot",
+      "object": null,
+      "message": "expected origin at bottom-center (asset rests on Z=0, centered on X/Y); bounds min [-0.152, -0.085, 0.0] max [0.152, 0.115, 0.452]"
+    }
+  ],
+  "verdict": "PASS"
+}

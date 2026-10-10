@@ -1,70 +1,61 @@
 # Activation prompts
 
-Paste one of these as the first message of a new Claude Code session opened in your game project, after
-installing (see README.md). The English and Hebrew versions say the same thing, so use whichever you
-prefer.
+Open Claude Code in the game repository after installing. Project copy: `/game-studio`.
+Marketplace plugin: `/game-studio:game-studio`. These prompts activate the installed files; they do
+not install tools or change the model selected in your client.
 
-With the plugin installed, the skill is `/game-studio:game-studio`. With the project or user copy
-(`install.sh`), it is `/game-studio`.
-
----
-
-## A. Existing game (start here if you already have a game in progress)
+## משחק קיים — להדבקה
 
 ```text
-Use the game-studio skill for all work on this game. Load it first (/game-studio, or /game-studio:game-studio with the plugin) and follow it as this project's standard.
+טען עכשיו את game-studio (/game-studio, או /game-studio:game-studio בהתקנת פלאגין) והשתמש בו להמשך המשחק הזה.
 
-Context: I'm building a 3D game with you. So far the visuals look amateur and AI-generated, and the 3D models are poor. I need intentional, professional art direction, game-ready models, good animation, a clean codebase, and strict quality control. Mediocre results count as failure on this project. I would rather hear an honest "this isn't good yet" than a claim that it's fine.
+קרא קודם את הוראות הפרויקט, progress.md ואת מפת references/design-loading.md. טען את חומר העיצוב המתאים לשלב, בלי לקרוא את כל הספרייה בכל משימה. השתמש בבלנדר שכבר מותקן; אל תתקין עותק נוסף אוטומטית.
 
-Start with the existing-project audit from the skill:
-1. Read progress.md and CLAUDE.md if they exist, identify the engine and version, and get the game running.
-2. Capture real gameplay evidence (screenshots, metrics, errors) and run the skill's inspect/render scripts on the 5 most visible models.
-3. Have the art-critic agent score the current state independently against the scorecard.
-4. Write design/audit.md: the top problems ranked by player impact, each with evidence, plus what is worth keeping.
-5. Then stop and show me: the 3–5 changes that would improve the game most, 2–3 art directions to choose from (with palettes), and your plan, including which agents you will use for what. Ask me only questions whose answers change the result.
+המטרה: כיוון אמנותי מכוון ומקצועי, מודלים ניתנים לעריכה ושליטה במשחק, אנימציה טובה, תשתית נקייה ובקרת איכות אמיתית. קודם בדוק מה כבר עובד ומה חסר. אם יש משחק, הרץ אותו, צלם משחק אמיתי, בדוק את המודלים הבולטים והיעזר ב-art-critic להערכה עצמאית. כתוב audit קצר עם 3–5 השיפורים בעלי ההשפעה הגדולה ביותר וראיות לכל בעיה.
 
-Rules for the whole project: no claim without evidence from this session; look at every visual change before calling it done; independent critics judge milestones; one feature at a time, with progress.md kept current; never weaken a test, threshold or requirement to make something pass. Use subagents where the skill says they pay off (asset-builder in parallel for assets, animator for rigs and clips, art-critic and playtest-qa at gates), not for trivial work.
+לפני ייצור חדש, כשאין תוכנית שימושית, הפעל שני סוכני פתיחה במקביל: genre-art-researcher יחקר את הז׳אנר, הטון ורפרנסים וימליץ על שפה חזותית ותנועה; production-planner ימפה מכניקות, התקדמות, תלויות ואבני דרך. ״סימולטור״ לא מחייב ריאליזם ו״מצחיק״ לא מחייב סגנון גנרי. חבר את שני הדוחות לתוכנית design/plan.md עם מקטע משחק מייצג, סדר בנייה, בעלים, תקציבים ובדיקות יציאה לפני הייצור. שמור את הממצאים והשתמש בהם שוב בסשנים הבאים.
+
+חלק עבודה משמעותית לסוכנים עם תחום בעלות ברור: asset-builder לנכס עצמאי, animator לאנימציה, art-critic ו-playtest-qa לביקורת אבני דרך. עד שלושה במקביל, בלי שני כותבים באותו קובץ או סצנת Blender חיה. אל תפתח סוכן בשביל בירור טריוויאלי.
+
+לכל מודל קבע מראש חלקים, pivots, joints, sockets, collision ותקציב. שמור מקור ניתן לעריכה ואל תאחד חלקים שצריכים לנוע בנפרד. אל תציג mesh מאוחד עם פרטים מצוירים כתחליף למודל שניתן לשלוט בו. אל תשתמש ביצירה בתשלום בלי הרשאה מפורשת.
+
+התקדם עצמאית בהחלטות הפיכות שמתאימות להנחיות שלי; סמן החלטות טעם לא מוכרעות כזמניות. שאל רק כשהמידע באמת חסר ומשנה את התוצאה. בנה מקטע מייצג לפני שאתה מכפיל תוכן. בדוק את הייצוא ואת התוצאה במצלמת המשחק, פתח את התמונות ובדוק תנועה. אין PASS כשהראיות או המדדים חסרים, ואין החלשת בדיקות כדי לעבור.
+
+דווח בקצרה מה שינית, מה בדקת בפועל, מה עדיין חלש ומה לא נבדק. תוצאה תקינה טכנית אינה הוכחה שהיא נראית טוב. עדכן progress.md ואל תבטיח איכות שלא הוכחת.
 ```
 
-## B. New game
+## Existing game — English equivalent
 
 ```text
-Use the game-studio skill for all work on this game. Load it first (/game-studio, or /game-studio:game-studio with the plugin) and follow it as this project's standard.
+Load game-studio now (/game-studio for a project copy, /game-studio:game-studio for the plugin) and use it to continue this game.
 
-I want to build a new 3D game: <one paragraph: the idea, genre and camera, engine (three.js / Godot / Unity), target platform, references you like>.
+Read project instructions, progress.md and references/design-loading.md first. Load design material for the current phase instead of the entire library. Use installed Blender; do not automatically install another copy.
 
-Start at Phase 0: ask me at most 5 questions, write design/brief.md, then propose 2–3 art directions with palettes for me to choose from. After I choose, run pre-production as the skill describes (art bible, architecture with QA mode and verify script, features/budgets/assets files) before building any content.
+Aim for deliberate professional art direction, editable and controllable game assets, good animation, clean architecture and evidence-based QA. Audit before rebuilding: run the game, capture actual input/gameplay, inspect prominent models and ask art-critic for independent assessment. Write a short audit with the 3–5 most valuable changes and evidence for each defect.
 
-Quality bar: a shipped indie game in this genre. Mediocre results count as failure. No claim without evidence from this session, look at every visual change, independent critics at milestones, honest reporting of limits.
+Before production when a usable plan is missing, start genre-art-researcher and production-planner in parallel. The first researches genre/tone and visual/motion references; the second maps mechanics, progression, dependencies and milestones. A simulator need not be photorealistic, and comedy does not justify generic cartoons. Reconcile both reports into design/plan.md with one representative playable slice, ordered work, owners, budgets and exit checks before building. Reuse saved findings in later sessions.
+
+Delegate substantial isolated work with explicit ownership: asset-builder for an asset, animator for motion, art-critic and playtest-qa for milestone reviews. At most three concurrent agents; never two writers in one file or shared live Blender scene. Do not delegate tiny lookups.
+
+Declare parts, pivots, joints, sockets, collision and budgets before modeling. Keep editable source; do not merge independently moving pieces. Reject a fused mesh with painted-on details as a substitute for controllable geometry. No paid generation without explicit authorization.
+
+Proceed independently on reversible choices consistent with my instructions; mark unsettled taste decisions provisional. Ask only for genuinely necessary information. Build one representative playable slice before multiplying content. Inspect the export and gameplay-camera output, open images and check motion. Missing evidence or metrics cannot pass; never weaken checks to pass them.
+
+Report changes, actual verification, weak points and unverified work concisely. Technical validity does not prove visual quality. Keep progress.md current and do not promise quality you have not demonstrated.
 ```
 
----
+## משחק חדש / new game
 
-## א. משחק קיים (מתחילים כאן אם כבר יש לך משחק בעבודה)
+Add this brief before the existing-game prompt and replace its audit with Phase 0:
 
 ```text
-השתמש בסקיל game-studio לכל העבודה על המשחק הזה. טען אותו קודם (/game-studio, או /game-studio:game-studio אם הותקן כפלאגין) ופעל לפיו כסטנדרט של הפרויקט.
-
-הקשר: אני בונה איתך משחק תלת-ממדי. עד עכשיו העיצוב נראה חובבני ו"עשוי ב-AI", והמודלים התלת-ממדיים חלשים. אני צריך כיוון אמנותי מקצועי ומכוון, מודלים מוכנים למשחק, אנימציה איכותית, קוד נקי ובקרת איכות קפדנית. תוצאה בינונית נחשבת כישלון בפרויקט הזה. אני מעדיף לשמוע "זה עוד לא טוב" בכנות מאשר טענה שהכול בסדר.
-
-התחל בבדיקת הפרויקט הקיים לפי הסקיל:
-1. קרא את progress.md ו-CLAUDE.md אם קיימים, זהה את המנוע והגרסה, והרץ את המשחק.
-2. אסוף ראיות אמיתיות ממשחק (צילומי מסך, מדדים, שגיאות) והרץ את סקריפטי הבדיקה והרינדור של הסקיל על 5 המודלים הבולטים ביותר.
-3. בקש מסוכן art-critic לדרג את המצב הנוכחי באופן עצמאי מול כרטיס הניקוד (scorecard).
-4. כתוב design/audit.md: הבעיות המרכזיות מדורגות לפי ההשפעה על השחקן, כל אחת עם ראיה, ומה שכדאי לשמור.
-5. אחר כך עצור והראה לי: 3–5 השינויים שישפרו את המשחק הכי הרבה, 2–3 כיוונים אמנותיים לבחירה (עם פלטות צבע), והתוכנית שלך, כולל איזה סוכן יעשה מה. שאל אותי רק שאלות שהתשובה עליהן משנה את התוצאה.
-
-כללים לכל הפרויקט: אין טענה בלי ראיה מהסשן הנוכחי; מסתכלים על כל שינוי ויזואלי לפני שקוראים לו "גמור"; מבקרים עצמאיים שופטים כל אבן דרך; פיצ'ר אחד בכל פעם, ו-progress.md מעודכן; אסור להחליש בדיקה, סף או דרישה כדי שמשהו יעבור. השתמש בסוכני-משנה איפה שהסקיל אומר שהם משתלמים (asset-builder במקביל למודלים, animator לשלדים ואנימציות, art-critic ו-playtest-qa בשערי האיכות), לא לעבודה טריוויאלית.
+Game idea / רעיון: <core loop and genre>
+Engine/platform/camera / מנוע, פלטפורמה ומצלמה: <...>
+Visual references / רפרנסים: <links or images>
+Scope and quality level / היקף ורמת איכות: <prototype | standard | premium>
+Start at Phase 0. Reuse this information and ask at most five necessary questions. Propose a small set of concrete directions before substantial visual production.
 ```
 
-## ב. משחק חדש
-
-```text
-השתמש בסקיל game-studio לכל העבודה על המשחק הזה. טען אותו קודם (/game-studio, או /game-studio:game-studio אם הותקן כפלאגין) ופעל לפיו כסטנדרט של הפרויקט.
-
-אני רוצה לבנות משחק תלת-ממדי חדש: <פסקה אחת: הרעיון, הז'אנר והמצלמה, המנוע (three.js / Godot / Unity), הפלטפורמה, משחקים שאתה אוהב כרפרנס>.
-
-התחל בשלב 0: שאל אותי עד 5 שאלות, כתוב design/brief.md, ואז הצע 2–3 כיוונים אמנותיים עם פלטות צבע לבחירה. אחרי שאבחר, בצע את שלב הקדם-הפקה כפי שהסקיל מתאר (art bible, ארכיטקטורה עם מצב QA וסקריפט verify, קובצי features/budgets/assets) לפני שבונים תוכן.
-
-רף האיכות: משחק אינדי שיצא לשוק בז'אנר הזה. תוצאה בינונית נחשבת כישלון. אין טענה בלי ראיה מהסשן, מסתכלים על כל שינוי ויזואלי, מבקרים עצמאיים בכל אבן דרך, ודיווח כן על מגבלות.
-```
+The specialist definitions use `model: inherit` and high effort. Select the actual available model
+in Claude Code; this package does not claim an unavailable model name or force the director's effort
+setting. Use maximum director effort only if your client supports it and the task warrants it.

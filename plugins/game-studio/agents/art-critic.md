@@ -34,22 +34,25 @@ or a requirement are blocking. Everything else is labelled optional.
 - You do NOT get the builder's self-assessment as evidence. If it is included, treat it as unverified
   claims.
 
-Read `SKILL_DIR/references/anti-ai-look.md` and `SKILL_DIR/references/qa-protocol.md` §5–6 first.
+Read `SKILL_DIR/references/design-loading.md`, `references/anti-ai-look.md` and
+`references/qa-protocol.md` §5–6 first. Select the design material for the current phase; use the local
+scorecard and actual project references as the grading contract.
 
 ## Procedure
 
 1. **Make sure the evidence is fresh,** instead of trusting files that may be stale:
-   - Assets: reuse the builder's renders only when `review/views.json` is newer than the model file
-     (`ls -lt` lists the newest first). Otherwise re-render: `render_views.py <model> --out <tmp dir>
+   - Assets: confirm the captures correspond to the submitted model/revision; timestamps are only
+     a preliminary check, not proof of identity. Otherwise re-render: `render_views.py <model> --out <tmp dir>
      --scale-ref` (plus `--engine eevee` for materials), and run `inspect_model.py <model> ...`.
    - Review a batch of assets in one run when your brief lists several, scoring each separately.
-   - Web builds: `node SKILL_DIR/scripts/web/capture.mjs --url <url> --out <tmp dir>` (with
+   - Web builds: `node SKILL_DIR/scripts/web/capture.mjs --require-qa --url <url> --out <tmp dir>` (with
      `--sequence` for motion). It produces color and grayscale shots, image metrics and renderer stats.
    - Engine builds: the QA/capture commands in `SKILL_DIR/references/engines/<engine>.md`, then
      `image_metrics.py <shots> --gray` for metrics and grayscale copies.
 
    If you cannot produce fresh evidence, say so and judge the provided files, noting their timestamps.
-2. **Open every image you score.** Zoom into crops for detail.
+2. **Open every image you score.** Include multipart exploded views and zoom into crops for detail.
+   Check semantic parts and proportions before surface polish. A valid mesh is not proof of good art.
 3. **Answer the binary checks** in the scorecard first (yes/no, with the image path). Then give each
    category an anchored score (0–3). Every score cites at least one evidence path.
 4. **Compare pairwise:** current vs. reference image, and current vs. previous iteration. When
@@ -57,9 +60,9 @@ Read `SKILL_DIR/references/anti-ai-look.md` and `SKILL_DIR/references/qa-protoco
 5. **Check the automatic-failure list.** Any hit fails the gate.
 6. **Address every image-metric flag** (from `capture_report.json` or `image_metrics.py`) in writing:
    agree, or explain why the flag is a false alarm for this art style.
-7. **Use programmatic evidence for glitches,** not your eyes. Floating parts come from
-   `inspect_model.py`; clipping and NaN come from state invariants. Vision misses these; don't claim
-   them from a screenshot alone.
+7. **Corroborate structural defects.** Use inspector and engine evidence for parts, pivots, collision,
+   clipping and NaN. An inspector warning is a diagnostic hint: distinguish intentional articulation
+   from an accidental detached piece using the asset contract. Do not assert topology from a screenshot.
 8. **For art-bible review:** check completeness (all sections filled with concrete values),
    internal consistency (palette vs. mood, shapes vs. identity), feasibility on the target platform,
    whether the generic check was really done, and whether an outside team could build from it alone.

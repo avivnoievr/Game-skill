@@ -1,0 +1,687 @@
+{
+  "file": "work/geometry/tests/car.glb",
+  "summary": {
+    "triangles": 10098,
+    "meshes": 5,
+    "materials": 3,
+    "draw_calls_estimate": 7,
+    "dimensions_m": [
+      1.8,
+      4.5,
+      1.44
+    ],
+    "bounds_min": [
+      -0.9,
+      -2.25,
+      0.0
+    ],
+    "bounds_max": [
+      0.9,
+      2.25,
+      1.44
+    ],
+    "surface_area_m2": 40.705,
+    "textures": {
+      "car_palette": {
+        "size": [
+          32,
+          32
+        ],
+        "colorspace": "sRGB",
+        "pot": true
+      },
+      "car_palette_orm": {
+        "size": [
+          32,
+          32
+        ],
+        "colorspace": "Non-Color",
+        "pot": true
+      }
+    },
+    "texel_density_px_per_m": {},
+    "armatures": [],
+    "actions": [],
+    "budget": {
+      "max_tris": 12000,
+      "max_materials": 3
+    }
+  },
+  "meshes": [
+    {
+      "name": "Body",
+      "vertices": 5052,
+      "faces": 5762,
+      "triangles": 5762,
+      "uv_layers": 1,
+      "materials": [
+        "car_palette",
+        "head",
+        "tail"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.625,
+          0.125
+        ]
+      ],
+      "surface_area_m2": 35.0973,
+      "uv_area": 0.0,
+      "ngons": 0,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": true,
+      "signed_volume": 6.415754
+    },
+    {
+      "name": "Wheel_FL",
+      "vertices": 762,
+      "faces": 1084,
+      "triangles": 1084,
+      "uv_layers": 1,
+      "materials": [
+        "car_palette"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": [
+        [
+          0.125,
+          0.375
+        ],
+        [
+          0.375,
+          0.375
+        ]
+      ],
+      "surface_area_m2": 1.4021,
+      "uv_area": 0.0,
+      "ngons": 0,
+      "boundary_edges": 64,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": false,
+      "signed_volume": null
+    },
+    {
+      "name": "Wheel_FR",
+      "vertices": 762,
+      "faces": 1084,
+      "triangles": 1084,
+      "uv_layers": 1,
+      "materials": [
+        "car_palette"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": [
+        [
+          0.125,
+          0.375
+        ],
+        [
+          0.375,
+          0.375
+        ]
+      ],
+      "surface_area_m2": 1.4021,
+      "uv_area": 0.0,
+      "ngons": 0,
+      "boundary_edges": 64,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": false,
+      "signed_volume": null
+    },
+    {
+      "name": "Wheel_RL",
+      "vertices": 762,
+      "faces": 1084,
+      "triangles": 1084,
+      "uv_layers": 1,
+      "materials": [
+        "car_palette"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": [
+        [
+          0.125,
+          0.375
+        ],
+        [
+          0.375,
+          0.375
+        ]
+      ],
+      "surface_area_m2": 1.4021,
+      "uv_area": 0.0,
+      "ngons": 0,
+      "boundary_edges": 64,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": false,
+      "signed_volume": null
+    },
+    {
+      "name": "Wheel_RR",
+      "vertices": 762,
+      "faces": 1084,
+      "triangles": 1084,
+      "uv_layers": 1,
+      "materials": [
+        "car_palette"
+      ],
+      "color_attributes": 0,
+      "uv_bounds": [
+        [
+          0.125,
+          0.375
+        ],
+        [
+          0.375,
+          0.375
+        ]
+      ],
+      "surface_area_m2": 1.4021,
+      "uv_area": 0.0,
+      "ngons": 0,
+      "boundary_edges": 64,
+      "nonmanifold_edges": 0,
+      "wire_edges": 0,
+      "loose_vertices": 0,
+      "zero_area_faces": 0,
+      "flipped_normal_edges": 0,
+      "closed": false,
+      "signed_volume": null
+    }
+  ],
+  "parts": [
+    {
+      "name": "Steer_FL",
+      "joint": "steer",
+      "axis": "Z",
+      "origin": [
+        0.775,
+        -1.35,
+        0.3262
+      ],
+      "meshes": []
+    },
+    {
+      "name": "Wheel_FL",
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        0.775,
+        -1.35,
+        0.3262
+      ],
+      "meshes": [
+        "Wheel_FL"
+      ],
+      "bounds_min": [
+        0.6725,
+        -1.6762,
+        0.0
+      ],
+      "bounds_max": [
+        0.8775,
+        -1.0238,
+        0.6524
+      ],
+      "pivot_distance_m": 0.0,
+      "pivot_tolerance_m": 0.013048
+    },
+    {
+      "name": "Steer_FR",
+      "joint": "steer",
+      "axis": "Z",
+      "origin": [
+        -0.775,
+        -1.35,
+        0.3262
+      ],
+      "meshes": []
+    },
+    {
+      "name": "Wheel_FR",
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        -0.775,
+        -1.35,
+        0.3262
+      ],
+      "meshes": [
+        "Wheel_FR"
+      ],
+      "bounds_min": [
+        -0.8775,
+        -1.6762,
+        0.0
+      ],
+      "bounds_max": [
+        -0.6725,
+        -1.0238,
+        0.6524
+      ],
+      "pivot_distance_m": 0.0,
+      "pivot_tolerance_m": 0.013048
+    },
+    {
+      "name": "Wheel_RL",
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        0.775,
+        1.35,
+        0.3262
+      ],
+      "meshes": [
+        "Wheel_RL"
+      ],
+      "bounds_min": [
+        0.6725,
+        1.0238,
+        0.0
+      ],
+      "bounds_max": [
+        0.8775,
+        1.6762,
+        0.6524
+      ],
+      "pivot_distance_m": 0.0,
+      "pivot_tolerance_m": 0.013048
+    },
+    {
+      "name": "Wheel_RR",
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        -0.775,
+        1.35,
+        0.3262
+      ],
+      "meshes": [
+        "Wheel_RR"
+      ],
+      "bounds_min": [
+        -0.8775,
+        1.0238,
+        0.0
+      ],
+      "bounds_max": [
+        -0.6725,
+        1.6762,
+        0.6524
+      ],
+      "pivot_distance_m": 0.0,
+      "pivot_tolerance_m": 0.013048
+    }
+  ],
+  "rigid_groups": {
+    "body": [
+      "Body"
+    ],
+    "Wheel_FL": [
+      "Wheel_FL"
+    ],
+    "Wheel_FR": [
+      "Wheel_FR"
+    ],
+    "Wheel_RL": [
+      "Wheel_RL"
+    ],
+    "Wheel_RR": [
+      "Wheel_RR"
+    ]
+  },
+  "sockets": [
+    "SOCKET_seat_driver",
+    "SOCKET_cam_chase",
+    "SOCKET_exhaust"
+  ],
+  "collisions": [
+    {
+      "name": "Body-colonly",
+      "triangles": 12,
+      "dimensions_m": [
+        1.8,
+        4.5,
+        1.26
+      ],
+      "origin": [
+        0.0,
+        0.0,
+        0.809962
+      ]
+    }
+  ],
+  "hierarchy": [
+    {
+      "name": "Car",
+      "type": "EMPTY",
+      "parent": null,
+      "depth": 0,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Body",
+      "type": "MESH",
+      "parent": "Car",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Body-colonly",
+      "type": "MESH",
+      "parent": "Car",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.809962
+      ],
+      "collision": true,
+      "socket": false
+    },
+    {
+      "name": "SOCKET_cam_chase",
+      "type": "EMPTY",
+      "parent": "Car",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.0,
+        6.5,
+        2.2
+      ],
+      "collision": false,
+      "socket": true
+    },
+    {
+      "name": "SOCKET_exhaust",
+      "type": "EMPTY",
+      "parent": "Car",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        -0.5,
+        2.3,
+        0.28
+      ],
+      "collision": false,
+      "socket": true
+    },
+    {
+      "name": "SOCKET_seat_driver",
+      "type": "EMPTY",
+      "parent": "Car",
+      "depth": 1,
+      "joint": null,
+      "axis": null,
+      "origin": [
+        0.38,
+        0.25,
+        0.55
+      ],
+      "collision": false,
+      "socket": true
+    },
+    {
+      "name": "Steer_FL",
+      "type": "EMPTY",
+      "parent": "Car",
+      "depth": 1,
+      "joint": "steer",
+      "axis": "Z",
+      "origin": [
+        0.775,
+        -1.35,
+        0.3262
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Wheel_FL",
+      "type": "MESH",
+      "parent": "Steer_FL",
+      "depth": 2,
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        0.775,
+        -1.35,
+        0.3262
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Steer_FR",
+      "type": "EMPTY",
+      "parent": "Car",
+      "depth": 1,
+      "joint": "steer",
+      "axis": "Z",
+      "origin": [
+        -0.775,
+        -1.35,
+        0.3262
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Wheel_FR",
+      "type": "MESH",
+      "parent": "Steer_FR",
+      "depth": 2,
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        -0.775,
+        -1.35,
+        0.3262
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Wheel_RL",
+      "type": "MESH",
+      "parent": "Car",
+      "depth": 1,
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        0.775,
+        1.35,
+        0.3262
+      ],
+      "collision": false,
+      "socket": false
+    },
+    {
+      "name": "Wheel_RR",
+      "type": "MESH",
+      "parent": "Car",
+      "depth": 1,
+      "joint": "spin",
+      "axis": "X",
+      "origin": [
+        -0.775,
+        1.35,
+        0.3262
+      ],
+      "collision": false,
+      "socket": false
+    }
+  ],
+  "checks": [
+    {
+      "level": "INFO",
+      "check": "topology",
+      "object": "Wheel_FL",
+      "message": "64 open boundary edges (ok for planes/cards/hidden faces; otherwise a hole)."
+    },
+    {
+      "level": "INFO",
+      "check": "topology",
+      "object": "Wheel_FR",
+      "message": "64 open boundary edges (ok for planes/cards/hidden faces; otherwise a hole)."
+    },
+    {
+      "level": "INFO",
+      "check": "topology",
+      "object": "Wheel_RL",
+      "message": "64 open boundary edges (ok for planes/cards/hidden faces; otherwise a hole)."
+    },
+    {
+      "level": "INFO",
+      "check": "topology",
+      "object": "Wheel_RR",
+      "message": "64 open boundary edges (ok for planes/cards/hidden faces; otherwise a hole)."
+    },
+    {
+      "level": "PASS",
+      "check": "parts",
+      "object": "Wheel_FL",
+      "message": "required part matches 'Wheel_FL'"
+    },
+    {
+      "level": "PASS",
+      "check": "parts",
+      "object": "Wheel_FR",
+      "message": "required part matches 'Wheel_FR'"
+    },
+    {
+      "level": "PASS",
+      "check": "parts",
+      "object": "Wheel_RL",
+      "message": "required part matches 'Wheel_RL'"
+    },
+    {
+      "level": "PASS",
+      "check": "parts",
+      "object": "Wheel_RR",
+      "message": "required part matches 'Wheel_RR'"
+    },
+    {
+      "level": "PASS",
+      "check": "part_pivot",
+      "object": "Wheel_FL",
+      "message": "bounds-center distance 0.000000 m / tolerance 0.013048 m (max of absolute floor and relative extent)"
+    },
+    {
+      "level": "PASS",
+      "check": "part_pivot",
+      "object": "Wheel_FR",
+      "message": "bounds-center distance 0.000000 m / tolerance 0.013048 m (max of absolute floor and relative extent)"
+    },
+    {
+      "level": "PASS",
+      "check": "part_pivot",
+      "object": "Wheel_RL",
+      "message": "bounds-center distance 0.000000 m / tolerance 0.013048 m (max of absolute floor and relative extent)"
+    },
+    {
+      "level": "PASS",
+      "check": "part_pivot",
+      "object": "Wheel_RR",
+      "message": "bounds-center distance 0.000000 m / tolerance 0.013048 m (max of absolute floor and relative extent)"
+    },
+    {
+      "level": "PASS",
+      "check": "socket",
+      "object": "SOCKET_seat_driver",
+      "message": "required attachment node exists"
+    },
+    {
+      "level": "PASS",
+      "check": "socket",
+      "object": "SOCKET_cam_chase",
+      "message": "required attachment node exists"
+    },
+    {
+      "level": "PASS",
+      "check": "socket",
+      "object": "SOCKET_exhaust",
+      "message": "required attachment node exists"
+    },
+    {
+      "level": "PASS",
+      "check": "budget",
+      "object": null,
+      "message": "triangles 10098 / budget 12000"
+    },
+    {
+      "level": "PASS",
+      "check": "budget",
+      "object": null,
+      "message": "materials 3 / budget 3"
+    },
+    {
+      "level": "PASS",
+      "check": "scale",
+      "object": null,
+      "message": "X extent 1.800 m vs expected 1.8 m"
+    },
+    {
+      "level": "PASS",
+      "check": "scale",
+      "object": null,
+      "message": "Y extent 4.500 m vs expected 4.5 m"
+    },
+    {
+      "level": "PASS",
+      "check": "scale",
+      "object": null,
+      "message": "Z extent 1.440 m vs expected 1.45 m"
+    },
+    {
+      "level": "PASS",
+      "check": "pivot",
+      "object": null,
+      "message": "expected origin at bottom-center (asset rests on Z=0, centered on X/Y); bounds min [-0.9, -2.25, 0.0] max [0.9, 2.25, 1.44]"
+    }
+  ],
+  "verdict": "PASS"
+}

@@ -134,7 +134,7 @@ export function installQa(game: Game) {
 - With an EffectComposer, set `renderer.info.autoReset = false` and call `renderer.info.reset()` at the
   start of each frame, so the counts cover all passes.
 
-Run it: `node "$SKILL_DIR/scripts/web/capture.mjs" --url "http://localhost:5173/?qa=1&seed=1" --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8 --hold KeyW`
+Run it: `node "$SKILL_DIR/scripts/web/capture.mjs" --require-qa --url "http://localhost:5173/?qa=1&seed=1" --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8 --hold KeyW`
 
 ## 5. Animation
 

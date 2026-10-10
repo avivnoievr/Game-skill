@@ -57,7 +57,14 @@ than real shadows.
   and generate LODs (on by default) and shadow meshes.
 - Organize per feature: `characters/player/art/`, `levels/forest/props/` (`architecture.md` §5).
 
-## 4. QA autoload (shots + metrics)
+## 4. Partial capture adapter (shots + metrics)
+
+This recipe captures a running scene; it is not a complete deterministic QA mode. The shot scene below
+lets ordinary process/physics callbacks run, and its frame waits do not fix simulation time. To pass
+G0/G4, separately implement seeded project RNG, explicit simulation stepping and input injection,
+serializable state with feature invariants, fatal asset-load handling and five scene reload assertions.
+Make the project runner exit non-zero on failed assertions or missing measurements. Do not substitute
+screenshots for those checks.
 
 ```gdscript
 # res://qa/qa.gd: register as autoload "QA". Inert unless started with:  -- --qa [--qa-out=/abs/dir]
@@ -126,11 +133,13 @@ xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3
   res://qa/shots.tscn -- --qa --qa-out="$PWD/qa/out/shots"
 # Motion sequence (non-real-time, deterministic): Movie Maker
 mkdir -p qa/out/frames && xvfb-run -a godot --path . --rendering-driver opengl3 --audio-driver Dummy \
-  --write-movie "$PWD/qa/out/frames/f.png" --fixed-fps 30 --quit-after 150 res://levels/test_level.tscn
+  --write-movie "$PWD/qa/out/frames/f.png" --fixed-fps 30 --quit-after 150 res://levels/test_level.tscn -- --qa
 ```
 
 - `--headless` disables rendering entirely, so use it for tests and import only.
 - `--write-movie` needs an existing output folder.
+- Fixed-fps movie capture plus a seeded QA argument is a motion-evidence recipe. Validate the game's
+  own RNG, physics timing and input harness before claiming deterministic simulation or G4 coverage.
 - In tests, the window size came from `project.godot`, not from `--resolution`.
 - Turn frames into a contact sheet with `toolchain.md` §3 (ffmpeg `tile`).
 - Run `image_metrics.py qa/out/shots/*.png --gray` for the same image metrics and grayscale copies

@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "verified_at": "2026-10-10",
+  "files": [
+    {
+      "path": "threejs-aaa-graphics-builder/UPSTREAM-SKILL.md",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-aaa-graphics-builder/SKILL.md",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-aaa-graphics-builder/SKILL.md",
+      "content_modified": false,
+      "bytes": 4468,
+      "sha256": "6656c3a0c3553cf78e0e64665bd6e697e06eeebbe2276b10538483820688f7b6",
+      "git_blob_sha": "3bca703021c032285441c8ccc4a49d201ce97626"
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/references/technical-art.md",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-aaa-graphics-builder/references/technical-art.md",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-aaa-graphics-builder/references/technical-art.md",
+      "content_modified": false,
+      "bytes": 5445,
+      "sha256": "8da9799dc229557ac4e489e7e2a9048c5b401c444f3c26c67810e2bb5da89bda",
+      "git_blob_sha": "00c5dc46dea4add9341fdc2e8f019ac81d6b243b"
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/references/visual-scorecard.md",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-aaa-graphics-builder/references/visual-scorecard.md",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-aaa-graphics-builder/references/visual-scorecard.md",
+      "content_modified": false,
+      "bytes": 5972,
+      "sha256": "97b27303a978e68294d9cbf2e6951f4b98e72765c306d13ea1884b0441c65391",
+      "git_blob_sha": "86060a8db3fea68cd75f82ad8e7870bc169703df"
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/LICENSE",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "LICENSE",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/LICENSE",
+      "content_modified": false,
+      "bytes": 1073,
+      "sha256": "306512561953da83863404efe11ba8845c6a7cf47a8744321c7cbd67f9944304",
+      "git_blob_sha": "0e7cfcfa43d5da2dc6a31768afcd95525fd3000c"
+    },
+    {
+      "path": "threejs-game-ui-designer/UPSTREAM-SKILL.md",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-game-ui-designer/SKILL.md",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-game-ui-designer/SKILL.md",
+      "content_modified": false,
+      "bytes": 2368,
+      "sha256": "f68b6a0ad4347ed30fb416d3e5d9ee21e63af6c43dc05a3784f3e333f21e4f85",
+      "git_blob_sha": "1ff25aa86cf60383dd2517889fa514d7f4e77d57"
+    },
+    {
+      "path": "threejs-game-ui-designer/references/ui-patterns.md",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-game-ui-designer/references/ui-patterns.md",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-game-ui-designer/references/ui-patterns.md",
+      "content_modified": false,
+      "bytes": 5230,
+      "sha256": "a5f3d2350e91ef21a610c68a878a9feb42f1e53aa01f78a05655e7bf158f2b0b",
+      "git_blob_sha": "438aa234e725128bc2a6cbd4503b2b48a1cff9de"
+    },
+    {
+      "path": "threejs-game-ui-designer/LICENSE",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "LICENSE",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/LICENSE",
+      "content_modified": false,
+      "bytes": 1073,
+      "sha256": "306512561953da83863404efe11ba8845c6a7cf47a8744321c7cbd67f9944304",
+      "git_blob_sha": "0e7cfcfa43d5da2dc6a31768afcd95525fd3000c"
+    },
+    {
+      "path": "threejs-game-feel/game-feel.md",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-gameplay-systems/references/game-feel.md",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-gameplay-systems/references/game-feel.md",
+      "content_modified": false,
+      "bytes": 12909,
+      "sha256": "d328c7bb64ece26841c3119d5820097aee9d4719c6355fbfe6a7c65e5518c9ef",
+      "git_blob_sha": "72a5230300f385b92fa0983365024225937eca0a"
+    },
+    {
+      "path": "threejs-game-feel/LICENSE",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "LICENSE",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/LICENSE",
+      "content_modified": false,
+      "bytes": 1073,
+      "sha256": "306512561953da83863404efe11ba8845c6a7cf47a8744321c7cbd67f9944304",
+      "git_blob_sha": "0e7cfcfa43d5da2dc6a31768afcd95525fd3000c"
+    },
+    {
+      "path": "anthropic-frontend-design/UPSTREAM-SKILL.md",
+      "upstream_repository": "anthropics/skills",
+      "upstream_commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "upstream_path": "skills/frontend-design/SKILL.md",
+      "source_url": "https://raw.githubusercontent.com/anthropics/skills/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design/SKILL.md",
+      "content_modified": false,
+      "bytes": 9390,
+      "sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+      "git_blob_sha": "a5333457c414d20d625f307df945842c0952ecc3"
+    },
+    {
+      "path": "anthropic-frontend-design/LICENSE.txt",
+      "upstream_repository": "anthropics/skills",
+      "upstream_commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "upstream_path": "skills/frontend-design/LICENSE.txt",
+      "source_url": "https://raw.githubusercontent.com/anthropics/skills/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design/LICENSE.txt",
+      "content_modified": false,
+      "bytes": 10174,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+      "git_blob_sha": "f433b1a53f5b830a205fd2df78e2b34974656c7b"
+    },
+    {
+      "path": "gamedev-game-ui-ux/UPSTREAM-SKILL.md",
+      "upstream_repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "upstream_commit": "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd",
+      "upstream_path": "skills/disciplines/game-ui-ux/SKILL.md",
+      "source_url": "https://raw.githubusercontent.com/gamedev-skills/awesome-gamedev-agent-skills/0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd/skills/disciplines/game-ui-ux/SKILL.md",
+      "content_modified": false,
+      "bytes": 8436,
+      "sha256": "8a094c84a377503aa8f4c40df676d1c6b6fc07d36ff95554ce06467f1614397e",
+      "git_blob_sha": "c84646755c3d8f2b96fd955d1d2706e911b45596"
+    },
+    {
+      "path": "gamedev-game-ui-ux/references/layout-and-flow.md",
+      "upstream_repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "upstream_commit": "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd",
+      "upstream_path": "skills/disciplines/game-ui-ux/references/layout-and-flow.md",
+      "source_url": "https://raw.githubusercontent.com/gamedev-skills/awesome-gamedev-agent-skills/0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd/skills/disciplines/game-ui-ux/references/layout-and-flow.md",
+      "content_modified": false,
+      "bytes": 5413,
+      "sha256": "000d944db77155ebf97fde035a3d4fbe69ef0ae348e9dbcaff48c5ea134d7d69",
+      "git_blob_sha": "139caf1d76828a303ba85b9446c75fa259610ea8"
+    },
+    {
+      "path": "gamedev-game-ui-ux/LICENSE",
+      "upstream_repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "upstream_commit": "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd",
+      "upstream_path": "LICENSE",
+      "source_url": "https://raw.githubusercontent.com/gamedev-skills/awesome-gamedev-agent-skills/0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd/LICENSE",
+      "content_modified": false,
+      "bytes": 11395,
+      "sha256": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+      "git_blob_sha": "c7fc0c6d59cb8129a0e30fe13f5a6118f3933c44"
+    },
+    {
+      "path": "gamedev-game-ui-ux/NOTICE",
+      "upstream_repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "upstream_commit": "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd",
+      "upstream_path": "NOTICE",
+      "source_url": "https://raw.githubusercontent.com/gamedev-skills/awesome-gamedev-agent-skills/0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd/NOTICE",
+      "content_modified": false,
+      "bytes": 883,
+      "sha256": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+      "git_blob_sha": "d4204881c3f79f39151a53a6aae476b188a8c51f"
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-1.jpg",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-1.jpg",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-1.jpg",
+      "content_modified": false,
+      "bytes": 30465,
+      "sha256": "bfca5ae29fe4675a435eeb6bb75eedd96370376528c1801b6fa6edebfcdf2b18",
+      "git_blob_sha": "165702a0c2d1380c741a2772ae57326dceb17708"
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-2.jpg",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-2.jpg",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-2.jpg",
+      "content_modified": false,
+      "bytes": 62757,
+      "sha256": "27d363f0feb8bff85f704ebf7b850365e387d67bbfc0de4affb9d7275fb110e8",
+      "git_blob_sha": "d9ee020c57356cab148376cecfedb9ebeb29aba6"
+    },
+    {
+      "path": "threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-3.jpg",
+      "upstream_repository": "majidmanzarpour/threejs-game-skills",
+      "upstream_commit": "8286774b22a2566bf894dbc825825c16921866af",
+      "upstream_path": "skills/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-3.jpg",
+      "source_url": "https://raw.githubusercontent.com/majidmanzarpour/threejs-game-skills/8286774b22a2566bf894dbc825825c16921866af/skills/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-3.jpg",
+      "content_modified": false,
+      "bytes": 67905,
+      "sha256": "5fc81e5d20a9e3b281e02fed068b6de489f87f05f77dcdbf915f3be450515f2a",
+      "git_blob_sha": "e35368e2f6d30850454da96aa6266a4374bee25f"
+    }
+  ]
+}

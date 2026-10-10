@@ -101,6 +101,34 @@ def rigid_group(obj, part_names=()):
     return "body"
 
 
+def object_depth(obj):
+    """Parent depth, useful when applying/restoring world transforms parent-first."""
+    depth = 0
+    while obj.parent is not None:
+        depth += 1
+        obj = obj.parent
+    return depth
+
+
+def hierarchy_rows(objects=None):
+    """Serializable scene-node metadata; joint/socket extras survive the glTF importer unchanged."""
+    objects = list(bpy.context.scene.objects if objects is None else objects)
+    selected = set(objects)
+    children = {}
+    for obj in objects:
+        children.setdefault(obj.parent if obj.parent in selected else None, []).append(obj)
+    stack = [(o, 0) for o in sorted(children.get(None, []), key=lambda x: x.name, reverse=True)]
+    rows = []
+    while stack:
+        obj, depth = stack.pop()
+        rows.append({"name": obj.name, "type": obj.type, "parent": obj.parent.name if obj.parent else None,
+                     "depth": depth, "joint": joint_of(obj), "axis": obj.get("axis"),
+                     "origin": round_vec(obj.matrix_world.translation, 6), "collision": is_collision(obj),
+                     "socket": obj.name.startswith("SOCKET_") or bool(obj.get("socket"))})
+        stack.extend((c, depth + 1) for c in sorted(children.get(obj, []), key=lambda x: x.name, reverse=True))
+    return rows
+
+
 def world_bbox(objs):
     """Axis-aligned world-space bounds of the evaluated objects -> (min, max) Vectors."""
     deps = bpy.context.evaluated_depsgraph_get()

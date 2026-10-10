@@ -38,7 +38,10 @@ Read `SKILL_DIR/references/animation.md` completely, and `modeling.md` §7 for e
 2. **Check the rig and skin:** `inspect_model.py <model> --preset <inspect_preset of the asset's class in design/budgets.json>`. It reports bone count,
    vertices with more than 4 influences, and the actions present. Fix skinning problems before
    animating: they show up as collapsing joints in the pose strips.
-3. **Make or retarget the clips:**
+3. **Block and review before polishing.** Check key poses, timing, silhouette and contact from the
+   gameplay camera. Repair the largest problem while the motion is cheap to change, then spline and
+   add secondary motion. Preserve the source rig and independently controlled mechanical parts.
+   **Make or retarget the clips:**
    - Name them for gameplay (`Idle`, `Walk`, `Run`, `Jump_Start`, `Jump_Loop`, `Land`,
      `Attack_Light`).
    - Decide in-place vs. root motion per clip, to match the engine plan.
@@ -48,7 +51,7 @@ Read `SKILL_DIR/references/animation.md` completely, and `modeling.md` §7 for e
    - With one armature, "Export all Armature Actions" (on by default) exports every action, so delete
      stray test actions first. Otherwise each action must be active or on its own NLA track.
    - Reset pose bones between actions; keep sampling on; start loops at frame 0.
-5. **Prove it, per clip:** run `render_views.py <glb> --out assets/<id>/anim/<Clip> --views q_fr --anim <Clip>
+5. **Prove the exported motion, per clip:** run `render_views.py <glb> --out assets/<id>/anim/<Clip> --views q_fr --anim <Clip>
    --anim-steps 8` and open every strip. Check:
    - contact and passing poses;
    - arcs;
@@ -65,6 +68,8 @@ Read `SKILL_DIR/references/animation.md` completely, and `modeling.md` §7 for e
    - the foot-skate ratio.
 
    Add the event frames (footsteps, hit frames, VFX spawns) yourself.
+   A numeric seam test does not prove appealing motion. Play the exported clip in the target engine
+   and verify transitions, event timing and speed matching; report unavailable engine checks plainly.
 
 ## Report: write `assets/<id>/animation-report.md`, then reply in ≤ 15 lines
 

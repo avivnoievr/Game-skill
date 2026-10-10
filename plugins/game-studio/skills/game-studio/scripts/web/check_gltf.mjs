@@ -58,23 +58,39 @@ for (const m of (issues.messages || []).filter((m) => m.severity <= 1).slice(0, 
   add(m.severity === 0 ? 'FAIL' : 'WARN', 'validator', `${m.code}: ${m.message} (${m.pointer || ''})`);
 }
 
+const limit = (k) => {
+  if (!argv.includes(`--${k}`)) return undefined;
+  const raw = opt(k);
+  const value = Number(raw);
+  if (raw === undefined || raw === '' || raw.startsWith('--') || !Number.isFinite(value) || value < 0) {
+    add('FAIL', 'budget', `${k} requires a finite nonnegative limit`);
+    return undefined;
+  }
+  return value;
+};
 const budget = (k, actual, label) => {
-  const lim = opt(k);
-  if (lim === undefined || actual === undefined) return;
-  add(actual <= Number(lim) ? 'PASS' : 'FAIL', 'budget', `${label} ${actual} / budget ${lim}`);
+  const lim = limit(k);
+  if (lim === undefined) return;
+  if (typeof actual !== 'number' || !Number.isFinite(actual) || actual < 0) {
+    add('FAIL', 'budget', `${label} measurement is unavailable; cannot verify budget ${lim}`);
+    return;
+  }
+  add(actual <= lim ? 'PASS' : 'FAIL', 'budget', `${label} ${actual} / budget ${lim}`);
 };
 budget('max-tris', info.totalTriangleCount, 'triangles');
 budget('max-draw-calls', info.drawCallCount, 'draw calls');
 budget('max-materials', info.materialCount, 'materials');
 const sizeMb = statSync(path).size / 1048576;
-budget('max-size-mb', Number(sizeMb.toFixed(2)), 'file size MB');
+budget('max-size-mb', sizeMb, 'file size MB');
 
 const images = (info.resources || []).filter((r) => r.image);
-const maxTex = opt('max-texture');
+const maxTex = limit('max-texture');
 for (const r of images) {
   const { width, height } = r.image;
   const pot = (v) => v > 0 && (v & (v - 1)) === 0;
-  if (maxTex && Math.max(width, height) > Number(maxTex)) add('FAIL', 'budget', `texture ${r.pointer} ${width}x${height} exceeds ${maxTex}px`);
+  const measured = Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0;
+  if (maxTex !== undefined && !measured) add('FAIL', 'budget', `texture ${r.pointer} dimensions unavailable; cannot verify ${maxTex}px`);
+  else if (maxTex !== undefined && Math.max(width, height) > maxTex) add('FAIL', 'budget', `texture ${r.pointer} ${width}x${height} exceeds ${maxTex}px`);
   if (!pot(width) || !pot(height)) add('WARN', 'texture', `texture ${r.pointer} ${width}x${height} is not power-of-two`);
 }
 if ((info.maxInfluences || 0) > 4) add('WARN', 'skinning', `up to ${info.maxInfluences} joint influences per vertex (engines commonly use 4)`);

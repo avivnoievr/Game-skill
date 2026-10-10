@@ -16,13 +16,15 @@
 //   --press KEY             press a key once at the start of the sequence (e.g. Space)
 //   --budgets FILE          design/budgets.json: fail when drawCalls / triangles / textures exceed scene budgets
 //   --reloads N             leak test: call __QA__.reload() N times; fail if geometries/textures grow
+//   --require-qa            gate mode: require ready, stats, state, advance and named shots; no timed fallback
 //   --gpu                   use the machine's GPU instead of SwiftShader (faster; less deterministic)
 //   --no-gray               skip the grayscale copy (<shot>_gray.png) written for every named shot
 //   --allow-errors          exit 0 even when checks failed
 // Requires `playwright` in the game project (npm i -D playwright; npx playwright install chromium).
 // CHROMIUM_PATH selects a specific Chromium binary if Playwright's own browser is not installed.
 //
-// Dev-only hook the game can expose (all members optional except ready):
+// Optional for ordinary timed screenshots; --require-qa requires the QA contract below.
+// Requested budgets/reloads always require valid numeric stats, even without --require-qa.
 //   window.__QA__ = {
 //     ready: false,                                  // set true (synchronously) after load + first frame
 //     stats: () => ({ drawCalls, triangles, geometries, textures, programs }),  // e.g. renderer.info
@@ -59,6 +61,17 @@ if (!args.url || !args.out) {
 }
 const [vw, vh] = String(args.viewport || '1280x720').split('x').map(Number);
 const num = (k, d) => (args[k] === undefined ? d : Number(args[k]));
+const requireQa = Boolean(args['require-qa']);
+for (const key of ['sequence', 'reloads', 'shots']) {
+  if (args[key] !== undefined && (!Number.isInteger(num(key, 0)) || num(key, 0) < 0)) {
+    console.error(`error: --${key} must be a non-negative integer`); process.exit(2);
+  }
+}
+for (const key of ['timeout', 'step-ms', 'interval-ms', 'wait-ms']) {
+  if (args[key] !== undefined && (!Number.isFinite(num(key, 0)) || num(key, 0) < (key === 'timeout' ? 1 : 0))) {
+    console.error(`error: --${key} must be a finite ${key === 'timeout' ? 'positive' : 'non-negative'} number`); process.exit(2);
+  }
+}
 const outDir = resolve(String(args.out));
 mkdirSync(outDir, { recursive: true });
 
@@ -112,14 +125,50 @@ const isNoise = (t) => /favicon\.ico/.test(t) || /GPU stall due to ReadPixels/.t
 const frames = (n = 2) => page.evaluate((k) => new Promise((res) => {
   let left = k; const tick = () => (--left <= 0 ? res() : requestAnimationFrame(tick)); requestAnimationFrame(tick);
 }), n);
-const hookCall = (fn) => page.evaluate((f) => {
-  try {
-    const v = window.__QA__?.[f] ? window.__QA__[f]() : null;
-    const s = v == null ? null : JSON.stringify(v);
-    return s && s.length > 4000 ? { truncated: s.slice(0, 4000) } : v;
-  } catch (e) { return { error: String(e) }; }
-}, fn);
+async function hookCall(fn, required = requireQa) {
+  const result = await page.evaluate(async (f) => {
+    if (typeof window.__QA__?.[f] !== 'function') return { missing: true };
+    try {
+      const value = await window.__QA__[f]();
+      const s = value == null ? null : JSON.stringify(value);
+      if (s && s.length > 4000) throw new Error('payload exceeds 4000 bytes; provide a small JSON snapshot');
+      return { value };
+    } catch (e) { return { failure: String(e) }; }
+  }, fn);
+  if (result.failure) fail(`__QA__.${fn}() failed: ${result.failure}`);
+  else if (result.missing) { if (required) fail(`required __QA__.${fn}() is missing`); }
+  else if (required && (!result.value || typeof result.value !== 'object' || Array.isArray(result.value))) {
+    fail(`__QA__.${fn}() must return a JSON object`);
+  } else {
+    if (fn === 'stats' && requireQa) numericStats(result.value, ['drawCalls', 'triangles', 'geometries', 'textures'], 'QA stats');
+    return result.value ?? null;
+  }
+  return null;
+}
 const hasHook = (fn) => page.evaluate((f) => typeof window.__QA__?.[f] === 'function', fn);
+const validCount = (v) => typeof v === 'number' && Number.isFinite(v) && v >= 0;
+function numericStats(stats, keys, context) {
+  const missing = keys.filter((k) => !validCount(stats?.[k]));
+  if (missing.length) fail(`${context}: missing or invalid renderer counts: ${missing.join(', ')}`);
+  return missing.length === 0;
+}
+function checkBudgets() {
+  if (!args.budgets) return;
+  const scene = JSON.parse(readFileSync(String(args.budgets), 'utf8')).scene;
+  if (!scene || typeof scene !== 'object' || Array.isArray(scene)) throw new Error('budgets file must contain a scene object');
+  const fields = { draw_calls: 'drawCalls', triangles_in_view: 'triangles', textures_live: 'textures', shader_programs: 'programs' };
+  const active = Object.entries(fields).filter(([key]) => Object.hasOwn(scene, key));
+  if (!active.length) throw new Error('scene contains no supported renderer budgets');
+  for (const [key, metric] of active) {
+    if (!validCount(scene[key])) { fail(`invalid budget scene.${key}: expected a finite non-negative number`); continue; }
+    const samples = [...report.shots, ...report.sequence];
+    if (!samples.length) { fail(`no samples for scene.${key}`); continue; }
+    for (const sample of samples) {
+      if (!numericStats(sample.stats, [metric], `budget sample ${sample.name ?? sample.index}`)) continue;
+      if (sample.stats[metric] > scene[key]) fail(`${metric} ${sample.stats[metric]} > budget ${scene[key]}`);
+    }
+  }
+}
 
 async function imageMetrics(png) {
   return tool.evaluate(async (b64) => {
@@ -189,23 +238,30 @@ async function shoot(file, gray = false) {
 try {
   await page.goto(String(args.url), { waitUntil: 'load', timeout: num('timeout', 30000) });
   report.hook = await page.evaluate(() => typeof window.__QA__ === 'object' && window.__QA__ !== null);
-  if (report.hook) {
+  if (report.hook || requireQa) {
     // Synchronous predicate: Playwright does not await a Promise returned by the predicate.
     await page.waitForFunction(() => window.__QA__?.ready === true, null, { timeout: num('timeout', 30000) })
       .catch(() => { throw new Error(`window.__QA__.ready was not true within ${num('timeout', 30000)} ms`); });
+    report.hook = true;
   } else {
     await page.waitForTimeout(num('wait-ms', 3000));
   }
   await frames(3);
 
-  // Rough FPS over 2 s. Under SwiftShader this is CPU rendering capped near 60: compare builds, never budgets.
-  report.fps = await page.evaluate(() => new Promise((res) => {
+  // QA mode has no free-running game loop. Its RAF frequency is not a game performance metric.
+  if (!requireQa) report.fps = await page.evaluate(() => new Promise((res) => {
     let n = 0; const t0 = performance.now();
     const tick = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(tick); else res(Math.round(n / ((performance.now() - t0) / 1000))); };
     requestAnimationFrame(tick);
   }));
 
   const shotNames = report.hook ? await page.evaluate(() => Object.keys(window.__QA__.shots || {})) : [];
+  if (requireQa) {
+    for (const method of ['stats', 'state', 'advance']) {
+      if (!(await hasHook(method))) fail(`required __QA__.${method}() is missing`);
+    }
+    if (!shotNames.length) fail('required __QA__.shots has no named shots');
+  }
   if (shotNames.length) {
     for (const name of shotNames) {
       await page.evaluate(async (n) => { await window.__QA__.shots[n](); }, name);
@@ -221,29 +277,19 @@ try {
     }
   }
 
-  // Budgets: compare the largest renderer counts seen across shots with design/budgets.json → scene.
-  if (args.budgets) {
-    const scene = JSON.parse(readFileSync(String(args.budgets), 'utf8')).scene || {};
-    const seen = (k) => Math.max(0, ...report.shots.map((s) => Number(s.stats?.[k]) || 0));
-    if (!report.shots.some((s) => s.stats)) warn('budgets given but the page exposes no __QA__.stats()');
-    else {
-      if (scene.draw_calls && seen('drawCalls') > scene.draw_calls) fail(`draw calls ${seen('drawCalls')} > budget ${scene.draw_calls}`);
-      if (scene.triangles_in_view && seen('triangles') > scene.triangles_in_view) fail(`triangles ${seen('triangles')} > budget ${scene.triangles_in_view}`);
-      if (scene.textures_live && seen('textures') > scene.textures_live) fail(`textures ${seen('textures')} > budget ${scene.textures_live}`);
-    }
-  }
-
   // Leak test: geometries/textures must return to baseline after N reloads.
   const reloads = num('reloads', 0);
   if (reloads > 0) {
-    if (!(await hasHook('reload')) || !(await hasHook('stats'))) warn('leak test skipped: __QA__.reload() or stats() missing');
+    if (!(await hasHook('reload')) || !(await hasHook('stats'))) fail('requested leak test cannot run: __QA__.reload() or stats() missing');
     else {
-      const before = await hookCall('stats');
+      const before = await hookCall('stats', true);
       for (let i = 0; i < reloads; i++) { await page.evaluate(async () => { await window.__QA__.reload(); }); await frames(2); }
-      const after = await hookCall('stats');
+      const after = await hookCall('stats', true);
       report.leak = { reloads, before, after };
-      for (const k of ['geometries', 'textures']) {
-        if (Number(after?.[k]) > Number(before?.[k])) fail(`leak: ${k} ${before[k]} -> ${after[k]} after ${reloads} reloads`);
+      if (numericStats(before, ['geometries', 'textures'], 'leak baseline') && numericStats(after, ['geometries', 'textures'], 'leak result')) {
+        for (const k of ['geometries', 'textures']) {
+          if (after[k] !== before[k]) fail(`reload resource mismatch: ${k} ${before[k]} -> ${after[k]} after ${reloads} reloads`);
+        }
       }
     }
   }
@@ -252,6 +298,7 @@ try {
   if (seqN > 0) {
     const stepMs = num('step-ms', 100);
     const hasAdvance = report.hook && await hasHook('advance');
+    if (requireQa && !hasAdvance) throw new Error('requested deterministic sequence needs __QA__.advance(ms)');
     await page.mouse.click(vw / 2, vh / 2); // focus the canvas so keyboard input reaches the game
     if (args.hold) await page.keyboard.down(String(args.hold));
     if (args.press) await page.keyboard.press(String(args.press));
@@ -262,7 +309,7 @@ try {
         await frames(1);
       }
       const s = await shoot(join(outDir, `seq_${String(i).padStart(2, '0')}.png`));
-      report.sequence.push({ index: i, ...s, deterministic: hasAdvance, state: await hookCall('state') });
+      report.sequence.push({ index: i, ...s, deterministic: hasAdvance, stats: await hookCall('stats', Boolean(args.budgets) || requireQa), state: await hookCall('state') });
     }
     if (args.hold) await page.keyboard.up(String(args.hold));
     if (seqN > 1 && new Set(report.sequence.map((s) => s.sha1)).size === 1) {
@@ -288,6 +335,7 @@ try {
     writeFileSync(sheetFile, Buffer.from(sheet.split(',')[1], 'base64'));
     report.sequenceSheet = sheetFile;
   }
+  checkBudgets();
 } catch (e) {
   report.fatal = String(e);
 } finally {

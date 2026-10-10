@@ -5,10 +5,11 @@ Contents: 1. Principles · 2. Bundled scripts · 3. Essential tools · 4. Option
 
 ## 1. Principles
 
-- **Scripts first, MCP second.** A headless script is reproducible, diffable, re-runnable and costs no
-  context. An MCP server is a live pipe into a GUI app. It is useful when a human watches the viewport
-  on a desktop, and it is never required. The most popular Blender MCP refuses to start in background
-  mode, so it cannot run in a cloud container at all.
+- **Installed Blender first.** Use a working live MCP for bounded interactive iteration, and the local
+  CLI for isolated builds/validation/heavy jobs. The native `.blend` is source for authored/manual work;
+  a saved build script is source for procedural work. PyPI `bpy` is the fallback when no local binary exists.
+  The [live protocol](blender-live.md) defines transport, scene ownership and retry boundaries. A GUI
+  socket is not required, and cloud availability must be checked rather than inferred from an install.
 - **The transport is not the skill.** "Blender MCP lets Claude model anything" is false. Asset quality
   comes from the modeling method and the render-and-look loop (`modeling.md`), not from how commands
   reach Blender.
@@ -23,25 +24,44 @@ Contents: 1. Principles · 2. Bundled scripts · 3. Essential tools · 4. Option
 | Script | Does | Run |
 |---|---|---|
 | `blender/inspect_model.py` | Game-readiness report: tris, materials, textures, texel density, flipped normals, non-manifold, loose geometry, UVs, negative/unapplied scale, units, pivot, rig/skin limits, actions. Exit 1 on FAIL | `blender -b --factory-startup --python-exit-code 1 -P inspect_model.py -- MODEL --preset web-prop --expect-height 1.0` |
-| `blender/render_views.py` | Review renders: front/right/back/left/top (ortho), two 3/4 views, silhouette, wireframe overlay, optional 1.8 m scale figure, pose strip of an action, contact sheet | `blender -b --factory-startup --python-exit-code 1 -P render_views.py -- MODEL --out DIR [--engine workbench\|eevee\|cycles] [--scale-ref] [--anim Walk]` |
+| `blender/gs_build.py` | Procedural helpers: owned collection, profiles/lofts/sweeps/revolves, finishing, separate joints/sockets, collision proxies, palette + ORM atlas, export | Import from the asset's saved `build.py`; call `gb.begin(id)`. Not a CLI entry point |
+| `find_blender.sh` | Discovers/probes installed local Blender candidates; prints executable and version | `bash "$SKILL_DIR/scripts/find_blender.sh"`; resolve the printed path before running checks |
+| `blender/render_views.py` | Fixed views, silhouette/wire, scale figure, animation strip and exploded `parts` sheet. Parts auto-added to the default list for multi-mesh assets; `--no-parts` suppresses | `blender -b --factory-startup --python-exit-code 1 -P render_views.py -- MODEL --out DIR [--engine workbench\|eevee\|cycles] [--scale-ref] [--anim Walk]` |
 | `blender/clip_report.py` | Numeric animation QA per clip: loop-point pops, root speed, implied ground speed for in-place clips, foot-skate ratio. Exit 1 on FAIL | `blender -b --factory-startup --python-exit-code 1 -P clip_report.py -- MODEL [--feet L,R]` |
 | `blender/image_metrics.py` | The same objective image metrics as `capture.mjs`, for screenshots from any engine; `--gray` writes grayscale copies. Exit 1 on a blank image | `blender -b --factory-startup --python-exit-code 1 -P image_metrics.py -- shots/*.png --gray` |
 | `web/check_gltf.mjs` | Khronos glTF-Validator + budgets (tris, draw calls, materials, texture size, file size) | `node check_gltf.mjs MODEL.glb --max-tris 5000 --max-texture 1024` |
-| `web/capture.mjs` | Runs a web game in headless Chromium: screenshots + grayscale copies + image metrics, console/page errors, failed requests, blank-canvas check, renderer stats vs budgets, scene-reload leak test, frame sequence + contact sheet | `node capture.mjs --url http://localhost:5173 --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8` |
+| `web/capture.mjs` | Runs a web game in headless Chromium: screenshots + grayscale copies + image metrics, errors, numeric renderer budgets, reload leaks and sequences; gate mode requires the QA contract | `node capture.mjs --require-qa --url http://localhost:5173 --out qa/out/m1 --budgets design/budgets.json --reloads 5 --sequence 8` |
 
-All Blender scripts also run with the PyPI module: `python inspect_model.py MODEL ...`. They accept
-`.glb .gltf .fbx .obj .stl .ply .usd* .blend`.
+The inspection/render/clip entry points also run with the PyPI module: `python inspect_model.py MODEL ...`.
+Model import supports `.glb .gltf .fbx .obj .stl .ply .usd* .blend` where the installed importer is available;
+`image_metrics.py` consumes image files. Build helpers are imported by the saved asset script.
+
+Inspector parts contract: `--parts 'Wheel_FL,Wheel_FR,Wheel_RL,Wheel_RR'` requires each case-sensitive
+name/glob; `--sockets seat_driver,cam_chase` requires EMPTY attachment nodes (`SOCKET_` prefix optional).
+`--part-pivot center` checks spin joints and explicitly required untagged parts within
+max(5 mm, 2% of largest part extent); it does not center hinge/slide/steer pivots. JSON reports hierarchy,
+rigid groups and separate collision proxies. Required names + center checks are not a motion-clearance test.
+`render_views --views parts --explode-factor 0.4` makes the exploded sheet explicitly.
+
+Run inspection/render/clip/image entry points only in **separate processes**; model import resets the
+scene. Never run them through an MCP in the user's live scene. `gs_common.py` is shared support, not a job.
 
 ## 3. Essential tools (work in cloud containers and on desktops)
 
-**Blender, headless.** Use one of:
+**Blender, local CLI.** Keep the user's installed version; discover it before installing anything:
+- Ask a permitted live connection for `bpy.app.binary_path`; ahujasid safe mode blocks that read, so
+  fall back to `find_blender.sh`. Discovery reports candidates, not a connection to another machine.
+- Windows PowerShell candidate check (installation-dependent paths):
+  `Get-ChildItem 'C:\Program Files\Blender Foundation' -Recurse -Filter blender.exe | Select-Object -ExpandProperty FullName`;
+  probe the chosen path with `& 'C:\actual\path\blender.exe' --version`. Git Bash can run the bundled shell helper.
 - Installed Blender: `blender -b --factory-startup --python-exit-code 1 -P script.py -- args`.
   `--python-exit-code 1` turns Python exceptions into a failing exit code. It must come **before** `-P`,
   because Blender applies arguments in order. Arguments after `--` go to
   the script.
-- When no Blender is installed, or download.blender.org is unreachable: `python3.13 -m venv ~/.venv-blender &&
-  ~/.venv-blender/bin/pip install bpy==5.2.2`. Create it outside the game repo. The wheel is about 400 MB and needs Python 3.13. Check the
-  wheel tags on PyPI for other versions. Then run `~/.venv-blender/bin/python script.py args`. In the bpy
+- Only when no usable local Blender exists: use a version-matched PyPI `bpy` environment. For the
+  researched 5.2.2 wheel: `python3.13 -m venv work/bpy-venv`, then
+  `work/bpy-venv/bin/pip install bpy==5.2.2`. The wheel is about 400 MB; inspect available wheel/Python
+  tags before selecting another version. Then run `work/bpy-venv/bin/python script.py args`. In the bpy
   module, `import bpy` must come before `import bmesh` or `mathutils`.
 - In a bare Linux container, EEVEE and Workbench need Mesa EGL: `apt-get install -y libegl1
   libegl-mesa0 libgl1-mesa-dri`. Cycles CPU works without it. `EGL_BAD_MATCH` lines in the log are
@@ -94,7 +114,7 @@ montage shot_*.png -tile 3x -geometry +4+4 qa/contact.png    # ImageMagick 6
 | Need | Server | Setup |
 |---|---|---|
 | Live Blender inspection on a desktop | **Blender Lab official MCP** (Blender ≥ 5.1, GPL-3.0). It is minimal: code execution, blend-file summaries, API/manual doc search, screenshots, thumbnail renders. It can run in background mode with `--command blender_mcp` | Follow the install steps on blender.org/lab, or from source: `uv --directory /abs/path/blender_mcp/mcp run blender-mcp` |
-| Blender with asset search/import (Poly Haven, Sketchfab, Poly Pizza) and multi-angle `look` | `ahujasid/mcp-for-blender` (MIT). Needs the GUI | `claude mcp add blender uvx mcp-for-blender` then `uvx mcp-for-blender install-addon`. Set `BLENDER_MCP_SAFE_MODE=1` and `DISABLE_TELEMETRY=true` |
+| Blender with asset search/import (Poly Haven, Sketchfab, Poly Pizza) and multi-angle `look` | `ahujasid/mcp-for-blender` (MIT). GUI add-on; installed version/tool schemas decide capabilities | Follow [blender-live.md](blender-live.md); register stdio server plus matching add-on; `BLENDER_MCP_SAFE_MODE=1`, `DISABLE_TELEMETRY=true` |
 | Web perf traces, Lighthouse, console with source maps | **Chrome DevTools MCP** (Apache-2.0) | `claude mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest`. Add `--slim --headless` for routine checks, and `--no-usage-statistics --no-performance-crux` |
 | Godot editor screenshots, test runs, GDScript validation | `hi-godot/godot-ai` (MIT, Godot 4.7+, editor plugin) | Per its README; set `GODOT_AI_DISABLE_TELEMETRY=true` |
 | Unity editor control, tests, profiling | `CoplayDev/unity-mcp` (MIT), or Unity's official MCP (beta, Unity 6+, AI Assistant package) | Per their docs. Use tool groups to limit context |
@@ -102,8 +122,12 @@ montage shot_*.png -tile 3x -geometry +4+4 qa/contact.png    # ImageMagick 6
 
 Rules:
 - Run only one Blender MCP at a time, because both default to port 9876.
-- If a Blender MCP call hangs, don't wait it out. One server has an open bug with 4–5 minute hangs on
-  Blender 5.1+. Time out and fall back to the headless script.
+- Handshake with a read-only call. Historical reports describe slow calls on some version/OS pairs;
+  verify this session instead of declaring every installation broken. After a mutation timeout, inspect
+  the scene/pending job before any retry; a cancelled client call may still execute in Blender.
+- ahujasid safe mode blocks `open`, `exec`, external helper imports and `bpy.app.binary_path`. Inline
+  code must still satisfy its allowlist; sending a saved `build.py` inline does not make `gs_build`
+  importable. Keep the guard; use local CLI for blocked builds. See [blender-live.md](blender-live.md).
 
 **Avoid:**
 - `chongdashu/unreal-mcp` (abandoned since April 2025).
@@ -112,18 +136,21 @@ Rules:
 
 ## 5. Paid 3D generation (optional, with cost and license discipline)
 
-Image-to-3D services produce raw material, not game-ready assets. None of them claims game-ready
-topology out of the box. Remesh, retopology and rigging are separate (often paid) steps, and rigging is
-reliable for humanoids first. Every generated asset goes through the same gates as everything else
+Treat image-to-3D output as raw material until the project's gates pass. Remesh, retopology and rigging
+can be separate paid steps; verify the supported rig class for the selected model. Every generated
+asset goes through the same gates as everything else
 (`modeling.md`).
+
+Apply the [tool matrix](tool-matrix.md) and `modeling.md` §8 before choosing a service. The following
+are routing leads, not currently verified price/model/license promises; inspect the exact tool/plan at use.
 
 | Service | Use it for | Watch out for |
 |---|---|---|
-| Meshy (official MCP `@meshy-ai/meshy-mcp-server`, paid API key) | Characters and props, remesh with `target_polycount`, humanoid auto-rig and animation clips | Free-tier outputs are CC BY 4.0, so attribution is required. Auto-rig works only for standard bipeds |
-| Tripo (REST API v3) | Low-poly "P" models with face-count control; rig types for quadrupeds, birds and other creatures; `spec: mixamo` | Free-tier commercial terms are unclear, so check before shipping. The MCP is alpha |
-| Hyper3D Rodin | High-quality props | API only on the business plan |
-| Hunyuan3D open weights | Local generation on your GPU | The license territory **excludes the EU, UK and South Korea**, and over 1M MAU needs a separate license |
-| Higgsfield MCP `generate_3d` (if connected) | Routes to Meshy/Tripo/Hunyuan/SAM-3D models | Spends credits. Preflight with `get_cost: true`. Its hosted "3D Jutsu" Blender cannot import your own files and has no network |
+| Meshy | Optional generated raw mesh/remesh/humanoid rig route | Verify model controls, supported rig class and plan-specific attribution/commercial terms |
+| Tripo | Optional raw mesh/segmentation/creature rig route | Verify current API/tool options and free-plan rights; don't infer rights from a search snippet |
+| Hyper3D Rodin | Optional static organic source route | Confirm API access/plan and controllability before estimating a job |
+| Hunyuan3D weights/services | Optional raw geometry where hardware and rights permit | Family/version-specific license, territory and scale restrictions require checking the actual release |
+| Higgsfield 3D tool, if exposed | Optional wrapper around available models | Inspect tool schema and cost method; a hosted catalog-only Blender is not a replacement for editable local sources |
 
 Always:
 - Preflight the cost, and get the user's OK before spending.
@@ -147,6 +174,8 @@ the project.
 
 ## 7. Task → tool matrix
 
+Choose the asset route with [tool-matrix.md](tool-matrix.md) first; this table resolves execution location.
+
 | Task | Cloud / CI container | Desktop |
 |---|---|---|
 | Procedural model, export GLB | bpy / `blender -b -P` | same; optionally a Blender MCP to watch |
@@ -160,6 +189,10 @@ the project.
 | Unity scene/editor work | not practical | unity-mcp / Unity MCP |
 | Humanoid character + rig + clips | Meshy / Higgsfield (paid), or a CC0 rigged pack | same, plus Mixamo by hand |
 | Creature rig | Tripo `rig_type` (paid) or a scripted Blender rig | same |
+
+Texture, audio and level contracts are in [texturing.md](texturing.md), [audio.md](audio.md) and
+[level-design.md](level-design.md). A Dummy-audio capture cannot pass the listening gate; Workbench
+cannot pass final material appearance; software-renderer FPS cannot pass real-hardware performance.
 
 ## 8. Risks
 

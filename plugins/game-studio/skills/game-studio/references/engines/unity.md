@@ -38,6 +38,13 @@ project. For Unity projects, also install Unity's official agent plugin (`toolch
 
 ## 4. QA: tests, captures, metrics
 
+The commands and capture helper below are partial integration recipes, not a ready-made deterministic
+QA adapter. Implement a dev-only project QA mode with a seed, controlled fixed steps, input injection,
+state/invariant assertions, fatal asset-load handling and scene-reload/resource checks. Connect those
+tests to the project's verify entry point, and fail when required profiler values are unavailable.
+Their implementation and engine execution remain unverified here; a PNG or passing empty test run
+does not establish G0/G4.
+
 ```bash
 Unity -batchmode -projectPath . -runTests -testPlatform EditMode -testResults qa/out/editmode.xml
 Unity -batchmode -projectPath . -runTests -testPlatform PlayMode -testResults qa/out/playmode.xml

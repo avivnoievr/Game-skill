@@ -28,6 +28,8 @@ subagent must earn its cost.
 | Role | Runs as | Owns | Never does |
 |---|---|---|---|
 | **Director** (you, main thread) | the session itself | Conversation with the user (subagents cannot ask questions), brief, art bible, architecture, gameplay code, integration, lighting/post/UI, game feel, final decisions | Grading its own work at a gate |
+| **genre-art-researcher** | bounded opening subagent | Intent/genre/tone references and feasible visual/motion directions; writes `design/research.md` | Building assets, treating a genre label as a style or claiming uninspected media |
+| **production-planner** | bounded opening subagent | Systems/dependencies, small slice, ownership and milestone evidence; writes `design/plan-draft.md` | Implementing code or finalizing research-dependent direction without the director |
 | **asset-builder** | subagent, up to 3 in parallel | One asset (or a small kit) per brief: source/build → validate → render → self-check → deliver under `assets/<id>/` | Touching game code or other assets' folders |
 | **animator** | subagent | Rigs, skin weights, clips, retargeting, pose strips; writes under `assets/<id>/` and `assets/anims/` | Gameplay code (it hands back clip names, lengths and events) |
 | **art-critic** | subagent, read-only | Independent visual verdicts on assets and scenes against the art bible and scorecard | Editing anything; softening a failing score |
@@ -39,7 +41,8 @@ Use built-ins instead of adding agents:
 - `/simplify` for cleanup passes.
 
 Subagent names:
-- With the plugin installed: `game-studio:asset-builder`, `game-studio:animator`, `game-studio:art-critic`,
+- With the plugin installed: `game-studio:genre-art-researcher`, `game-studio:production-planner`,
+  `game-studio:asset-builder`, `game-studio:animator`, `game-studio:art-critic`,
   `game-studio:playtest-qa`.
 - When copied into a project's `.claude/agents/`: the plain names.
 - If neither exists: spawn a general-purpose agent and paste the matching `agents/*.md` body into the brief.
@@ -61,6 +64,8 @@ Stay in the main thread when:
 Gameplay code is usually not parallelizable, because shared state means conflicts.
 
 Scale to the task:
+- New games or missing/invalidated plans start with the two opening roles and the reconciliation gate
+  in `startup-planning.md`. Cache their reports; ordinary sessions resume instead of redoing research.
 - A single prop fix needs no subagent.
 - A batch of 6 independent props justifies 2–3 builders.
 - Never spawn agents for simple lookups.
@@ -91,11 +96,18 @@ LIMITS: at most <N> build-review iterations, then stop and report what blocks yo
 
 ## 5. Parallel work
 
+Opening research and planning can run in parallel because the planner leaves style-sensitive choices
+explicitly unresolved. The director merges both into `design/plan.md` before production. Do not run
+builders while the first usable slice/direction plan is still absent. Read-only audit and boot checks
+can proceed meanwhile. The two opening agents consume two of the normal three slots.
+
 - Run at most **3** subagents at once. More multiplies cost, and integration conflicts grow faster
   than throughput.
+- Only one builder may mutate a shared live Blender scene. Use separate headless processes and
+  files for parallel asset construction; folder ownership alone does not isolate a shared scene.
 - Give each builder its own folder (`assets/<id>/`). Two agents never write the same file.
-- Commit before delegating. Worktree isolation branches from the default branch, not your HEAD,
-  unless configured otherwise.
+- Establish a known base revision before delegating. Verify each worktree's actual base and avoid
+  shared-file edits; do not assume isolation settings or branch selection.
 - While builders work, you build the greybox gameplay loop and the QA hook. Don't sit idle, and don't
   duplicate their work.
 - A subagent that needs a decision returns `NEEDS-DECISION` with options. You ask the user, then resume
@@ -153,7 +165,8 @@ Endless review loops burn budget and rarely converge.
   a lenient critic costs more in rework.
 - Set `maxTurns` on every agent. Agents may not spawn agents.
 - Returns are ≤ 15 lines. Artifacts go to files.
-- Prototype rigor may skip critic gates. It never skips the run-and-look rule.
+- Prototype previews may skip critic gates, but never run-and-look checks. This does not satisfy
+  standard/premium asset acceptance or release; report deferred checks explicitly.
 - Re-render only the views you changed. Use small render sizes (512–640 px) for iteration and larger
   ones only for final evidence.
 - Paid generation needs a cost preflight and the user's OK. Never blind-retry a paid job.

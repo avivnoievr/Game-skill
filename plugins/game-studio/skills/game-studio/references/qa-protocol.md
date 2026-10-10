@@ -54,29 +54,52 @@ window.__QA__ = {
   `renderer.info.reset()` once per frame, so the counts cover the whole frame.
 - Asset load failures must be **fatal** in QA mode. A silent placeholder cube is a lie that passes
   every screenshot.
-- Godot and Unity equivalents are in `engines/godot.md` and `engines/unity.md`.
+- `engines/godot.md` and `engines/unity.md` provide **partial capture adapters**, not full equivalents
+  of this contract. For either engine, implement project-specific seeded stepping, input injection,
+  state/invariant assertions and scene reload tests before declaring G0/G4 passed. A screenshot helper
+  or a green import command does not prove that QA mode exists.
 
 ## 3. Gates
 
-One entry point runs the automated gates: `qa/verify.sh` (template: `templates/verify.sh`). It exits
-non-zero on failure and writes `qa/out/`. A gate counts as passed only when you can quote this
-session's output.
+One entry point runs the automated gates: `qa/verify.sh` (web template: `templates/verify.sh`). Adapt
+the commands for the actual engine. It exits non-zero on failure or missing required checks and writes
+`qa/out/`. The web template requires typecheck, lint, layer-rule and terminating test commands; it
+never downloads missing tools. Full mode also requires the project state files, budgets and local
+Vite. A gate counts as passed only when you can quote this session's output.
+
+**Missing evidence is BLOCKED/FAIL, never zero or PASS.** A non-applicable check may be labelled N/A
+only with a reason tied to the approved scope, recorded before review in the project's gate definition
+and `progress.md`. A missing tool, command, QA adapter or unknown metric is not non-applicability.
+These rules hold for every engine and every rigor level.
 
 | Gate | When | Blocking pass condition | Tools |
 |---|---|---|---|
 | **G0 Scaffold** | before the first feature | Game boots; QA mode exists; `qa/verify.sh` runs; `design/` state files exist | — |
 | **G1 Static** | every change | Typecheck 0 errors; lint 0 errors (incl. `max-lines`); layer rules 0 violations | tsc, ESLint, dependency-cruiser / GDScript warnings |
 | **G2 Logic** | every change to simulation code | Unit tests green. A bug fix ships with a test you **saw fail** before the fix | vitest / GUT / gdUnit4 / Unity EditMode |
-| **G3 Boot smoke** | every change, start of every session | 0 page errors, 0 console errors, 0 failed requests; `ready` within 30 s; canvas not blank; renderer counts within budget | `capture.mjs --budgets design/budgets.json` (fails on errors, blank canvas, over-budget counts) / engine equivalent |
+| **G3 Boot smoke** | every change, start of every session | 0 page errors, 0 console errors, 0 failed requests; `ready` within 30 s; canvas not blank; renderer counts within budget | `capture.mjs --require-qa --budgets design/budgets.json` (fails on missing hooks, invalid counts, errors, blank canvas, over-budget counts) / validated engine adapter |
 | **G4 Playthrough** | each feature | Scripted input for N simulated seconds keeps invariants true (moved > X, no NaN transforms, never below the floor, objective reachable); after 5 scene reloads, geometry/texture counts return to baseline | `capture.mjs --sequence --hold`, `__QA__.state()`; leak test `capture.mjs --reloads 5` (needs `__QA__.reload`) |
 | **G5 Visual** | each visual milestone | The shot list renders; `art-critic` passes every scorecard threshold | `capture.mjs`, `render_views.py`, art-critic |
 | **G6 Real-GPU perf** | milestones | p95 frame time within budget on the target device class, measured headed on real hardware and labelled with the device | stats-gl / Chrome DevTools trace / Godot monitors |
-| **G7 Release review** | before "done" | `art-critic` and `playtest-qa` PASS on the same build revision; every feature in `features.json` has evidence | both critics |
+| **G7 Release review** | before "done" | Every in-scope feature has fresh evidence; for standard/premium, `art-critic` and `playtest-qa` PASS on the same build revision | evidence pack; both critics at standard/premium |
 
 Rigor levels:
-- `prototype` runs G0–G4 and the run-and-look rule.
+- `prototype` runs G0–G4 and the run-and-look rule. It skips independent art/critic gates, including
+  art-bible approval, asset criticism and release criticism, but still requires a release evidence
+  review. Report prototype completion as verified prototype scope, not as passing the standard art bar.
 - `standard` adds G5 at the vertical slice and at release.
 - `premium` runs G5 at every milestone and requires G6.
+
+`capture.mjs` records state snapshots and drives requested input; it does **not** know the game's
+feature invariants. Write project-specific assertions (for example in Playwright/engine tests) for
+expected movement, NaN/floor bounds and objective reachability, and run them through the verification
+entry point. A capture PASS alone proves neither G2 nor the feature portion of G4. The template's
+eight-frame smoke is also not the 60-second boot soak in `features.json`.
+
+Use `--require-qa` for gate evidence. Without it, timed screenshots remain useful for inspection but
+cannot establish deterministic G0/G4. Requested budgets and reload tests always fail on missing or
+invalid numeric counters. `--allow-errors` is diagnostic only; a printed FAIL never counts as a gate
+PASS even if that option makes the process exit zero.
 
 ## 4. What counts as evidence
 

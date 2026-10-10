@@ -9,7 +9,7 @@ What it demonstrates:
   * detail cut INTO surfaces (recessed windows, grille), bevels + weighted normals
   * moving parts kept SEPARATE: Wheel_FL/FR/RL/RR, origin at the axle center, spin axis = local X
   * hierarchy Car (root, origin at ground center) -> Body, wheels, Car-colonly collision proxy
-  * palette materials; export GLB with modifiers applied
+  * nearest-filtered color + ORM palette atlases; independent head/tail emissive materials (3 in total)
 Front faces -Y in Blender (+Z in glTF). The driver's left is +X.
 """
 import argparse
@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 import bpy  # noqa: E402
 from mathutils import Matrix  # noqa: E402
 import gs_build as gb  # noqa: E402
-from gs_common import script_args  # noqa: E402
+from gs_common import is_collision, script_args  # noqa: E402
 
 TIRE = gb.tire_dims("205/60R16")  # radius 0.326 m, width 0.205 m
 DIM = {"length": 4.5, "width": 1.8, "height": 1.45, "wheelbase": 2.7, "track": 1.55,
@@ -49,6 +49,8 @@ def build():
         ("trim", PALETTE["trim"], 0.7, 0.0, None), ("tire", PALETTE["tire"], 0.92, 0.0, None),
         ("rim", PALETTE["rim"], 0.3, 1.0, None), ("head", PALETTE["head"], 0.2, 0.0, PALETTE["head"]),
         ("tail", PALETTE["tail"], 0.3, 0.0, PALETTE["tail"])]}
+    m["head"]["gs_light"] = "head"
+    m["tail"]["gs_light"] = "tail"
 
     # Lower body: bumper -> hood -> doors -> trunk (front at -Y)
     body = gb.loft("Body", [
@@ -105,7 +107,7 @@ def build():
         tl.location.y = 2.215
         gb.assign(tl, m["tail"])
         parts += [hl, tl]
-    for y, z in ((-2.25, 0.32), (2.25, 0.36)):
+    for y, z in ((-2.20, 0.32), (2.20, 0.36)):
         bumper = gb.extrude("Bumper", gb.rounded_rect(0.10, 0.14, 0.04, center=(y, z)), 1.72, axis="X")
         gb.assign(bumper, m["trim"])
         parts.append(bumper)
@@ -143,9 +145,14 @@ def build():
 def main():
     p = argparse.ArgumentParser(prog="car_stylized.py")
     p.add_argument("--out", required=True, help="output .glb path (a .blend is saved next to it)")
+    p.add_argument("--no-atlas", action="store_true", help="keep individual palette materials for comparison")
     a = p.parse_args(script_args())
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     root = build()
+    if not a.no_atlas:
+        meshes = [o for o in root.children_recursive if o.type == "MESH" and not is_collision(o)]
+        keep = {mat.name for o in meshes for mat in o.data.materials if mat and mat.get("gs_light")}
+        gb.palette_atlas(meshes, os.path.splitext(a.out)[0] + "_palette.png", name="car_palette", keep=keep)
     gb.export_glb(a.out, [root])
     gb.save_blend(os.path.splitext(a.out)[0] + ".blend")
     print(f"exported {a.out}")
