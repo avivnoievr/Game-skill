@@ -91,3 +91,11 @@ Weak points / next improvement: <honest>
   (`animation.md` §5).
 - If a requested motion conflicts with the rig or source limits (e.g. a quadruped on a humanoid
   auto-rig), return `NEEDS-DECISION` with options instead of shipping something broken.
+
+## Additional motion judgment
+
+Read `SKILL_DIR/references/design-judgment.md` §4 for new motion or motion review.
+Record purpose, expected repetition and interruption/retarget behavior. Inspect normal-speed action
+as well as diagnostic slow/stepped motion; exercise rapid repeated input and changed state.
+Game animation follows the actual engine/clip contract; frontend CSS rules, keyboard-animation bans
+and universal duration cutoffs are not transferred to character/world motion.

@@ -194,3 +194,12 @@ State changes, evidence paths/results against criteria, remaining defects and un
 For visual changes provide before/after gameplay captures. Structural validity and visual quality
 require separate evidence. Never claim this skill guarantees professional art without a real project
 evaluation.
+
+## Additional design judgment
+
+Before substantial visual work or visual acceptance, read `references/design-judgment.md`.
+It adds a brief-specific design commitment, an inspected visual reference even for a single model,
+form checks before surface polish, and independent observation before metric interpretation.
+Reuse the project's accepted direction; existing recipes are evaluated in that context.
+A test of design taste uses standard/premium visual review, even if its scope is one asset.
+Technical PASS, prototype completion and reference-backed visual acceptance remain distinct.

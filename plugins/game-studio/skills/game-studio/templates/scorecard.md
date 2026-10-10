@@ -78,3 +78,16 @@ To pass: every criterion ≥ 2, with a technical PASS.
 For multipart assets also cite exported required parts, joint/pivot checks, sockets, collision budget
 and a target-engine control check. Keep editable source even when an export copy merges static pieces.
 Colorful materials cannot compensate for missing functional geometry.
+
+## Additional reference and evidence coverage
+
+Apply [design-judgment.md](../references/design-judgment.md) to visual acceptance, including a
+single asset. Standard/premium art acceptance requires an opened relevant visual reference or
+accepted project asset, a comparison at intended screen size, and evidence for the brief-specific
+choices. A URL or transcript alone cannot satisfy the visual comparison.
+Missing required visual evidence fails the art gate; report the comparison as `NOT VERIFIED`.
+Report technical/control results separately. A score of 2 or a clean mesh is not a validated
+certificate of professional taste. Prototype completion is not an aesthetic acceptance result;
+use standard/premium visual review when the test's purpose is design quality.
+Record intentional style deviations before review and evaluate their effect, rather than
+rewarding extra noise or failing a purposeful grid/material solely for resembling a named tell.

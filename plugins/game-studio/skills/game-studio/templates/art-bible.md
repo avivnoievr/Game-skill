@@ -106,3 +106,14 @@ Each shot is captured in color, grayscale, silhouette and post-off variants.
 | Reference | Take | Avoid |
 |---|---|---|
 | | | |
+
+## 16. Additional applicability and visual evidence
+
+- Preserve from the existing project: <accepted strengths and stable visual rules>
+- Recipe choices and intentional local deviations: <choice → purpose → observed comparison>
+- Inspected visual references: <source/path + actual image/frame + take/avoid>
+- Representative design test: <intended screen size/action state; what would show failure>
+- Visual evidence not available: <label limitations; do not approve by technical counts alone>
+
+Use `references/design-judgment.md`; a single-asset brief can contain these relevant lines instead
+of requiring this whole game-wide document.

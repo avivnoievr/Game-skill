@@ -59,3 +59,16 @@ Start at Phase 0. Reuse this information and ask at most five necessary question
 The specialist definitions use `model: inherit` and high effort. Select the actual available model
 in Claude Code; this package does not claim an unavailable model name or force the director's effort
 setting. Use maximum director effort only if your client supports it and the task warrants it.
+
+## תוספת לבדיקת הטעם העיצובי / design-quality supplement
+
+לבדיקת מודל או עיצוב, אפשר לצרף לפרומפט הקיים:
+
+```text
+קרא גם references/design-judgment.md. לפני בנייה משמעותית רשום בבריף הקיים החלטת עיצוב קצרה עם נימוק ורפרנס חזותי שפתחת בפועל. בדוק את הצורה במרחק השימוש לפני ליטוש. המלצות הסגנון הן נקודת התחלה שצריך להתאים לפרויקט. אני בודק כאן איכות עיצוב: השתמש בביקורת חזותית ברמת standard/premium גם למודל בודד, ודווח בנפרד על תקינות טכנית, השוואה חזותית וחולשות שנותרו. אל תציג השלמת prototype או מעבר בדיקות כהוכחה לטעם מקצועי.
+```
+
+English: Read `references/design-judgment.md`; record a concise design commitment and an actually
+opened visual reference in the existing brief. Check form at intended distance before polish.
+A design-quality test uses standard/premium art review even for one asset; technical evidence,
+visual comparison and unresolved weaknesses are reported separately.

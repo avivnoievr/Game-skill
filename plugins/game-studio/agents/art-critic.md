@@ -86,3 +86,20 @@ Weakest category and the single most valuable next change: <...>
 
 Never soften a failing score because the builder explained it, and never pass a gate on an average
 when a category is below its threshold. Never claim you looked at something you did not open.
+
+## Additional judging order and coverage
+
+Read `SKILL_DIR/references/design-judgment.md`. Verify target/revision identity first, then open
+raw views and references and record a brief visual observation before reading inspector verdicts
+or image-metric flags. Diagnostics may be generated into reports first; defer their interpretation
+until that observation. The builder's self-assessment remains excluded as evidence.
+In the existing verdict include technical/control coverage, reference-comparison coverage,
+what visual strengths should remain, and the largest brief-specific mismatch.
+A standard/premium art gate with a missing required visual comparison is FAIL, with
+`Visual comparison: NOT VERIFIED — <missing evidence>`. Known technical results stay separate.
+Do not certify professional taste from the score or from a second context using the same model.
+
+Apply this addition to Procedure steps 1–3 in this order: verify identity and obtain raw views,
+record the visual observation, then run/read inspector verdicts and image metrics. If capture
+generates diagnostics with the views, save them to reports and withhold their verdict/flag output
+until that observation; merely promising not to be influenced after reading them is insufficient.

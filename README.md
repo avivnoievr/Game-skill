@@ -98,3 +98,14 @@ Original work is MIT ([LICENSE](LICENSE)). Bundled reference files retain MIT or
 including applicable NOTICE files; see [THIRD_PARTY_NOTICES](plugins/game-studio/THIRD_PARTY_NOTICES.md)
 and [docs/CREDITS.md](docs/CREDITS.md). The imported scorecard example ratings are their author's
 judgments, not the project's adopted visual quality target.
+
+## Additional design judgment (2026-10-10)
+
+An additive supplement to 1.1.0 preserves the prior files and bundled design references:
+[design-judgment.md](plugins/game-studio/skills/game-studio/references/design-judgment.md).
+It adds project-specific recipe selection, inspected visual comparisons for standalone assets,
+form checkpoints and visual observation before metric interpretation. A model-design test uses
+standard/premium art review; prototype or technical completion does not certify design taste.
+The [research record](docs/research/round2/10-design-judgment-additions.md) identifies four further
+skill sources, selected adaptations and licenses. Their runtime/CLI packages are not dependencies.
+This supplement is identified by its Git commit; the package version remains 1.1.0.

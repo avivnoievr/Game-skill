@@ -80,3 +80,11 @@ Instead:
 8. Does anything glow only to look "premium"?
 
 Any "no" in 1–4, or any find in 5–8, gets fixed before review.
+
+## 6. Additional contextual check
+
+Use [design-judgment.md](design-judgment.md) to test the purpose of a suspected tell.
+A checkerboard's grid, a symmetrical machine or an intentionally unlit graphic style may be
+appropriate. An unexplained default is the problem; arbitrary irregularity, extra grime or
+mandatory ornament removal can become defaults too. A justified exception needs an inspected
+comparison and must preserve the object's role, required information and controllable parts.

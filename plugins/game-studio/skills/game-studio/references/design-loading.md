@@ -75,3 +75,13 @@ limitations; otherwise judge against the project's art bible and reference captu
 
 Licenses, exact source commits and content hashes are in `../THIRD_PARTY_NOTICES.md` and
 `../vendor/sources.json`. Do not strip the license files when distributing the plugin.
+
+## Additional 3D design method
+
+Read [design-judgment.md](design-judgment.md) before a new direction, substantial asset design or
+art review. This is the locally adapted result of additional frontend-skill research, not a new
+plugin or tool dependency. It adds contextual recipe selection, a short design commitment,
+opened visual comparisons for standalone assets and observation before numerical diagnostics.
+Motion-specific portions apply when new motion is being designed or reviewed.
+Existing licensed originals and the phase table above remain available; no whole-source reread,
+numeric taste preset, extra agent roster or upstream detector installation is required.

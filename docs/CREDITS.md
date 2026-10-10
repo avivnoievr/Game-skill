@@ -86,3 +86,21 @@ Blender Studio's indexed animation-pipeline text informed a blocking checkpoint,
 [Simple Prop Workflow](https://blog.polyhaven.com/simple-prop-workflow/) informed the UV checker
 checkpoint. Public Instagram fetching failed; no Instagram post is cited as a verified finding.
 See `docs/research/round2/08-media-followup.md` for exact access and evidence limits.
+
+## Additional rewritten design methods (2026-10-10)
+
+The additive `references/design-judgment.md` adapts selected methods from
+[pbakaus/impeccable](https://github.com/pbakaus/impeccable),
+[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill),
+[nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), and
+[emilkowalski/skills](https://github.com/emilkowalski/skills).
+This adapted reference is Apache-2.0; source MIT licenses and Apache LICENSE/NOTICE are preserved.
+Exact pins, reviewed sections and copied-notice hashes are in
+`plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/sources.json`.
+No upstream runtime, hook or new external plugin is imported.
+
+Primary written research also includes Valve's
+[Illustrative Rendering in Team Fortress 2](https://cdn.fastly.steamstatic.com/apps/valve/2007/NPAR07_IllustrativeRenderingInTeamFortress2.pdf)
+and Riot's [Clarity in League](https://www.leagueoflegends.com/en-us/news/dev/clarity-in-league/).
+Their text/art is cited, not redistributed. Research scope and source-access limits are in
+[the additional research record](research/round2/10-design-judgment-additions.md).

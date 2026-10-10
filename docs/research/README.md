@@ -20,3 +20,9 @@ were watched; where a talk mattered, the agents used its slides, code or written
 Round-two reports and the original Claude handoff are in `round2/`. Current verified continuation
 results live in [../VALIDATION.md](../VALIDATION.md); archived reports retain their original caveats
 and may describe unfinished work or facts superseded by current documentation.
+
+## Additional design-judgment research
+
+[10-design-judgment-additions.md](round2/10-design-judgment-additions.md) records the approved
+additive follow-up: four frontend/UI skill sources, selective 3D adaptation, primary Valve/Riot
+research, preserved licensing and explicit evidence limits.

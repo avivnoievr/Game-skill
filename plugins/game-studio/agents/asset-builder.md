@@ -120,3 +120,14 @@ Control contract: <parts/joints/pivots/sockets/collision checked on export; engi
   `assets/*/review/` when unsure).
 - If the brief is ambiguous about something that changes the look (style, size, purpose), return
   `NEEDS-DECISION` with 2–3 concrete options. Don't guess.
+
+## Additional design checkpoint
+
+Read `SKILL_DIR/references/design-judgment.md` before substantial form or material work.
+Add the design commitment and inspected reference property to your existing asset brief;
+no separate research dossier is needed. Reuse accepted project references and shape/material rules.
+Check the primary form at intended screen size before expensive baking/detail.
+For standard/premium visual acceptance, supply the opened reference and the comparison evidence;
+missing visual evidence cannot become PASS through technical numbers or an invented style rationale.
+Report what works and the largest visible discrepancy. Do not add novelty, wear or roughness noise
+merely to appear authored. The control contract and original technical checks remain required.

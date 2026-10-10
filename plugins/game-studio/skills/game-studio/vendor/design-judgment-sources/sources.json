@@ -1,0 +1,149 @@
+{
+  "reviewed_on": "2026-10-10",
+  "adapted_file": "plugins/game-studio/skills/game-studio/references/design-judgment.md",
+  "adapted_file_license": "Apache-2.0",
+  "scope": "Selected concepts rewritten for games/3D; upstream skill bodies and executables are not bundled or activated. Existing vendor archive unchanged.",
+  "reviewed_sources": [
+    {
+      "repository": "pbakaus/impeccable",
+      "commit": "d631a8827f99414d2b6daba4ef08b7f8701751d7",
+      "license": "Apache-2.0",
+      "reviewed_files": [
+        {
+          "path": "skill/reference/critique.md",
+          "url": "https://github.com/pbakaus/impeccable/blob/d631a8827f99414d2b6daba4ef08b7f8701751d7/skill/reference/critique.md",
+          "git_blob_sha": "ad0831694497d99e455fe02d02ce526867b2eea0",
+          "sections": [
+            "Hard Invariants / Assessment A: design specificity before detector findings",
+            "Design Specificity Verdict / Priority Issues",
+            "Heuristics applicability and false positives"
+          ]
+        },
+        {
+          "path": "skill/reference/distill.md",
+          "url": "https://github.com/pbakaus/impeccable/blob/d631a8827f99414d2b6daba4ef08b7f8701751d7/skill/reference/distill.md",
+          "git_blob_sha": "bc0f6e96472be319e27e62e681975d3716e7b43a",
+          "sections": [
+            "Assess Current State / Visual Simplification",
+            "NEVER constraints / Verify Simplification"
+          ]
+        }
+      ],
+      "adapted": "Independent visual observation before metrics; reversible removal of decorative distraction while retaining function.",
+      "not_adopted": "Mandatory two new agents, browser overlay/detector/runtime, user-question gates, <=4 choices as a universal cognitive limit, 1-2-color mandate."
+    },
+    {
+      "repository": "Leonxlnx/taste-skill",
+      "commit": "717446e07a78d4e6d7918b1fde1a263378eebac9",
+      "license": "MIT",
+      "reviewed_files": [
+        {
+          "path": "skills/taste-skill/SKILL.md",
+          "url": "https://github.com/Leonxlnx/taste-skill/blob/717446e07a78d4e6d7918b1fde1a263378eebac9/skills/taste-skill/SKILL.md",
+          "git_blob_sha": "b72132fcd466da605623ffe96e370b3991fc5285",
+          "sections": [
+            "0: Brief Inference / Anti-Default Discipline",
+            "1: Three Dials (reviewed and not imported)"
+          ]
+        },
+        {
+          "path": "skills/redesign-skill/SKILL.md",
+          "url": "https://github.com/Leonxlnx/taste-skill/blob/717446e07a78d4e6d7918b1fde1a263378eebac9/skills/redesign-skill/SKILL.md",
+          "git_blob_sha": "c8304f0c9301385e3641b052d6b25b8af11cb6c1",
+          "sections": [
+            "How This Works / Fix Priority / Rules"
+          ]
+        }
+      ],
+      "adapted": "Brief-specific design commitment; preserve successful existing visual identity; targeted repairs.",
+      "not_adopted": "Numeric 8/6/4 presets, automatic motion increase, font-first repair order, React/Tailwind assumptions, blanket SVG/icon-library rules."
+    },
+    {
+      "repository": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "50d8a7de0900119855614541f15a1a616691eb33",
+      "license": "MIT",
+      "reviewed_files": [
+        {
+          "path": "src/ui-ux-pro-max/templates/base/skill-content.md",
+          "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/50d8a7de0900119855614541f15a1a616691eb33/src/ui-ux-pro-max/templates/base/skill-content.md",
+          "git_blob_sha": "1f4dca9036982a28607c906b67673e5610e38543",
+          "sections": [
+            "Query Contract / Step 1 requirements",
+            "Step 2b Master + Overrides / Step 2c optional dials"
+          ]
+        }
+      ],
+      "adapted": "Small task-matched research; durable master visual rules with explicit asset-level deviations.",
+      "not_adopted": "CLI/database, extra persistence system, GSAP snippets, product-style lookup tables as a 3D art authority."
+    },
+    {
+      "repository": "emilkowalski/skills",
+      "commit": "e8a175de22ae1e49370fc144c1f3bb9aeedf988d",
+      "license": "MIT",
+      "reviewed_files": [
+        {
+          "path": "skills/emil-design-eng/SKILL.md",
+          "url": "https://github.com/emilkowalski/skills/blob/e8a175de22ae1e49370fc144c1f3bb9aeedf988d/skills/emil-design-eng/SKILL.md",
+          "git_blob_sha": "62ce902af8dd32c590ea7203e9ab2edb1d6ef81a",
+          "sections": [
+            "Core Philosophy / Animation Decision Framework",
+            "Interruptibility advantage / Cohesion / Debugging Animations"
+          ]
+        },
+        {
+          "path": "skills/review-animations/SKILL.md",
+          "url": "https://github.com/emilkowalski/skills/blob/e8a175de22ae1e49370fc144c1f3bb9aeedf988d/skills/review-animations/SKILL.md",
+          "git_blob_sha": "577a64397267ce20960de2202950594d5bd6f9b6",
+          "sections": [
+            "Operating Posture / Justified motion / Interruptibility / Cohesion",
+            "Remedial Preference Hierarchy / Approval criteria"
+          ]
+        }
+      ],
+      "adapted": "Motion purpose, repetition, continuity and rapid retrigger inspection; felt quality distinct from code success.",
+      "not_adopted": "Blanket no-keyboard-animation rule, CSS-only performance rules as engine laws, mandatory greeting-only responses, universal timing cutoffs."
+    }
+  ],
+  "copied_notices": [
+    {
+      "local_path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/impeccable/LICENSE",
+      "repository": "pbakaus/impeccable",
+      "commit": "d631a8827f99414d2b6daba4ef08b7f8701751d7",
+      "upstream_path": "LICENSE",
+      "git_blob_sha": "bb3f6d23b1f8025514a62a12b51b47d73e3c9aa9",
+      "url": "https://github.com/pbakaus/impeccable/blob/d631a8827f99414d2b6daba4ef08b7f8701751d7/LICENSE"
+    },
+    {
+      "local_path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/impeccable/NOTICE.md",
+      "repository": "pbakaus/impeccable",
+      "commit": "d631a8827f99414d2b6daba4ef08b7f8701751d7",
+      "upstream_path": "NOTICE.md",
+      "git_blob_sha": "0468271c904ae334cfaf27da6f8df3d5f419a1f0",
+      "url": "https://github.com/pbakaus/impeccable/blob/d631a8827f99414d2b6daba4ef08b7f8701751d7/NOTICE.md"
+    },
+    {
+      "local_path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/taste-skill/LICENSE",
+      "repository": "Leonxlnx/taste-skill",
+      "commit": "717446e07a78d4e6d7918b1fde1a263378eebac9",
+      "upstream_path": "LICENSE",
+      "git_blob_sha": "48a2f6640b81ff8eca9ce7f6a96337692713ef5b",
+      "url": "https://github.com/Leonxlnx/taste-skill/blob/717446e07a78d4e6d7918b1fde1a263378eebac9/LICENSE"
+    },
+    {
+      "local_path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/ui-ux-pro-max/LICENSE",
+      "repository": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "50d8a7de0900119855614541f15a1a616691eb33",
+      "upstream_path": "LICENSE",
+      "git_blob_sha": "1e71cbf26660f31903807d099fe902c098fc7e4c",
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/50d8a7de0900119855614541f15a1a616691eb33/LICENSE"
+    },
+    {
+      "local_path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/emil-design-eng/LICENSE",
+      "repository": "emilkowalski/skills",
+      "commit": "e8a175de22ae1e49370fc144c1f3bb9aeedf988d",
+      "upstream_path": "LICENSE",
+      "git_blob_sha": "57b46f1fd11dc62351ea548104a88aa3f659c11b",
+      "url": "https://github.com/emilkowalski/skills/blob/e8a175de22ae1e49370fc144c1f3bb9aeedf988d/LICENSE"
+    }
+  ]
+}

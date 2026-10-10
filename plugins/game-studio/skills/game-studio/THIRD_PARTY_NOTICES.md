@@ -72,3 +72,23 @@ redistributed material. If editing Apache-2.0 files, add prominent change notice
 keep upstream originals and place project-specific guidance in the router whenever practical.
 Update the pinned commit, source URL and hash together after reviewing any source update.
 The license permits redistribution; it does not endorse the sources' quality scores or tool choices.
+
+## Additional adapted design-judgment reference — Apache-2.0 and MIT sources
+
+`references/design-judgment.md` is a changed/adapted synthesis dated 2026-10-10, distributed under
+Apache-2.0 rather than the repository's default MIT license. The source methods were rewritten for
+3D assets, reference evidence and game motion. These upstream skill bodies, commands and executables
+are not shipped or activated; the existing five-component archive is unchanged.
+
+| Source | Pinned commit | License / copyright |
+|---|---|---|
+| [pbakaus/impeccable](https://github.com/pbakaus/impeccable) | `d631a8827f99414d2b6daba4ef08b7f8701751d7` | Apache-2.0; Copyright 2025 Paul Bakaus |
+| [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | `717446e07a78d4e6d7918b1fde1a263378eebac9` | MIT; Copyright 2026 Leonxlnx |
+| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | `50d8a7de0900119855614541f15a1a616691eb33` | MIT; Copyright 2024 Next Level Builder |
+| [emilkowalski/skills](https://github.com/emilkowalski/skills) | `e8a175de22ae1e49370fc144c1f3bb9aeedf988d` | MIT; Copyright 2026 Emil Kowalski |
+
+Unchanged license copies and Impeccable's root `NOTICE.md` are under
+`vendor/design-judgment-sources/`. That NOTICE names platform-design-skills; its iOS/Android
+reference content is not selected here. Exact reviewed sections and copied-notice hashes are in
+`vendor/design-judgment-sources/sources.json`. Retain these notices with the adapted reference.
+Valve/Riot publications are research citations, not redistributed text or art assets.

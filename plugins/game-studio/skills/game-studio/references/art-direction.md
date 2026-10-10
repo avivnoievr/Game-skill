@@ -240,3 +240,11 @@ Check four variants of each:
 
 The art bible's verification section names these shots, and `art-critic` scores them with
 `templates/scorecard.md`.
+
+## 12. Additional recipe applicability and design evidence
+
+Apply [design-judgment.md](design-judgment.md) alongside the method above. Its brief-specific
+comparison determines which starting recipe serves this project. Palette count, low-poly,
+warm/cool lighting, colored shadows, asymmetry, surface wear and jitter are contextual choices;
+their presence alone does not establish quality. Record purposeful deviations and inspect the
+result against its references while preserving required readability and technical controls.

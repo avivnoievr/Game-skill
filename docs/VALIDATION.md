@@ -101,3 +101,25 @@ Blender data API with a simulated background flag, not a developer GUI/MCP conne
 Public evidence copies omit private session/inbox identifiers and local absolute path prefixes.
 Numerical results are unchanged; provenance hashes describe the original local artifacts before
 path sanitization, not rewritten public JSON files.
+
+## Additive design-judgment verification (2026-10-10)
+
+Scope: instruction/reference/attribution additions to published commit `660e9f7`. No production
+script, inspector threshold, existing vendor archive or package version was changed.
+
+- Compared every existing published blob against the local baseline. Modified existing files retain
+  their exact prior bytes as a prefix; no original instruction line or file was removed.
+- The original 19 published vendor files (18 upstream files plus their manifest) are unchanged.
+- Five new license/NOTICE copies match the pinned upstream Git blob hashes exactly.
+- JSON parses, local Markdown links resolve, public additions contain no private coordination
+  addresses/session identifiers or absolute execution paths, and `git diff --check` passes.
+- `python3 -m unittest discover -s tests/bootstrap -v`: **4 passed**.
+- A separate temporary project-copy installation preserved the new reference, attribution manifest,
+  five licenses/notices and appended builder/critic definitions byte-for-byte.
+- One additional agent performed read-only method/consistency review. Its judging-order issue was
+  corrected with explicit ordering for Procedure steps 1–3; no new standing agent was added.
+
+These checks establish packaging, preservation and instruction consistency. The baseline's 57
+regression results remain historical; they were not rerun for this documentation addition.
+No new Claude/model taste evaluation, visual reference comparison on a real asset, Blender MCP
+connection, actual-game quality claim or GPU benchmark is established by this supplement.

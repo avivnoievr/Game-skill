@@ -59,3 +59,16 @@ documentation omits their addresses and the private session link. It exchanges m
 not automatically copy a private Claude conversation or reload its context. Read this repo/handoff
 when resuming. User-facing updates are Hebrew; only send messages within the user's authorized
 Claude coordination task. No secrets or credentials are part of this handoff.
+
+## Additional design-judgment supplement (2026-10-10)
+
+The user approved additions only, preserving prior instructions. A subsequent request added
+research into existing website/UI design-taste skills and selected rewriting for 3D.
+`references/design-judgment.md` now extends contextual style choices, standalone-asset visual
+references, short decision/checkpoint notes, observation before metrics and motion purpose.
+References and role definitions link it; the prior content and five-component vendor archive remain.
+Source pins/licenses and examined sections are in the additional research record
+`docs/research/round2/10-design-judgment-additions.md`.
+This is instruction/attribution work, not a new model or game-quality evaluation. Package version
+is still 1.1.0; the supplemental Git commit identifies this update. The previous AgentMail status
+message described the baseline commit and does not imply that a Claude session has loaded this addition.
