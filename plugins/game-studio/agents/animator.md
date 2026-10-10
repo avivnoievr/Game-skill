@@ -45,7 +45,8 @@ Read `SKILL_DIR/references/animation.md` completely, and `modeling.md` §7 for e
    - Apply the motion language: anticipation for enemy telegraphs, fast response for player actions,
      follow-through, arcs.
 4. **Export to glTF correctly:**
-   - Every action is on its own NLA track or active, otherwise it is silently dropped.
+   - With one armature, "Export all Armature Actions" (on by default) exports every action, so delete
+     stray test actions first. Otherwise each action must be active or on its own NLA track.
    - Reset pose bones between actions; keep sampling on; start loops at frame 0.
 5. **Prove it, per clip:** run `render_views.py <glb> --out assets/<id>/anim/<Clip> --views q_fr --anim <Clip>
    --anim-steps 8` and open every strip. Check:
