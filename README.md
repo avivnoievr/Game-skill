@@ -109,3 +109,15 @@ standard/premium art review; prototype or technical completion does not certify 
 The [research record](docs/research/round2/10-design-judgment-additions.md) identifies four further
 skill sources, selected adaptations and licenses. Their runtime/CLI packages are not dependencies.
 This supplement is identified by its Git commit; the package version remains 1.1.0.
+
+## Development and publication policy
+
+This repository remains the source of every update and regression comparison. The planned
+`avivnoievr/game-studio-3d` repository is a publication channel for versions the owner tests
+and explicitly approves. It does not receive automatic updates.
+
+The package metadata now identifies candidate **1.1.1**. Earlier 1.1.0 descriptions and
+validation counts above remain historical. Publication templates live in `distribution/`;
+`tools/prepare_distribution.py` exports a specific committed SHA into a new local folder,
+retaining tests, licenses and a content manifest. Preparing a candidate does not publish it.
+See [the Hebrew release process](docs/RELEASE-PROCESS.he.md). Development continues here.

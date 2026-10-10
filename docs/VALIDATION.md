@@ -123,3 +123,29 @@ These checks establish packaging, preservation and instruction consistency. The 
 regression results remain historical; they were not rerun for this documentation addition.
 No new Claude/model taste evaluation, visual reference comparison on a real asset, Blender MCP
 connection, actual-game quality claim or GPU benchmark is established by this supplement.
+
+## Distribution candidate 1.1.1 (2026-10-10)
+
+Development remains in `avivnoievr/Game-skill`. The proposed `game-studio-3d` repository is a
+publication channel for source commits the owner tests and explicitly approves. No automatic
+sync, push-triggered publication or first-release approval was introduced.
+
+- `python3 -m unittest discover -s tests/distribution -v`: **6 passed**. These check committed
+  input despite later edits, binary/license/test preservation, file modes and hashes, output
+  overwrite prevention, full SHA/version requirements, exact approval matching, and rejection
+  of output inside the source repository. Approval examples in tests are synthetic fixtures.
+- Prepared a full candidate from a temporary committed copy, not from uncommitted input.
+  `RELEASE.json` reports `candidate` and a null approval. All recorded SHA-256 hashes and modes
+  matched the emitted files; local Markdown links and three issue-form YAML files parsed.
+- Ran the candidate's existing bootstrap suite: **4 passed**. Installed discovery and preserved
+  user-customization behavior remain the same. Runtime scripts and existing vendor files did
+  not change; the 57 earlier regression results were not rerun or relabeled as current.
+- One independent agent reviewed the pinned export, manifest, approval boundary and packaging
+  claims. Fresh-history instructions and the distinction between backups and merging were
+  clarified. Distribution-tool tests stay with their tool in the development repository.
+
+The package metadata advances to 1.1.1; the production workflow files are preserved. The
+preparation tool has no publishing capability. An approval record is a manual record, not a
+cryptographic verification that the owner approved. Candidate install links point to a future
+publication tag and become usable after that tag exists. There is still no new Claude quality
+evaluation or observed real-game result from this packaging work.

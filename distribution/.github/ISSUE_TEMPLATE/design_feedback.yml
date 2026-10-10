@@ -1,0 +1,36 @@
+name: Design and workflow feedback
+description: Review an actual result and identify concrete improvements.
+title: "[Feedback] "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version and source commit
+      description: Copy the version and source_commit from RELEASE.json.
+    validations:
+      required: true
+  - type: textarea
+    id: intent
+    attributes:
+      label: Intended result
+      description: Task, game style, intended player feeling and viewing conditions.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Result and comparison reference
+      description: Attach images/clips or links, and explain what was actually compared.
+    validations:
+      required: true
+  - type: textarea
+    id: judgment
+    attributes:
+      label: What works and what needs improvement
+      description: Point to specific choices or workflow failures. Label personal preferences as preferences.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change or next test

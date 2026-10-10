@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Development and implementation pull requests
+    url: https://github.com/{{SOURCE_REPOSITORY}}
+    about: Skill changes and fixes are maintained in the development repository.
