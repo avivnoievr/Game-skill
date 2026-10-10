@@ -1,0 +1,41 @@
+{
+  "version": "1.1.1",
+  "published_at": "2026-10-10",
+  "source_repository": "avivnoievr/Game-skill",
+  "source_commit": "0fc9352fbec0cc8c32ecd785b95d9b0fa54018ec",
+  "candidate_commit": "d7755590691940a7690e17dab41bbd67ed20662e",
+  "publication_repository": "avivnoievr/game-studio-3d",
+  "publication_commit": "9f49e1fae1fa7bacd8b0082bf440c55f9d681c66",
+  "publication_tree": "a90c9583137223d076732fe49d427b9cd3e5935c",
+  "publication_branch": "main",
+  "version_reference": {
+    "kind": "branch",
+    "name": "v1.1.1"
+  },
+  "files_verified": 143,
+  "verification": "All Git blob hashes and executable modes match the approved prepared snapshot. Four bootstrap tests passed on the approved snapshot. Version-reference files are accessible through GitHub.",
+  "approval": {
+    "approved": true,
+    "approved_by": "Repository owner, by explicit publication instruction in this conversation",
+    "approved_at": "2026-10-10",
+    "source_commit": "0fc9352fbec0cc8c32ecd785b95d9b0fa54018ec",
+    "version": "1.1.1",
+    "checks": [
+      "Six distribution-boundary tests passed during preparation.",
+      "Four bootstrap/install tests passed on the prepared candidate.",
+      "Candidate file hashes, modes, Markdown links and issue-form YAML were verified."
+    ],
+    "observed_result": "The owner created the public repository and explicitly requested uploading the prepared initial version for feedback. No owner-reported real-game or visual-quality test result is asserted.",
+    "limitations": [
+      "The 57 earlier runtime regression results remain historical, not a new execution.",
+      "No new Claude-generated finished-game quality, desktop Blender MCP connection or real-device GPU result has been established.",
+      "The version reference v1.1.1 is a publication branch. Available connector tools cannot create Git tags or GitHub Releases; a Git tag is not claimed."
+    ],
+    "publication_reference": {
+      "kind": "branch",
+      "name": "v1.1.1",
+      "policy": "Leave this version branch at its original publication commit; future approved versions update main and receive their own version reference."
+    }
+  },
+  "development_policy": "All future changes originate in Game-skill. Publication receives only versions explicitly approved by the owner. There is no automatic sync."
+}

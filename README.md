@@ -121,3 +121,16 @@ validation counts above remain historical. Publication templates live in `distri
 `tools/prepare_distribution.py` exports a specific committed SHA into a new local folder,
 retaining tests, licenses and a content manifest. Preparing a candidate does not publish it.
 See [the Hebrew release process](docs/RELEASE-PROCESS.he.md). Development continues here.
+
+## Published feedback distribution — 2026-10-10
+
+[Game Studio 3D 1.1.1](https://github.com/avivnoievr/game-studio-3d) is now published from
+source commit `0fc9352fbec0cc8c32ecd785b95d9b0fa54018ec`, after the owner's explicit upload
+instruction. The publication commit is `9f49e1fae1fa7bacd8b0082bf440c55f9d681c66`.
+`v1.1.1` is a version branch at that commit, not a Git tag. Its install references work;
+GitHub Release/tag creation is not claimed. Keep that version branch at its original commit.
+
+All future development remains here. The publication repository collects feedback and receives
+only selected owner-approved versions. [The release record](docs/releases/1.1.1.json) stores
+approval, source/publication commits and verification limits. No real-game visual-quality result
+was inferred from the publication approval.
