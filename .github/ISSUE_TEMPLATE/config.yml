@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: Development and implementation pull requests
-    url: https://github.com/{{SOURCE_REPOSITORY}}
+    url: https://github.com/avivnoievr/Game-skill
     about: Skill changes and fixes are maintained in the development repository.

@@ -1,7 +1,7 @@
 # Development and publication
 
-- Development repository: [{{SOURCE_REPOSITORY}}](https://github.com/{{SOURCE_REPOSITORY}}).
-- Publication repository: [{{PUBLICATION_REPOSITORY}}](https://github.com/{{PUBLICATION_REPOSITORY}}).
+- Development repository: [avivnoievr/Game-skill](https://github.com/avivnoievr/Game-skill).
+- Publication repository: [avivnoievr/game-studio-3d](https://github.com/avivnoievr/game-studio-3d).
 
 All edits, including publication templates and issue forms, originate in the development
 repository. The publication repository receives snapshots of specific commits. Feedback can

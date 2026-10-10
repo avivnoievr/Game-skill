@@ -1,123 +1,93 @@
 # Game Studio 3D
 
-A Claude Code plugin for deliberate 3D game production: editable assets, coherent art direction,
-animation, clean architecture and independent quality checks. It supplies a workflow and executable
-evidence tools for a capable model; it does not promise professional art from prompting alone.
+A Claude Code skill and plugin for editable 3D assets, deliberate art direction,
+animation, game architecture and evidence-based quality checks.
 
-- **Editable game assets:** semantic parts, joints, pivots, sockets and collision contracts. Moving
-  parts stay separate; source files/build recipes survive export optimization.
-- **Design material loaded by phase:** five selected components from three upstream repositories,
-  pinned with licenses and hashes. The short startup router selects what the current task needs.
-- **Research before production:** opening genre/art researcher and production planner produce
-  separate reports; the director reconciles them into an executable slice/milestone plan.
-- **Installed Blender first:** executable discovery, optional constrained live workflow and separate
-  headless inspection/rendering. No automatic installation or paid generation.
-- **Useful specialists:** two opening roles, asset builder, animator, art critic and playtest QA. Up to
-  three independent production agents; one writer in a shared live Blender scene.
-- **Evidence that can fail:** part/pivot/socket checks, exploded views, animation seam reports,
-  browser input/counters and verification gates. Missing measurements cannot become a passing zero.
+**Version 1.1.1 is offered for testing and feedback.** The workflow and several tools
+have been checked; professional visual quality and a complete game made with Claude have
+not been established. See [validation and limits](docs/VALIDATION.md).
 
-The complete Hebrew explanation and exact integration inventory are in
-[docs/SUMMARY.he.md](docs/SUMMARY.he.md). Activation prompts are in [PROMPT.md](PROMPT.md).
-Current continuation state is in [docs/HANDOFF.md](docs/HANDOFF.md).
+## What it provides
 
-## Install in a game project
+- Separate moving parts, usable pivots and sockets, editable sources and export checks.
+- Design references adapted to the project's genre, camera and intended player experience.
+- Two opening research/planning roles, followed by asset building, animation, art critique
+  and playtest QA when the task needs them.
+- Blender inspection, multiple-view renders, animation reports and browser QA contracts.
+- A focused workflow for a single model as well as a larger game project.
 
-For a cloud session, keep the installed files in the game repository so the next session sees them:
+The skill directs work; it does not supply a game engine, install Blender or automatically
+connect to a developer's desktop. An MCP connection is optional and must be configured for
+the actual environment. The current packaging targets Claude Code.
+
+## Install
+
+For a local or cloud game project:
 
 ```bash
-git clone https://github.com/avivnoievr/Game-skill
-bash Game-skill/install.sh /path/to/your-game
+git clone --branch v1.1.1 https://github.com/avivnoievr/game-studio-3d.git
+bash game-studio-3d/install.sh /path/to/your-game
 ```
 
-Commit the resulting `.claude/skills/game-studio` and `.claude/agents` according to your project's
-branch policy. Windows PowerShell: `.\install.ps1 -Target C:\path\to\your-game`.
-Upgrades preserve the previous skill and same-name agents under `.claude/game-studio-backups/`.
+On Windows, run `./install.ps1 -Target C:\path\to\your-game` from the cloned folder.
+Commit the installed `.claude/skills/game-studio` and `.claude/agents` in your game
+repository when using cloud sessions. Upgrades keep previous customizations in backups;
+they do not automatically merge them into the new installation.
+Open a new Claude Code session and use [the matching activation prompt](PROMPT.md).
 
-Where Claude Code supports marketplace plugins:
+Where marketplace plugins are supported:
 
 ```text
-/plugin marketplace add avivnoievr/Game-skill
+/plugin marketplace add avivnoievr/game-studio-3d#v1.1.1
 /plugin install game-studio@game-skill
 ```
 
-The default branch is `claude/3d-game-dev-skills-system-13c0pn`; it can be pinned with
-`/plugin marketplace add avivnoievr/Game-skill#claude/3d-game-dev-skills-system-13c0pn`.
-Invoke `/game-studio:game-studio` for a plugin or `/game-studio` for a project copy. Open a new session
-after installation and use the matching prompt. Optional machine-only install: `bash install.sh --user`.
+Invoke `/game-studio:game-studio` for a plugin or `/game-studio` for a project copy.
+Cloud sessions that do not support marketplace commands should use the project-copy install.
 
-## Tool requirements
+## Requirements
 
-| Tool | Purpose | Policy |
+| Tool | When needed | Verification boundary |
 |---|---|---|
-| Existing Blender 4.2+ executable | Asset build, import, checks and renders | `scripts/find_blender.sh`; `BLENDER` overrides its location. Actually tested here on 4.3.2 |
-| Node 18+ and project `playwright` | Browser game capture/input | Use existing tools; install dependencies only within the authorized setup scope |
-| Project `gltf-validator` | Khronos GLB validation | `check_gltf.mjs`; missing dependency remains unverified |
-| Godot / Unity / other engine | Runtime import and gameplay evidence | Use installed project version. Native capture recipes are partial adapters, not complete QA systems |
-| Optional MCP, optimization, ffmpeg | Live access or specific pipeline work | Route by actual capability; none is a mandatory plugin dependency |
+| Existing Blender 4.2+ executable | Building, inspection and rendering | Tested on 4.3.2; other supported versions need checking |
+| Node 18+ and project Playwright | Browser-game capture and input evidence | Tested with controlled Chromium fixtures |
+| Project `gltf-validator` | Khronos GLB validation | Missing in the test environment; actual Khronos validation is unverified |
+| Your project's game engine | Import, gameplay and performance checks | One Godot 4.6.3 prop-control pilot; no general engine-compatibility claim |
 
-`pip install bpy` is an explicit fallback requiring compatible Python/Blender versions, not the
-default when Blender is already installed. This repository does not install Blender, run a paid
-generator or grant access to a developer's desktop. Live MCP compatibility and sandbox limits must
-be checked in that developer's actual environment.
+There is no mandatory paid service. Use the tools already installed for the project.
+This installer copies the skill and agents; it does not install or configure Blender MCP.
 
-## Contents
+## Give useful feedback
 
-```text
-plugins/game-studio/
-  .claude-plugin/plugin.json          plugin version 1.1.0
-  agents/                            genre-art-researcher, production-planner, asset-builder,
-                                     animator, art-critic, playtest-qa
-  THIRD_PARTY_NOTICES.md              bundled licenses/source inventory
-  skills/game-studio/
-    SKILL.md                         lean orchestrator and production contracts
-    references/                      design, tools, live Blender, asset recipes, QA, engine adapters
-    vendor/                          pinned reference selections, original licenses, sources.json
-    templates/                       brief, art bible, assets/budgets/features, scorecard, build, verify
-    scripts/blender/                  gs_build, inspector, multiview/exploded renderer, clip/image reports
-    scripts/web/                      capture and GLB validator
-tests/                               executable regression fixtures
-docs/                                research, Hebrew report, handoff and validation evidence
-```
+Please [report a bug](https://github.com/avivnoievr/game-studio-3d/issues/new?template=bug_report.yml)
+or [share design feedback](https://github.com/avivnoievr/game-studio-3d/issues/new?template=design_feedback.yml).
+Include the version, task, expected result and what actually happened. Visual feedback is most
+useful with the model/render, viewing conditions and the reference used for comparison.
+A structural pass is separate from a convincing design result.
 
-## Validation and limits
+Fixes and contributions are developed in [avivnoievr/Game-skill](https://github.com/avivnoievr/Game-skill).
+This repository receives selected releases after the owner tests and approves the exact source
+commit. Updates are not automatically mirrored. See [contributing](CONTRIBUTING.md) and
+[the release policy](RELEASE-POLICY.md).
 
-See [docs/VALIDATION.md](docs/VALIDATION.md) for reproducible commands and actual results from this
-continuation. Fixtures exercise clean and intentionally broken cases rather than checking syntax
-alone. The stylized car is a structural regression fixture; the independent prop pilot checks that
-another agent can use the workflow. Neither is proof of a polished finished game.
+## Documentation
 
-The current environment has Blender 4.3.2 and software rendering. No actual developer GUI/MCP session,
-Unity, paid generation or broad real-game quality evaluation is claimed. Prior handoff reports
-contain additional historical test claims; results not reproduced here remain historical reports.
-Automated critics and image metrics support review but cannot establish taste by themselves.
+- [Hebrew explanation and component inventory](docs/SUMMARY.he.md)
+- [Validation commands, evidence and limits](docs/VALIDATION.md)
+- [Credits and research sources](docs/CREDITS.md)
+- [Release changes](CHANGELOG.md)
+- [Source commit and file hashes](RELEASE.json)
 
-## License and attribution
+Research and handoff documents retained under `docs/` describe development history and its
+evidence limits. Their earlier version numbers, installation examples and status reports are
+historical. Use this README and `RELEASE.json` for the distributed version.
+Runtime regression tests are included for reproduction and future checks. The distribution
+preparer's own tests stay with that tool in the development repository.
 
-Original work is MIT ([LICENSE](LICENSE)). Bundled reference files retain MIT or Apache-2.0 terms,
-including applicable NOTICE files; see [THIRD_PARTY_NOTICES](plugins/game-studio/THIRD_PARTY_NOTICES.md)
-and [docs/CREDITS.md](docs/CREDITS.md). The imported scorecard example ratings are their author's
-judgments, not the project's adopted visual quality target.
+## License
 
-## Additional design judgment (2026-10-10)
+Original work is [MIT](LICENSE). Bundled references and adapted material retain their MIT or
+Apache-2.0 licenses and notices. See [third-party notices](plugins/game-studio/THIRD_PARTY_NOTICES.md).
 
-An additive supplement to 1.1.0 preserves the prior files and bundled design references:
-[design-judgment.md](plugins/game-studio/skills/game-studio/references/design-judgment.md).
-It adds project-specific recipe selection, inspected visual comparisons for standalone assets,
-form checkpoints and visual observation before metric interpretation. A model-design test uses
-standard/premium art review; prototype or technical completion does not certify design taste.
-The [research record](docs/research/round2/10-design-judgment-additions.md) identifies four further
-skill sources, selected adaptations and licenses. Their runtime/CLI packages are not dependencies.
-This supplement is identified by its Git commit; the package version remains 1.1.0.
-
-## Development and publication policy
-
-This repository remains the source of every update and regression comparison. The planned
-`avivnoievr/game-studio-3d` repository is a publication channel for versions the owner tests
-and explicitly approves. It does not receive automatic updates.
-
-The package metadata now identifies candidate **1.1.1**. Earlier 1.1.0 descriptions and
-validation counts above remain historical. Publication templates live in `distribution/`;
-`tools/prepare_distribution.py` exports a specific committed SHA into a new local folder,
-retaining tests, licenses and a content manifest. Preparing a candidate does not publish it.
-See [the Hebrew release process](docs/RELEASE-PROCESS.he.md). Development continues here.
+Prepared from [source commit 0fc9352fbec0cc8c32ecd785b95d9b0fa54018ec](https://github.com/avivnoievr/Game-skill/commit/0fc9352fbec0cc8c32ecd785b95d9b0fa54018ec).
+Snapshot status: **candidate**. A candidate is not an approved public release.

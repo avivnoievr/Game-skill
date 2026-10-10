@@ -1,0 +1,863 @@
+{
+  "schema_version": 1,
+  "version": "1.1.1",
+  "status": "candidate",
+  "source_repository": "avivnoievr/Game-skill",
+  "source_commit": "0fc9352fbec0cc8c32ecd785b95d9b0fa54018ec",
+  "publication_repository": "avivnoievr/game-studio-3d",
+  "approval": null,
+  "files": [
+    {
+      "path": ".claude-plugin/marketplace.json",
+      "sha256": "be1a85704de24e1f9c7a4163f44a631625031bc1a3bca9461e5de01d8675a307",
+      "git_blob_sha": "72c489174d98058d388ccdcf042f113d9c54c7b4",
+      "mode": "644"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "sha256": "8b30aa6728136fde472b6d17eea1f59279bd38b4187cbba53686c21169fca3a3",
+      "git_blob_sha": "dfc40056a5d98d37e1dfc208e35d391b9ce32f2f",
+      "mode": "644"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "287d39c5d971958445380d339109273f05961daf725ba3ffa3f6b9d4b840769d",
+      "git_blob_sha": "be0e92ea297baed6249d56621bb1389736d43355",
+      "mode": "644"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/design_feedback.yml",
+      "sha256": "198959ab524a4fc2efe49d8125555ebc4c26e92cd971f99ae6294e68490649b7",
+      "git_blob_sha": "508b2ec2967adec08ec8a4fcdf7cc345cb1206eb",
+      "mode": "644"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "df5cee7affb31aabd17fae50b6c532a74bce965a57af159491d92ce863368376",
+      "git_blob_sha": "28446dc1fe009bf13d9eac665cce83b00fadaf19",
+      "mode": "644"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "34c186ab5b629365f9ccc1180f4d8fe4c3a93e4f75f51c697ce27a8b0c0dde0a",
+      "git_blob_sha": "6af821949234a462bf08fd3ddce147993a55bb81",
+      "mode": "644"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "5ae6b625ba87d8489ed86f58050092548901bab3d74e7f4779c34bd38b70f316",
+      "git_blob_sha": "a1a511cac30b9487ebc1a63103d5f27e420fa643",
+      "mode": "644"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "8a797676e8636921f3a80013e76cfabe2b92a1f2072a4e0c20dea2a5dbd7b2f2",
+      "git_blob_sha": "4b3955a58aa9bd3798b985c5354e9cda2134932b",
+      "mode": "644"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "3fa3d5d3e6f0168341659cea7e0d1eb042f4a3728cd0067f9f68cafdb51a8c96",
+      "git_blob_sha": "0a05d44005c806b260d9f158b709e3d38d384e3a",
+      "mode": "644"
+    },
+    {
+      "path": "README.md",
+      "sha256": "93e3959a0f77cc3d6feb2948c6a8a791a9e7f35d7301792112fc6499953cbe58",
+      "git_blob_sha": "7f3a446d00c9804fa08edf78d032e41478db265c",
+      "mode": "644"
+    },
+    {
+      "path": "RELEASE-POLICY.md",
+      "sha256": "fde08f1e3a25c6815bfefc26b08f025b1f39395b90716cb034a433945ad2c3e5",
+      "git_blob_sha": "c1eb0b9be66767229e95f5bd9be8ae141975cec9",
+      "mode": "644"
+    },
+    {
+      "path": "docs/CREDITS.md",
+      "sha256": "f99b59a9d11861626eeeff10c1179727d58a195fe7ca63e64a43dab6644a15a8",
+      "git_blob_sha": "3d450e8754e0cf8d87c79c0c6ea6d92f08a3301c",
+      "mode": "644"
+    },
+    {
+      "path": "docs/HANDOFF.md",
+      "sha256": "c4dbbff2a5f76acd01a31ace198ce3bf089381b1439a69952700cccf70ce00d3",
+      "git_blob_sha": "ee82d941f9817e0cb5cbb01cf8a31f644a723758",
+      "mode": "644"
+    },
+    {
+      "path": "docs/RELEASE-PROCESS.he.md",
+      "sha256": "1d64f0d10095ba67fda89af1127d3c84f15f7e5524076c1838d7567a9429e98c",
+      "git_blob_sha": "d638157f9debcfd6b1e5335538a3db35fb22b993",
+      "mode": "644"
+    },
+    {
+      "path": "docs/SUMMARY.he.md",
+      "sha256": "83cac2bde7d2618a8b203b44b53506471e9d4206cb90c0afd32b799a7ac3586a",
+      "git_blob_sha": "9846b77770e31684d896046d7d025b99a408a6fd",
+      "mode": "644"
+    },
+    {
+      "path": "docs/VALIDATION.md",
+      "sha256": "212fbdf4f0e5ed4b379c8349aa6ee388b7258a22c5dcae51ce1d5fe9fb02f98a",
+      "git_blob_sha": "41c39f80fbfe1c0a24818ed241e92111246ce21f",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/car-inspect.json",
+      "sha256": "808655d63dfa8e33e4f57a19f76661d1a6410d7d755d5423ebeec918f13ba399",
+      "git_blob_sha": "8f5d8f5859974fbc7400c35c3e7032706d2fffef",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/geometry-review.md",
+      "sha256": "b72d2b6272667c9c0b96bc4cbb82d8e81c1e35b998b6579b8559203436bdef4b",
+      "git_blob_sha": "df7203a7dde20f31d0ae3c16c8888c4bb740fbaf",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/geometry-tests.txt",
+      "sha256": "3130d18d70231c89dfafe99c78514f2b306c77e5f7a4e75512c7fc24e617ca3e",
+      "git_blob_sha": "5225f02b93241db2540d30cc299af455c1aa1ab1",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/pilot-godot-control.json",
+      "sha256": "117f2e8554ddd3b03a943c12d46afca763471ea6117bcf469806f2fcef00aeb1",
+      "git_blob_sha": "166d9e1784ae7c3e7ae758d457da8617118e38fd",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/pilot-inspect-rotor.json",
+      "sha256": "cc21b98cbe2514886357ba816a7384d437b896208e0bbca5d4da0e2dedbd652e",
+      "git_blob_sha": "4df14e74b59113a6167a1e513f09aa2011310e7b",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/pilot-inspect.json",
+      "sha256": "ad3de667c9511a7c21e80ba0082359be269c4c5953f863fb2c21ec30e3627eba",
+      "git_blob_sha": "245db156fb37fc203b873bf96b482fdbf2b48e23",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/pilot-provenance.json",
+      "sha256": "2de4ab7c8b37692c76cf1ccd093fe5a1ea7322524d8bc6d6b679aa2f5135cbec",
+      "git_blob_sha": "613456b2a7f7fe2b26d5b1c764806deafcc4e025",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/pilot-review.md",
+      "sha256": "d0edd3d6c0097ea189d0a3ef82538d5e102bcf2180ffcf45172dd75120e82315",
+      "git_blob_sha": "13ced3fb76b93487438cd8eeb2dfb1b15d098f23",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/qa-review.md",
+      "sha256": "3e872c26f7e25e817f9edf8aae29a6fd00772a358e169ab78ad0c8f8c1859094",
+      "git_blob_sha": "05e299c267f7db9c2d83c203e7b1d088f5f89d58",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/startup-plan-draft.md",
+      "sha256": "ba9f4fcf8ef275ae1b313c1b1c2c9f8967c8c136c8a8789b2d748798afc4e9a7",
+      "git_blob_sha": "5469bddac569b2078c2d45c47d4878e1260eca62",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/startup-plan.md",
+      "sha256": "61a768c0bf446b85c79e5b3d5f8f28bdc80ba4f9ced4e9b526addd0cdf93eb49",
+      "git_blob_sha": "da2876894a093f84531537d3c4540cec226325cd",
+      "mode": "644"
+    },
+    {
+      "path": "docs/evidence/startup-research.md",
+      "sha256": "4a5d40c7536356d76efa8cc06855f942036114f346d510c4b97a7f1123b410f9",
+      "git_blob_sha": "da1f8f1e98bb42857c6d1bded478f522d573fa25",
+      "mode": "644"
+    },
+    {
+      "path": "docs/images/car_stylized_wip.jpg",
+      "sha256": "e369952d924b98475ea3358dac8d2d70b46045cf299d9f2ac0f5b50fbb9ccbc2",
+      "git_blob_sha": "65129d905c778158a429b67608a562422b115565",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/00-research-plan.md",
+      "sha256": "e10736814e81c61cd39a67a12074195547f0b0e0d36884e36d29057291b4297b",
+      "git_blob_sha": "1feabee43eda67fa224c8a59e9db2367aef472c4",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/01-ecosystem-orchestration.md",
+      "sha256": "3ea4227ab50bdfa9b183dacb8f78b96a8aba4d437742ec08c4dfd96265520cea",
+      "git_blob_sha": "6c60ebebdc3f782efa4467c9156d5f2efbdbfdda",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/02-3d-modeling.md",
+      "sha256": "017091a2fca6df01bdca42fc8726e70f7f253ed8a128ccb800c09eeedc84bdb6",
+      "git_blob_sha": "32e112d17ef49556159e66c614ce6e576c817500",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/03-art-animation.md",
+      "sha256": "2b994aadb55dc3f902e02cb9c7bdce41ab27447248f6218b32e27bda99a1d3c3",
+      "git_blob_sha": "c16c1da2082342d7f00ce30d85287c64f7251b4b",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/04-qa-rigor-architecture.md",
+      "sha256": "49eda018608cb6aa31ee677f7349c925771f6b2b5a1bcacf72f3d583f3b7f539",
+      "git_blob_sha": "d38efb4d146503bef98245dcc24622c5fa99b044",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/05-mcp-tools.md",
+      "sha256": "b1e2215a98a9caebf66e1eb22ef981364a3a2a774a64c72e5d52f2d71e98590d",
+      "git_blob_sha": "fb72a6373380538a169c7bb002bef778c6da9a2a",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/README.md",
+      "sha256": "0befcb491b223d825503b7ab44507f8d84f0c1a1837c001b776bd256ad4165a0",
+      "git_blob_sha": "85eddd9742d57869f744ffe0b61743745a865ca9",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/00-plan.md",
+      "sha256": "380368c70edc15e8da1cad02d50a07a1d9b2bccfed90ff90478078cf2724ca67",
+      "git_blob_sha": "629667d9adf7df21f530731fcea70fa4f15b5b43",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/01-design-skills.md",
+      "sha256": "b706c6bd41205aa4ca9646fa705574a7d437356d20426910f1cec0dc1d21a8e4",
+      "git_blob_sha": "af6b7f2f42d6f6c5cbb6fa291423e6152df685c8",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/02-tools-donts.md",
+      "sha256": "8b496eca814c8ed7c8aa7d40068438d477826a7fd5cb750d2d7faa026be1ae54",
+      "git_blob_sha": "ac804a2b8b4bd2825f04efce9262923d519d584f",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/03-blender-mcp.md",
+      "sha256": "6f3ed11f3c83ab718e15fe42b76c8e09abeeea0b0bf106e9dc58372da97ac2a8",
+      "git_blob_sha": "7cb54da04d20609f909d8779032efc52ebeb191a",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/04-vehicles-parts.md",
+      "sha256": "bc3cf00847817a0658aa8467179b15b454ee9ad84f3a1448322e4b4052a183dd",
+      "git_blob_sha": "5e394b01dbd5e60621d07eedc6894c6a516e509e",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/05-videos-notes.md",
+      "sha256": "e1ddbaadf0f433ac9983f080fc4cb7eb497487d80a3aa9f85f9f3f3d738de8a9",
+      "git_blob_sha": "f407fee7b649a2cd8b03a412447f3ae0c5b5c028",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/05-videos.md",
+      "sha256": "aba44c8d5f09d9744128eda0dd3077241a1b1e7c3507606b1f136d165861b907",
+      "git_blob_sha": "d02c0507bb187d622c85561d594132d229748ab3",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/06-gap-audit.md",
+      "sha256": "8c41d2dcfb32a277ea2e4f3d17602cec9180102884e8b161788be91a040ed2c4",
+      "git_blob_sha": "7df4c8800f80cf70d49209a6704fef40bd9ebc84",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/07-implementation-plan.md",
+      "sha256": "d20e621dea18af7aabdb0a0caca37dd1e76362a29242fc4182995710782cb799",
+      "git_blob_sha": "8963ad7524f459dc5f749623a3ed018778a95204",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/08-media-followup.md",
+      "sha256": "9ffe4936d9271ba1e239575a01e32d8f68f584189f4c8aa7db5c66e26e8065cc",
+      "git_blob_sha": "2ef832347ee838ec7e5c36edf409c600a27c7da5",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/09-claude-handoff-8128088.md",
+      "sha256": "945fa736f571d7783118228c06df9943126438f24e04575fa9ac3fa25eeabfdf",
+      "git_blob_sha": "78d58f775b8b891149c87ffc3f46abc05e1c6d17",
+      "mode": "644"
+    },
+    {
+      "path": "docs/research/round2/10-design-judgment-additions.md",
+      "sha256": "1d7ac4bee47adfda8b955503e99462cec6ed4074258f81780a94e02fdba84069",
+      "git_blob_sha": "67632c7f68cc7f89a0f30b07e43ffb3e559f34b7",
+      "mode": "644"
+    },
+    {
+      "path": "install.ps1",
+      "sha256": "f335a37cbdcd8526ca9a2e4857cc32011e1a27791cb9c5c49b956d73ba9b5d9b",
+      "git_blob_sha": "86d5e5b68b3784e752d857fb5005af5597ad4c6d",
+      "mode": "644"
+    },
+    {
+      "path": "install.sh",
+      "sha256": "f9552552ef1bc9aa4ef64a0dd5acc365f11b65bc18a97101654a63a861aa5db6",
+      "git_blob_sha": "d7243728d8e34b29bef5240ab6e37cf27d52fb78",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/.claude-plugin/plugin.json",
+      "sha256": "503a7615e2690de86afdf467dad796c2b223125b2c7856ee2535a67bf8dd2cf6",
+      "git_blob_sha": "54402891ef478e41243d6ffadd3dd54a7d3286e0",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/THIRD_PARTY_NOTICES.md",
+      "sha256": "d0c193e5900d26cd483b12165d9a8a4be0595052c6863cd8e3812fc30c026bec",
+      "git_blob_sha": "978af7407892c9de21657afa7a3be77c8a43db37",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/agents/animator.md",
+      "sha256": "94eef23fd15c90d0d5d637ca5bc27bf3079584186a21cfe2d3edf8fdf6705d5e",
+      "git_blob_sha": "0fc69ac2acb1a40d56bee8057d028b5d9442b512",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/agents/art-critic.md",
+      "sha256": "368ae0a1af6caedfd1fec0e36db876589618a35977d75f8492f072e7a4e75e6c",
+      "git_blob_sha": "5d4009f0adb61f03a0bfbf3b4927d35ffd9aa7d9",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/agents/asset-builder.md",
+      "sha256": "07f1eb8dda42b2c451e743b7cd8956d344d086aed2e6618dc2f63ac9b2cda5fd",
+      "git_blob_sha": "b6f5e2dcde0cebe4c72493e1b6a0a10df72a583b",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/agents/genre-art-researcher.md",
+      "sha256": "e453af7e9194a445368a2f9f4f89052f31ac142e862e9b3945bab3650722be1c",
+      "git_blob_sha": "61981957f6bde3891354c3ec176bd5940cae30aa",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/agents/playtest-qa.md",
+      "sha256": "39d6140bb7cab9537530484c5e0b6dfd51f43592e32718e089641b8f0c4d5de8",
+      "git_blob_sha": "031d94d12667051ca327530fb14f322a41a75c48",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/agents/production-planner.md",
+      "sha256": "e3cdc0d3e074920f8d36a31a66bf516c4ce6242987d58012fe63e4c51da6d338",
+      "git_blob_sha": "dbacff8323ef0ba77c249283877c6c1a0f910332",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/SKILL.md",
+      "sha256": "48cffe2bcbeee7a923e9fb10aa9766eda30b33d4b9d16ea1728d6dcfb28b736e",
+      "git_blob_sha": "a9893d1120b7ae98284a005fc2350182d381eb99",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/THIRD_PARTY_NOTICES.md",
+      "sha256": "38e047b3a009541a786ef38067f664d2b4cee4904c3fb2de941f80c496c12d2f",
+      "git_blob_sha": "81b1a3eb175a81498d7cbbf810dd0d7e36abb5a2",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/animation.md",
+      "sha256": "864839da686ea3f4f4e3bbe09005a2241b064677b9d44645ad1a02840f811a2b",
+      "git_blob_sha": "2a801a042fc71178e68c0966da599d056d7f5241",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/anti-ai-look.md",
+      "sha256": "aab24d73c94b7ba2c41866d40e760d7cc812fd339da1609be0ae8bee93aae357",
+      "git_blob_sha": "5c200ca0ba9c69751bbe1d8f8609e9a86f3bd719",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/architecture.md",
+      "sha256": "c23a03b17896099afc178f8a3b04c9adf5c059e3b1ee85c53cb53b6f5d88effc",
+      "git_blob_sha": "9dc8338b01395138d0790e7e15c889f4396115c5",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/art-direction.md",
+      "sha256": "eed98ee91e1ee6e6f54d140cddf9b725a7793dca5d59999e0b1e9c34c238cc86",
+      "git_blob_sha": "0a7912990efcbe3b407ccccac2b374b0d8b5c5e8",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/audio.md",
+      "sha256": "287a12e2d4151f3124f4d545a06308ed24104934491070a7e0baac506840a706",
+      "git_blob_sha": "352b9c7f927182b30e895ca703945b0f70d0406e",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/blender-live.md",
+      "sha256": "b7ba3d8881500b34efb7f69344c5f42aba3e0d4dd89e6a6af78a345aec2e74fb",
+      "git_blob_sha": "9cfb9998c34135a553fc3d91023029e48c690cf7",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/design-judgment.md",
+      "sha256": "42cab9c0090816007cea23ef8fa266087b5cbe7af2292f3312948e768588977c",
+      "git_blob_sha": "3156afd63f0b3c7182d247b9c2ee4e009b6cd3f4",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/design-loading.md",
+      "sha256": "4e45188a53d35803d28a7c84f865d12871239134997bbf76285d407171820562",
+      "git_blob_sha": "8cfdc1cafcdbbe2a6fe2f5b0b44fcf68c123c3d2",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/engines/godot.md",
+      "sha256": "949b66d160c642e45809653616831d2bec28d7a3f352301e94b80c79155fc22b",
+      "git_blob_sha": "449791ba2ec8648fb2ebd819420e42d7dec9a3d2",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/engines/threejs.md",
+      "sha256": "483d7892b41ea0709040a01fcf1457ba0031bb005433e0f6a5fe81f665e1fef5",
+      "git_blob_sha": "127ee1df4389265d8f7edd364369b49a1b684223",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/engines/unity.md",
+      "sha256": "fadd582d2b413a0056d03558b9c211848281d7ef8ddd10e98c6a76ad925faad6",
+      "git_blob_sha": "fc04b534360015ca559922c41544671c657bd4ff",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/level-design.md",
+      "sha256": "3f36a4b9b39ec2f81444756ed3169e5ba9b1a9070f831e786887f7890b57f00a",
+      "git_blob_sha": "3b12626ffe262cc00191f3ef799e856495e2e749",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/modeling.md",
+      "sha256": "8feb9a4457b4eb24ed8d8c3aa7a721a32631b4e8463705ee34d1179450f4d61f",
+      "git_blob_sha": "6c55a8293eca9dbb05510380dc8b5aa3c16c1c09",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/orchestration.md",
+      "sha256": "ffb5274a2ae4e5ac5de5848866b9691cdac8a1b36e3d7da780b9d97c8826ad5d",
+      "git_blob_sha": "a4f62773b78099aa64d59eb9478ee81b5dc0d719",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/qa-protocol.md",
+      "sha256": "7c0ec70af9da876794e79890c26f85790305f909ba1bcd0fff5c99ba3de35f14",
+      "git_blob_sha": "48904715a64558efd989c724728b99ca40f7dc72",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/recipes/articulated.md",
+      "sha256": "f30c32cc7d0fa022a87990177f7f704fa8623d26aacbf57b44e2d71bc7e072bc",
+      "git_blob_sha": "288bcc049b1387c77b034c480ceca5631f4cd052",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/recipes/character-cc0.md",
+      "sha256": "425efc93c5f8db6ae82e77c67352e092238b5581cbbd34911e94738584705d1c",
+      "git_blob_sha": "3263cad015078bb52802f7bd71aed49a3adffd56",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/recipes/environment.md",
+      "sha256": "e92998e05fb0e475c227c7af0d874818ca653df7b34d9a7ca8eb7d3ea0d94212",
+      "git_blob_sha": "b7ec0c399bdf5f72fbba1cc56aa6ae846c1a912b",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/recipes/modular-kit.md",
+      "sha256": "a9cb8347f5d719606515a4b9d582bec34b0b37ee5f6d9acf526dc9d07ad94ce4",
+      "git_blob_sha": "a582ab2b0dae55484c849084792e17285b64a3ca",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/recipes/vehicle.md",
+      "sha256": "28d04cb1931c516b0c9c6dd879ade03e2f3a7534c0352d52222532b75b2654ec",
+      "git_blob_sha": "5bf28cfce65eab986e3b2807f09b978c82d98e93",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/startup-planning.md",
+      "sha256": "dccb5cd4e5d167d7b3afabdda20801089f3e8c3bba44aa2e90aebe50df98cc19",
+      "git_blob_sha": "467db5909f933bfb4549946f19200de213eb8a1a",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/texturing.md",
+      "sha256": "702ceb7e7b636f3b478dfdc8ad2da407e1dbdbbf794fb9cec20b665bd585177c",
+      "git_blob_sha": "62e774ceffe3f3ef26e9272b4c6dd71d7c5b6322",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/tool-matrix.md",
+      "sha256": "8b43b5d0c8992c0077389976025d6c4b4eec002b4d3d9b7c5e3e91432a59c6c9",
+      "git_blob_sha": "5cafe9a5cb2acdd49e62260264685ea010e06684",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/references/toolchain.md",
+      "sha256": "a7e10bdda77a8e3469a2ecc5023f381e1e632b0a4c2a975c1a5cb7a2ca378335",
+      "git_blob_sha": "ad1807d26f70d31210e917f880b818f93b1f7327",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/blender/clip_report.py",
+      "sha256": "15b4d48166ef12ef8d0413fd526e66984abf8005ada01a1809943a85345cc166",
+      "git_blob_sha": "9a3554550daa7ba56348a88aa525a9da56a201fd",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/blender/examples/car_stylized.py",
+      "sha256": "79266b4cee9821f4d11a2cf5002884304b115165db0255c59aeb562b912ae370",
+      "git_blob_sha": "501e5ead87b717bfe87d8e1ba02e6aa2716c888e",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/blender/gs_build.py",
+      "sha256": "8d264696953ed94101b5485547d6cc7e5dddfab98913f297f6a232797bafee7b",
+      "git_blob_sha": "b700f221495bab4923792ad17f43ee572344f441",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/blender/gs_common.py",
+      "sha256": "8f8163b8131429d6737f284513b3c4eed511e8256e0c70fa38ecb832b8c8dadd",
+      "git_blob_sha": "235c9dded834e2a7017fa0b2c3a8111b781ce3aa",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/blender/image_metrics.py",
+      "sha256": "63a8dd5fd161e4b8728e70b54608baee2317a4b1b4ddc89eafcb0f5cc77af6b4",
+      "git_blob_sha": "d3645bbbafcea940f3c85427dc85c1f7528b1719",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/blender/inspect_model.py",
+      "sha256": "de62d34d0ef7457a42a5d151a16ab02edbf87790cf6579b95fa199e867bbf017",
+      "git_blob_sha": "69bf92b2c54772ea7ebf2374ce7804b3b3ee2b41",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/blender/render_views.py",
+      "sha256": "7bad1e98844b737b3d3b9a9ddc334f1c08f18afdf64bee33c5e143d0f5ba76df",
+      "git_blob_sha": "0ceb17f69ff16b0ea74829f48a0d5d10b91735df",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/find_blender.sh",
+      "sha256": "c86b16fb40382720479386f2e6db2fdde27d01d6d0d7c80702ea698660439620",
+      "git_blob_sha": "318ab3837e6941f6503b4a5bed6c84f7943d3ace",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/web/capture.mjs",
+      "sha256": "b639253f901dddb1064606e04bd055935d01f28efe7515777a1070f8e2c38f31",
+      "git_blob_sha": "e48a2b987acd08194686102bae0a73859e99d39a",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/scripts/web/check_gltf.mjs",
+      "sha256": "c06d252c70a347183321e383bb99191ca4d8de4f286d548e6189fdba9027c44c",
+      "git_blob_sha": "a237172f932f5f7ff8842cefa077811e62a1277b",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/LICENSES.md",
+      "sha256": "0df3cbdf9e3f5327f5450b3217666886691462d6687acb0cada2278ba9eb1b0a",
+      "git_blob_sha": "3b76b0162879eebb02aefad81428d50ef39e02dd",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/art-bible.md",
+      "sha256": "af5761f833395669d2d85233c7088164d448def53d440345e48a8248bc2dc5f2",
+      "git_blob_sha": "52e0b6b594b357463ca3307e724649dcf58d1656",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/assets.json",
+      "sha256": "431eaca957c0c979666844e711d18542ddf5fea325ec3a1486a6048143f91864",
+      "git_blob_sha": "30803533f184926c874c831d70cac7a58c79ecfa",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/brief.md",
+      "sha256": "babd6d889c320896ad9cd19ec441e4fb6150b13b1d8f8e3cf3541571b96b4e77",
+      "git_blob_sha": "cdf1713acbbc24cc1ea28f09202c87e6d2f235a5",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/budgets.json",
+      "sha256": "f99dda7de8a7f52bac4cbe4281af9147915b15698b3d2fd5646144b2d559cada",
+      "git_blob_sha": "6881e0838c0541e52fb440dacea16901c51e5caa",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/build.py",
+      "sha256": "cc618f3f7337fed85c6b6eb96c1f1c4a28222443e9dc27625d5a052bfe65702f",
+      "git_blob_sha": "0dc63142c3f3f89baae74aa215ddb85574f475f0",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/features.json",
+      "sha256": "dd2bf339fbbab81775088b41b36bf44b05e0a2276c111ff657b758148adecaac",
+      "git_blob_sha": "b99ab307ac42d4a4a4256bbf8ebf43b7c740b799",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/gitattributes",
+      "sha256": "b300f583cd88031da445ef8d056fbe1a66e2d77a5f398d76eb975dce98154c97",
+      "git_blob_sha": "225862516073be1b4abaeee93058bdb90c2d29a6",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/plan.md",
+      "sha256": "046c96474b7a4dc81f1a7bfa4457b902aab56a42dad3e022545fffb0e2d6c37a",
+      "git_blob_sha": "147ea1b4ed78fd2060c0cacadacbcfac8733d871",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/progress.md",
+      "sha256": "46f3a7c026172635cbbbd29edc416eec96393e659d9c93c7d30d420658245e82",
+      "git_blob_sha": "0c0718c40f9484586e257bc1c66c4e8f285e75bb",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/scorecard.md",
+      "sha256": "217e975afde76520b6b66422711b9b34bf6d4cc290a8e7854d1ec05689e87ea9",
+      "git_blob_sha": "a9de8822986a23834144f4a2730a15e41a5d1c76",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/templates/verify.sh",
+      "sha256": "e2763c6f2cf8638c21197ad9bd157e2335d8094230a24053108126fa3a56583f",
+      "git_blob_sha": "d24104bc64e35dd43e97cbe2c4486374f3e39d79",
+      "mode": "755"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/anthropic-frontend-design/LICENSE.txt",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+      "git_blob_sha": "f433b1a53f5b830a205fd2df78e2b34974656c7b",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/anthropic-frontend-design/UPSTREAM-SKILL.md",
+      "sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+      "git_blob_sha": "a5333457c414d20d625f307df945842c0952ecc3",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/emil-design-eng/LICENSE",
+      "sha256": "4ff5bdb7887ec1435c9cab0e8d1a7caee704d894d65c2a008ccc68b1cc2f260b",
+      "git_blob_sha": "57b46f1fd11dc62351ea548104a88aa3f659c11b",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/impeccable/LICENSE",
+      "sha256": "02bb8c3b4e70190e3986c0404ad2fd8d639b4f534252d82379cc1b502b6d1812",
+      "git_blob_sha": "bb3f6d23b1f8025514a62a12b51b47d73e3c9aa9",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/impeccable/NOTICE.md",
+      "sha256": "c60a093c2845fd9fb82f9c6f742ece31f379f8190b535309d32d66c45ccffdcb",
+      "git_blob_sha": "0468271c904ae334cfaf27da6f8df3d5f419a1f0",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/sources.json",
+      "sha256": "e02658c693f156318e224163a5d981745d64e8b5c60e712cfd4935c517485bdb",
+      "git_blob_sha": "e2e60358a94d58382486eb326fce3bba2d3e0dac",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/taste-skill/LICENSE",
+      "sha256": "4575a543ab88dad12ccea7d97e563d0bce5b448b06072e65d3264497dad326df",
+      "git_blob_sha": "48a2f6640b81ff8eca9ce7f6a96337692713ef5b",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/design-judgment-sources/ui-ux-pro-max/LICENSE",
+      "sha256": "738f69dfa83db5c347c678fb9d90e560877059f0de93a327c39001bff92dc014",
+      "git_blob_sha": "1e71cbf26660f31903807d099fe902c098fc7e4c",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/gamedev-game-ui-ux/LICENSE",
+      "sha256": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+      "git_blob_sha": "c7fc0c6d59cb8129a0e30fe13f5a6118f3933c44",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/gamedev-game-ui-ux/NOTICE",
+      "sha256": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+      "git_blob_sha": "d4204881c3f79f39151a53a6aae476b188a8c51f",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/gamedev-game-ui-ux/UPSTREAM-SKILL.md",
+      "sha256": "8a094c84a377503aa8f4c40df676d1c6b6fc07d36ff95554ce06467f1614397e",
+      "git_blob_sha": "c84646755c3d8f2b96fd955d1d2706e911b45596",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/gamedev-game-ui-ux/references/layout-and-flow.md",
+      "sha256": "000d944db77155ebf97fde035a3d4fbe69ef0ae348e9dbcaff48c5ea134d7d69",
+      "git_blob_sha": "139caf1d76828a303ba85b9446c75fa259610ea8",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/sources.json",
+      "sha256": "7ca435690e2ec5943244f8ffc159cf45034a13f4a2af20eaa03c0f335b1bddeb",
+      "git_blob_sha": "6edb0e970a8f5dfd9cd637119fa07d25c2f8730b",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-aaa-graphics-builder/LICENSE",
+      "sha256": "306512561953da83863404efe11ba8845c6a7cf47a8744321c7cbd67f9944304",
+      "git_blob_sha": "0e7cfcfa43d5da2dc6a31768afcd95525fd3000c",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-aaa-graphics-builder/UPSTREAM-SKILL.md",
+      "sha256": "6656c3a0c3553cf78e0e64665bd6e697e06eeebbe2276b10538483820688f7b6",
+      "git_blob_sha": "3bca703021c032285441c8ccc4a49d201ce97626",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-1.jpg",
+      "sha256": "bfca5ae29fe4675a435eeb6bb75eedd96370376528c1801b6fa6edebfcdf2b18",
+      "git_blob_sha": "165702a0c2d1380c741a2772ae57326dceb17708",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-2.jpg",
+      "sha256": "27d363f0feb8bff85f704ebf7b850365e387d67bbfc0de4affb9d7275fb110e8",
+      "git_blob_sha": "d9ee020c57356cab148376cecfedb9ebeb29aba6",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-aaa-graphics-builder/assets/scorecard-anchors/scene-3.jpg",
+      "sha256": "5fc81e5d20a9e3b281e02fed068b6de489f87f05f77dcdbf915f3be450515f2a",
+      "git_blob_sha": "e35368e2f6d30850454da96aa6266a4374bee25f",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-aaa-graphics-builder/references/technical-art.md",
+      "sha256": "8da9799dc229557ac4e489e7e2a9048c5b401c444f3c26c67810e2bb5da89bda",
+      "git_blob_sha": "00c5dc46dea4add9341fdc2e8f019ac81d6b243b",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-aaa-graphics-builder/references/visual-scorecard.md",
+      "sha256": "97b27303a978e68294d9cbf2e6951f4b98e72765c306d13ea1884b0441c65391",
+      "git_blob_sha": "86060a8db3fea68cd75f82ad8e7870bc169703df",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-game-feel/LICENSE",
+      "sha256": "306512561953da83863404efe11ba8845c6a7cf47a8744321c7cbd67f9944304",
+      "git_blob_sha": "0e7cfcfa43d5da2dc6a31768afcd95525fd3000c",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-game-feel/game-feel.md",
+      "sha256": "d328c7bb64ece26841c3119d5820097aee9d4719c6355fbfe6a7c65e5518c9ef",
+      "git_blob_sha": "72a5230300f385b92fa0983365024225937eca0a",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-game-ui-designer/LICENSE",
+      "sha256": "306512561953da83863404efe11ba8845c6a7cf47a8744321c7cbd67f9944304",
+      "git_blob_sha": "0e7cfcfa43d5da2dc6a31768afcd95525fd3000c",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-game-ui-designer/UPSTREAM-SKILL.md",
+      "sha256": "f68b6a0ad4347ed30fb416d3e5d9ee21e63af6c43dc05a3784f3e333f21e4f85",
+      "git_blob_sha": "1ff25aa86cf60383dd2517889fa514d7f4e77d57",
+      "mode": "644"
+    },
+    {
+      "path": "plugins/game-studio/skills/game-studio/vendor/threejs-game-ui-designer/references/ui-patterns.md",
+      "sha256": "a5f3d2350e91ef21a610c68a878a9feb42f1e53aa01f78a05655e7bf158f2b0b",
+      "git_blob_sha": "438aa234e725128bc2a6cbd4503b2b48a1cff9de",
+      "mode": "644"
+    },
+    {
+      "path": "tests/blender/test_clip_report.py",
+      "sha256": "504a43ff7d1b738e79acd517568591873fcb8e386050f6325162a6dde453360b",
+      "git_blob_sha": "0590fc9f5968751b5dcaa5ba93ad629662db3ec5",
+      "mode": "644"
+    },
+    {
+      "path": "tests/blender/test_gs_build.py",
+      "sha256": "f4544b32b732c4f91ac779858d98cca387f0228abada50b71561629e68265f47",
+      "git_blob_sha": "6056f081f03da2bda060f71772cfe5ea98c10f37",
+      "mode": "644"
+    },
+    {
+      "path": "tests/blender/test_inspect_parts.py",
+      "sha256": "57810e9ad33b9437e1f1101f2a9c1d8bbc2358655de68c884b3b82de45faabf6",
+      "git_blob_sha": "443d4fb8a5fe755041ad4a813c2d6ddfcd7576c9",
+      "mode": "644"
+    },
+    {
+      "path": "tests/blender/test_render_parts.py",
+      "sha256": "5f2e4386c7ffb43c97a6322fc040b35cace468535dbdbf12aff3cb9dd29327bd",
+      "git_blob_sha": "bb0bdfacef15a57e03fb27dc3f887d08e35754bf",
+      "mode": "644"
+    },
+    {
+      "path": "tests/bootstrap/test_bootstrap.py",
+      "sha256": "0e160956b5b8b8d772546036c0462b46b8990df9a67bb90ebabd326083404065",
+      "git_blob_sha": "728a165cfcd14ba236c8f5bf0e036db7e5948ad6",
+      "mode": "644"
+    },
+    {
+      "path": "tests/pilot/control.gd",
+      "sha256": "c7de6e9990b0b8fcfe0f6d71908735d2f8e9f2e1bea21f432249f385f4d3de44",
+      "git_blob_sha": "267232e48d6e831973a87d1c0eb04fe89027ea68",
+      "mode": "644"
+    },
+    {
+      "path": "tests/pilot/desk_fan.py",
+      "sha256": "c43cb3015290bce362e0b6ef5fbbb2076ce2281291138e823301e433d9f9d356",
+      "git_blob_sha": "babc31cd49229cefdb8305a64d5854ce6c4c4fd6",
+      "mode": "644"
+    },
+    {
+      "path": "tests/pilot/project.godot",
+      "sha256": "c80d59dfd8157d9b77e7257cb3ae4240553bc8074fc769c38f9a92d3db350191",
+      "git_blob_sha": "9745cf0c9e3cd2fa5fdac1481069b1e0338d24d8",
+      "mode": "644"
+    },
+    {
+      "path": "tests/qa/test_gltf_budgets.mjs",
+      "sha256": "1e91c5523ddfc16e4a2966387f5511f9300fbead7b3c5d4594336aaa01377507",
+      "git_blob_sha": "5091d0be62abf2ce8392a5ac75542764fe93ce73",
+      "mode": "644"
+    },
+    {
+      "path": "tests/qa/test_verify.mjs",
+      "sha256": "f66e7eb628098f866f62ffa6898b662f9be679108ddf5e57d10737f327b335c8",
+      "git_blob_sha": "a975a52c1926b5a4cab3fe6b38a8788ce3afc66a",
+      "mode": "644"
+    },
+    {
+      "path": "tests/web/test_capture.mjs",
+      "sha256": "70a0a99afb389d1ee96b90ab925751a4793f6d9e63d6896862ba286e20d4507d",
+      "git_blob_sha": "237941a1123912b54cc9bc09f4f4462f5d1e5415",
+      "mode": "644"
+    }
+  ]
+}

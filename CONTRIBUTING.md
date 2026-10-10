@@ -10,7 +10,7 @@ preference. Neither more polygons nor a passing metric alone establishes design 
 
 ## Where code and skill edits go
 
-Development happens in [{{SOURCE_REPOSITORY}}](https://github.com/{{SOURCE_REPOSITORY}}).
+Development happens in [avivnoievr/Game-skill](https://github.com/avivnoievr/Game-skill).
 Open implementation pull requests there, against its current default branch. The tests,
 source content and public README/issue templates are maintained there as well.
 
