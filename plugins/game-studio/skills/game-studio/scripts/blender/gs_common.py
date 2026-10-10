@@ -5,6 +5,7 @@ and with the `bpy` module from PyPI (`python script.py args`).
 """
 import math
 import os
+import re
 import sys
 
 import bpy
@@ -57,12 +58,47 @@ def load_model(path):
     IMPORTERS[ext](path)
 
 
-def mesh_objects():
-    """Renderable meshes, excluding objects used only as custom bone shapes by importers."""
+COLLISION_SUFFIXES = ("-col", "-colonly", "-convcol", "-convcolonly")   # Godot import hints
+COLLISION_PREFIXES = ("UCX_", "UBX_", "USP_", "UCP_", "COL_")            # Unreal, generic
+
+
+def is_collision(obj):
+    """True for collision proxies named by engine convention (Godot -col/-colonly/-convcol/-convcolonly,
+    Unreal UCX_/UBX_/USP_/UCP_, or COL_). Blender's .001 duplicate suffix is ignored."""
+    name = re.sub(r"\.\d{3}$", "", obj.name)
+    return name.lower().endswith(COLLISION_SUFFIXES) or name.startswith(COLLISION_PREFIXES)
+
+
+def mesh_objects(include_collision=False):
+    """Renderable meshes, excluding custom bone shapes and (by default) collision proxies."""
     shapes = {pb.custom_shape for o in bpy.context.scene.objects if o.type == "ARMATURE"
               for pb in o.pose.bones if pb.custom_shape}
     return [o for o in bpy.context.scene.objects
-            if o.type == "MESH" and not o.hide_render and o not in shapes]
+            if o.type == "MESH" and not o.hide_render and o not in shapes
+            and (include_collision or not is_collision(o))]
+
+
+def collision_objects():
+    return [o for o in bpy.context.scene.objects if o.type == "MESH" and is_collision(o)]
+
+
+def joint_of(obj):
+    """The joint an object declares (custom property / glTF extra "joint"), or None."""
+    try:
+        return obj.get("joint")
+    except TypeError:
+        return None
+
+
+def rigid_group(obj, part_names=()):
+    """Name of the rigid group an object moves with: its nearest ancestor-or-self that declares a joint or
+    is listed in part_names; "body" otherwise."""
+    o = obj
+    while o is not None:
+        if joint_of(o) or o.name in part_names:
+            return o.name
+        o = o.parent
+    return "body"
 
 
 def world_bbox(objs):

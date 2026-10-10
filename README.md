@@ -20,6 +20,9 @@ survive playing it. This plugin changes the *process*:
 It works with three.js / React Three Fiber, Godot 4 and Unity, plus Blender for assets. A full
 explanation in Hebrew is in [`docs/SUMMARY.he.md`](docs/SUMMARY.he.md).
 
+**Work in progress (round 2):** the current state, known defects and the remaining plan are in
+[`docs/HANDOFF.md`](docs/HANDOFF.md).
+
 ## What's inside
 
 ```

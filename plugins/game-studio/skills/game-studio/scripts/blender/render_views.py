@@ -32,7 +32,7 @@ import bpy  # noqa: E402  (import before mathutils: required by the PyPI bpy mod
 import numpy as np  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
-from gs_common import load_model, mesh_objects, script_args, world_bbox, world_points  # noqa: E402
+from gs_common import collision_objects, load_model, mesh_objects, script_args, world_bbox, world_points  # noqa: E402
 
 ALL_VIEWS = ["front", "right", "back", "left", "q_fl", "q_fr", "top", "silhouette", "wire"]
 DIRECTIONS = {  # camera position relative to the asset center (Blender: -Y is the asset's front)
@@ -153,10 +153,10 @@ def add_ground(lo, hi):
 
 
 def add_scale_ref(lo, hi):
-    """1.8 m tall, 0.45 m wide figure placed 0.4 m to the right of the asset."""
+    """1.8 m tall, 0.45 m wide figure beside the front-right corner, so no side view hides the asset."""
     h, w = 1.8, 0.45
     r = w / 2
-    x, y = hi.x + 0.4 + r, (lo.y + hi.y) / 2
+    x, y = hi.x + 0.4 + r, lo.y - 0.4 - r
     bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=h - r, location=(x, y, lo.z + (h - r) / 2))
     body = bpy.context.object
     body.name = "gs_scale_ref_1.8m"
@@ -296,6 +296,8 @@ def main():
     scene = bpy.context.scene
     if a.frame is not None:
         scene.frame_set(a.frame)
+    for col in collision_objects():  # collision proxies are invisible in engines; never review them as art
+        col.hide_render = True
     meshes = mesh_objects()
     if not meshes:
         raise SystemExit("error: no mesh objects to render")
